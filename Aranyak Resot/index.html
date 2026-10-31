@@ -3,454 +3,593 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aranyak Resort | Ajodhya Hills, Purulia</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <title>Niharika Resort & Enterprise PMS | Purulia</title>
   <style>
     :root {
       --primary: #1b4332;
-      --primary-dark: #081c15;
+      --secondary: #2d6a4f;
       --accent: #d4a373;
-      --accent-hover: #b98555;
-      --bg: #f8f9fa;
-      --surface: #ffffff;
-      --text: #2b2d42;
-      --text-muted: #6c757d;
-      --border: #e2e8f0;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --radius: 12px;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --vacant-clean: #2a9d8f;
+      --occupied: #e76f51;
+      --dirty: #e9c46a;
+      --cleaned: #457b9d;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f1f4f6; color: var(--dark); line-height: 1.5; }
+    
+    /* Header & Navigation */
+    header { background: var(--primary); color: white; padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+    header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+    nav button { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 0.9rem; border-radius: 4px; font-weight: 600; cursor: pointer; margin-left: 0.4rem; transition: 0.2s; }
+    nav button:hover { background: var(--accent); color: #000; }
+    nav button.active-btn { background: var(--accent); color: #000; border-color: var(--accent); }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
+    .view-section { padding: 1.5rem; max-width: 1300px; margin: auto; }
+    .hidden { display: none !important; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+    /* Guest View */
+    .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80') center/cover; color: white; text-align: center; padding: 4.5rem 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+    .hero h2 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .feature-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .feature-card img { width: 100%; height: 160px; object-fit: cover; }
+    .feature-card .content { padding: 1rem; }
+    .room-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .room-item { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .room-item img { width: 100%; height: 160px; object-fit: cover; }
+    .room-item .details { padding: 1rem; }
+    .calc-box { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
 
-    header {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+    /* PMS View */
+    .pms-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .stats-flex { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .stat-badge { padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; font-size: 0.85rem; color: white; display: flex; align-items: center; gap: 0.4rem; }
+    .stat-vacant-clean { background: var(--vacant-clean); }
+    .stat-occupied { background: var(--occupied); }
+    .stat-dirty { background: var(--dirty); color: #000; }
+    .stat-cleaned { background: var(--cleaned); }
 
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .btn-export { background: #198754; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; }
+    .btn-export:hover { background: #157347; }
 
-    .brand-logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      letter-spacing: 0.5px;
-    }
+    /* Floor & 40 Room Matrix */
+    .floor-title { margin: 1.5rem 0 0.6rem 0; font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #ddd; padding-bottom: 0.3rem; }
+    .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 0.8rem; margin-bottom: 1.5rem; }
+    .room-card { background: white; border-radius: 6px; padding: 0.6rem 0.4rem; text-align: center; border-top: 5px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.06); cursor: pointer; transition: 0.15s; position: relative; }
+    .room-card:hover { transform: scale(1.03); }
+    .room-card.status-vacant-clean { border-top-color: var(--vacant-clean); }
+    .room-card.status-occupied { border-top-color: var(--occupied); }
+    .room-card.status-dirty { border-top-color: var(--dirty); }
+    .room-card.status-cleaned { border-top-color: var(--cleaned); }
+    .room-num { font-size: 1.1rem; font-weight: bold; }
+    .room-type-abbr { font-size: 0.7rem; color: #666; margin-bottom: 0.2rem; }
+    .status-tag { font-size: 0.65rem; font-weight: bold; padding: 0.1rem 0.3rem; border-radius: 4px; color: white; display: inline-block; }
+    .tag-vacant-clean { background: var(--vacant-clean); }
+    .tag-occupied { background: var(--occupied); }
+    .tag-dirty { background: var(--dirty); color: #000; }
+    .tag-cleaned { background: var(--cleaned); }
+    .room-guest-name { font-size: 0.75rem; font-weight: 600; margin-top: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #111; }
 
-    .nav-links {
-      display: flex;
-      gap: 1.8rem;
-      list-style: none;
-    }
+    /* PMS Work Panels */
+    .pms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .box-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .box-card h3 { color: var(--primary); margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; font-size: 1.15rem; }
+    .form-group { margin-bottom: 0.9rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .form-group input, .form-group select { width: 100%; padding: 0.55rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .btn-action { width: 100%; padding: 0.7rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 0.95rem; margin-top: 0.5rem; }
 
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-
-    .hero {
-      position: relative;
-      height: 75vh;
-      min-height: 500px;
-      background: linear-gradient(rgba(8, 28, 21, 0.65), rgba(8, 28, 21, 0.65)),
-                  url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #ffffff;
-      padding: 0 1.5rem;
-    }
-
-    .hero-content h1 {
-      font-size: 3.2rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-      line-height: 1.2;
-    }
-
-    .hero-content p {
-      font-size: 1.2rem;
-      max-width: 650px;
-      margin: 0 auto 2rem auto;
-      opacity: 0.95;
-      font-weight: 300;
-    }
-
-    .btn {
-      display: inline-block;
-      background-color: var(--accent);
-      color: #ffffff;
-      padding: 0.8rem 2.2rem;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(212, 163, 115, 0.4);
-      transition: all 0.25s ease;
-    }
-
-    .btn:hover {
-      background-color: var(--accent-hover);
-      transform: translateY(-2px);
-    }
-
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4.5rem 1.5rem;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-title h2 {
-      font-size: 2.2rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .section-title p {
-      color: var(--text-muted);
-      font-size: 1rem;
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.8rem;
-    }
-
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: transform 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    .card-body h3 {
-      font-size: 1.25rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .card-body p {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-
-    .booking-wrapper {
-      background: var(--surface);
-      padding: 2.5rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .form-group select,
-    .form-group input[type="number"] {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      outline: none;
-      font-size: 0.95rem;
-      background: #fafafa;
-    }
-
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-
-    .checkbox-label input {
-      accent-color: var(--primary);
-      width: 16px;
-      height: 16px;
-    }
-
-    .price-summary {
-      background: #fdf8f4;
-      border: 2px dashed var(--accent);
-      border-radius: var(--radius);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .price-display {
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 1rem 0;
-    }
-
-    footer {
-      background: var(--primary-dark);
-      color: #cfd8dc;
-      padding: 3rem 1.5rem 1.5rem;
-    }
-
-    .footer-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-col h3 {
-      color: #ffffff;
-      margin-bottom: 1rem;
-      font-size: 1.15rem;
-    }
-
-    .footer-col p {
-      font-size: 0.92rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 1.5rem;
-      font-size: 0.85rem;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero-content h1 { font-size: 2.2rem; }
-      .booking-wrapper { grid-template-columns: 1fr; }
-    }
+    /* Modal / Popups */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+    .modal-content { background: white; padding: 1.5rem; border-radius: 8px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .invoice-card { width: 500px; }
+    .invoice-header { text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 1rem; margin-bottom: 1rem; }
+    .inv-row { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .inv-total { font-size: 1.1rem; font-weight: bold; border-top: 2px solid #222; padding-top: 0.5rem; margin-top: 0.8rem; }
+    .inv-btn-group { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
   <header>
-    <div class="nav-container">
-      <a href="#" class="brand-logo">🌿 Aranyak Resort</a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Amenities</a></li>
-        <li><a href="#booking">Tariff Calculator</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
+    <h1>🌸 Niharika Resort & Retreat</h1>
+    <nav>
+      <button id="btnGuest" class="active-btn" onclick="showView('guest')">Resort View</button>
+      <button id="btnMatrix" onclick="showView('matrix')">40-Room Matrix & Housekeeping</button>
+      <button id="btnDesk" onclick="showView('desk')">Front Desk Operations</button>
+    </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Serenity in Nature's Lap</h1>
-      <p>Experience luxurious forest cottages, infinity pool, and grand banquet facilities nestled amidst the scenic Ajodhya Hills of Purulia.</p>
-      <a href="#booking" class="btn">Book Your Stay</a>
+  <!-- 1. GUEST LANDING VIEW -->
+  <main id="guestView" class="view-section">
+    <div class="hero">
+      <h2>Serenity Amidst Purulia Hills</h2>
+      <p>Luxury Cottages, Authentic Bengali Cuisine & Tribal Hospitality at Ayodhya Foothills.</p>
     </div>
-  </section>
-
-  <!-- Amenities & Services -->
-  <section class="section" id="services">
-    <div class="section-title">
-      <h2>Signature Amenities</h2>
-      <p>Curated comforts designed to make your weekend getaway memorable</p>
-    </div>
-
-    <div class="services-grid">
-      <div class="card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Swimming Pool">
-        <div class="card-body">
-          <h3>🏊‍♂️ Crystal Clear Pool</h3>
-          <p>Unwind under the open hill skies in our well-maintained swimming pool. Perfect for a refreshing dip with family and friends.</p>
-        </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Pool">
+        <div class="content"><h3>Natural Swimming Pool</h3><p>Stone deck pool surrounded by green Sal forest foliage.</p></div>
       </div>
-
-      <div class="card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Banquet Hall">
-        <div class="card-body">
-          <h3>🏛️ Grand Banquet Hall</h3>
-          <p>A fully air-conditioned, 500-seater modern event hall ideal for destination weddings, family celebrations, and corporate retreats.</p>
-        </div>
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Dining">
+        <div class="content"><h3>'Bonbhojon' Dining</h3><p>Local Purulia delicacies, authentic thalis and multicuisine meals.</p></div>
       </div>
-
-      <div class="card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Bonbhojon Restaurant">
-        <div class="card-body">
-          <h3>🍽️ 'Bonbhojon' Dining</h3>
-          <p>Authentic Bengali delicacies, local Purulia specialties, along with delicious North Indian and Chinese culinary delights.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80" alt="Luxury Forest Cottage">
-        <div class="card-body">
-          <h3>🏡 Forest Cottages</h3>
-          <p>Spacious, standalone cottages with private sit-out balconies surrounded by Shal and Palash trees for total privacy.</p>
-        </div>
+      <div class="feature-card">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Banquet">
+        <div class="content"><h3>Open-Air Banquet Lawn</h3><p>Ideal venue for evening folk dances, bonfires, and celebrations.</p></div>
       </div>
     </div>
-  </section>
-
-  <!-- Booking Estimate Calculator -->
-  <section class="section" id="booking">
-    <div class="section-title">
-      <h2>Tariff & Booking Estimator</h2>
-      <p>Plan your budget with our transparent, instant cost calculator</p>
-    </div>
-
-    <div class="booking-wrapper">
-      <div>
+    <div class="calc-box">
+      <h3 style="margin-bottom: 0.8rem; color: var(--primary);">Estimated Stay Tariff</h3>
+      <div class="form-row">
         <div class="form-group">
-          <label for="roomType">Select Room Type:</label>
-          <select id="roomType" onchange="calculateTotal()">
-            <option value="2500">Deluxe Balcony Room — ₹2,500 / night</option>
-            <option value="4200">Premium Forest Cottage — ₹4,200 / night</option>
-            <option value="6000">Resort Pool-View Suite — ₹6,000 / night</option>
+          <label>Select Room Category</label>
+          <select id="estCategory">
+            <option value="1800">Standard Nature (₹1,800/night)</option>
+            <option value="2500">Deluxe Hill View Cottage (₹2,500/night)</option>
+            <option value="3800">Executive Luxury Suite (₹3,800/night)</option>
+            <option value="5500">Premium Family Villa (₹5,500/night)</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label for="nights">Number of Nights:</label>
-          <input type="number" id="nights" value="1" min="1" max="30" onchange="calculateTotal()" onkeyup="calculateTotal()">
-        </div>
-
-        <div class="form-group">
-          <label class="checkbox-label" for="poolAccess">
-            <input type="checkbox" id="poolAccess" onchange="calculateTotal()"> Include Swimming Pool Pass (₹300 / person)
-          </label>
+          <label>Nights</label>
+          <input type="number" id="estNights" value="1" min="1">
         </div>
       </div>
+      <button class="btn-action" style="background: var(--secondary);" onclick="calculateEstimate()">Calculate Estimated Cost</button>
+      <h4 id="estResult" style="margin-top: 0.8rem; color: var(--secondary);"></h4>
+    </div>
+  </main>
 
-      <div class="price-summary">
-        <h4>Estimated Total Cost</h4>
-        <div class="price-display" id="totalPrice">₹ 2,800</div>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">* Includes 12% GST and resort service charges</p>
+  <!-- 2. ROOM MATRIX & HOUSEKEEPING VIEW -->
+  <main id="matrixView" class="view-section hidden">
+    <div class="pms-toolbar">
+      <div class="stats-flex">
+        <div class="stat-badge stat-vacant-clean">🟢 Vacant Clean: <span id="countVacantClean">0</span></div>
+        <div class="stat-badge stat-occupied">🔴 Occupied: <span id="countOccupied">0</span></div>
+        <div class="stat-badge stat-dirty">🟡 Dirty: <span id="countDirty">0</span></div>
+        <div class="stat-badge stat-cleaned">🔵 Cleaned: <span id="countCleaned">0</span></div>
+      </div>
+      <button class="btn-export" onclick="exportToCSV()">📊 Export Register to Excel (CSV)</button>
+    </div>
+
+    <div id="floorsContainer"></div>
+  </main>
+
+  <!-- 3. FRONT DESK OPERATIONS VIEW -->
+  <main id="deskView" class="view-section hidden">
+    <div class="pms-grid">
+      <!-- Check-In -->
+      <div class="box-card">
+        <h3>Guest Check-In</h3>
+        <div class="form-group">
+          <label>Guest Full Name</label>
+          <input type="text" id="chkName" placeholder="e.g. Subir Sen">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="chkPhone" placeholder="10-digit number">
+          </div>
+          <div class="form-group">
+            <label>Assign Ready Room</label>
+            <select id="chkRoomSelect"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Advance Payment (₹)</label>
+            <input type="number" id="chkAdvance" value="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="chkPaymentMode">
+              <option value="UPI">UPI / GPay</option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Debit/Credit Card</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" style="background: var(--vacant-clean);" onclick="handleCheckIn()">Check-In Guest</button>
+      </div>
+
+      <!-- Food / Room Service Billing -->
+      <div class="box-card">
+        <h3>Room Service & Food Billing</h3>
+        <div class="form-group">
+          <label>Select Occupied Room</label>
+          <select id="foodRoomSelect" onchange="showCurrentFoodTotal()"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Item / Service Description</label>
+            <input type="text" id="foodItemName" placeholder="e.g. 2 Bengali Thalis + Tea">
+          </div>
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" id="foodAmount" placeholder="₹ Amount">
+          </div>
+        </div>
+        <button class="btn-action" style="background: #2b7a78;" onclick="handleAddFoodBill()">Add to Room Folio</button>
+        <p id="roomFolioSummary" style="font-size: 0.85rem; color: #444; margin-top: 0.6rem;"></p>
+      </div>
+
+      <!-- Express Checkout -->
+      <div class="box-card">
+        <h3>Express Check-Out & Final Billing</h3>
+        <div class="form-group">
+          <label>Select Occupied Room</label>
+          <select id="outRoomSelect"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stay Duration (Nights)</label>
+            <input type="number" id="outNights" value="1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Settlement Mode</label>
+            <select id="outPaymentMode">
+              <option value="UPI">UPI / QR Code</option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" style="background: var(--occupied);" onclick="handleCheckOut()">Generate Invoice & Check-Out</button>
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- Footer & Contact -->
-  <footer id="contact">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h3>Aranyak Resort</h3>
-        <p>A tranquil sanctuary away from the hustle of city life. Immerse yourself in the rustic beauty and hospitality of Ajodhya Hills.</p>
+  <!-- QUICK ROOM STATUS MODAL -->
+  <div id="roomModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 id="modalRoomTitle" style="margin-bottom: 0.8rem; color: var(--primary);"></h3>
+      <p id="modalRoomDetails" style="font-size: 0.9rem; margin-bottom: 1rem; color: #555;"></p>
+      
+      <div class="form-group">
+        <label>Update Housekeeping Status:</label>
+        <select id="modalStatusSelect">
+          <option value="vacant-clean">Vacant Clean (Ready for Guest)</option>
+          <option value="dirty">Dirty / Needs Cleaning</option>
+          <option value="cleaned">Cleaned / Inspected</option>
+        </select>
       </div>
-
-      <div class="footer-col">c
-        <h3>Contact Us</h3>
-        <p>📍 Ajodhya Hills Road, Purulia, West Bengal</p>
-        <p>📞 Phone: +91 98765 43210</p>
-        <p>✉️ Email: reservations@aranyakresort.com</p>
-    s  </div>
-
-      <div class="footer-col">
-        <h3>Location & Travel</h3>
-        <p>Purulia,West Bengal</p>
-        <p>Around 1.5 hours scenic drive from Purulia Railway Station. Free guest parking available 24/7.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.75;">
-          Disclaimer: This is a demo web portfolio project created for educational and practice purposes.
+      <div style="display: flex; gap: 0.6rem; margin-top: 1.2rem;">
+        <button class="btn-action" style="background: var(--secondary);" onclick="saveRoomStatus()">Save Status</button>
+        <button class="btn-action" style="background: #6c757d;" onclick="closeModal('roomModal')">Close</button>
       </div>
-    
-
-    <div class="footer-bottom">
-      <p>&copy; 2026 Aranyak Resort. All rights reserved.</p>
     </div>
-  </footer>
+  </div>
+
+  <!-- INVOICE MODAL -->
+  <div id="invoiceModal" class="modal-overlay hidden">
+    <div class="modal-content invoice-card" id="printableArea">
+      <div class="invoice-header">
+        <h2>NIHARIKA RESORT & RETREAT</h2>
+        <p>Near Sirkabad / Ayodhya Foothills, Purulia, West Bengal</p>
+        <p style="font-size: 0.8rem; color: #555;">GSTIN: 19ABCDE1234F1Z5 | Tax Invoice</p>
+      </div>
+      <div class="inv-row"><span>Guest Name:</span><strong id="invGuest"></strong></div>
+      <div class="inv-row"><span>Room Assigned:</span><strong id="invRoom"></strong></div>
+      <div class="inv-row"><span>Duration:</span><span id="invNights"></span></div>
+      <div class="inv-row"><span>Room Tariff:</span><span id="invRoomCharges"></span></div>
+      <div class="inv-row"><span>Food & Room Service:</span><span id="invFoodCharges"></span></div>
+      <div class="inv-row"><span>GST (12%):</span><span id="invTax"></span></div>
+      <div class="inv-row"><span>Gross Total:</span><span id="invGross"></span></div>
+      <div class="inv-row" style="color: #2a9d8f;"><span>Less Advance Paid:</span><span id="invAdvance"></span></div>
+      <div class="inv-row inv-total"><span>Balance Paid (<span id="invSettlementMode"></span>):</span><span id="invBalance"></span></div>
+      
+      <div class="inv-btn-group">
+        <button class="btn-action" style="background: var(--primary);" onclick="window.print()">Print Invoice</button>
+        <button class="btn-action" style="background: #6c757d;" onclick="closeModal('invoiceModal')">Done</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    function calculateTotal() {
-      const roomPrice = parseFloat(document.getElementById('roomType').value) || 0;
-      const nights = parseInt(document.getElementById('nights').value) || 1;
-      const poolAccess = document.getElementById('poolAccess').checked ? 300 : 0;
+    // 1. Generate 40 Room Inventory
+    const floorsData = [
+      { name: "Ground Floor (Garden Facing)", prefix: "1", type: "Standard Nature Room", rate: 1800, count: 10 },
+      { name: "First Floor (Hill View Cottages)", prefix: "2", type: "Deluxe Hill View Cottage", rate: 2500, count: 10 },
+      { name: "Second Floor (Luxury Suites)", prefix: "3", type: "Executive Luxury Suite", rate: 3800, count: 10 },
+      { name: "Top Floor & Hill Villas", prefix: "4", type: "Premium Family Villa", rate: 5500, count: 10 }
+    ];
 
-      const subtotal = (roomPrice * nights) + poolAccess;
-      const gst = subtotal * 0.12;
-      const grandTotal = Math.round(subtotal + gst);
+    let rooms = [];
+    floorsData.forEach(fl => {
+      for (let i = 1; i <= fl.count; i++) {
+        const num = `${fl.prefix}${i < 10 ? '0' + i : i}`;
+        rooms.push({
+          number: num,
+          floorName: fl.name,
+          type: fl.type,
+          rate: fl.rate,
+          status: 'vacant-clean',
+          guest: null,
+          advance: 0,
+          paymentMode: '',
+          foodCharges: 0,
+          foodItems: []
+        });
+      }
+    });
 
-      document.getElementById('totalPrice').innerText = '₹ ' + grandTotal.toLocaleString('en-IN');
+    let selectedRoomForModal = null;
+
+    function showView(viewId) {
+      ['guest', 'matrix', 'desk'].forEach(v => {
+        document.getElementById(v + 'View').classList.add('hidden');
+        document.getElementById('btn' + v.charAt(0).toUpperCase() + v.slice(1)).classList.remove('active-btn');
+      });
+      document.getElementById(viewId + 'View').classList.remove('hidden');
+      document.getElementById('btn' + viewId.charAt(0).toUpperCase() + viewId.slice(1)).classList.add('active-btn');
+
+      if (viewId === 'matrix') renderMatrix();
+      if (viewId === 'desk') refreshDeskDropdowns();
     }
 
-    // Initial calculation on load
-    calculateTotal();
+    function renderMatrix() {
+      const container = document.getElementById('floorsContainer');
+      container.innerHTML = '';
+
+      let countVC = 0, countOcc = 0, countDirt = 0, countCln = 0;
+
+      floorsData.forEach(fl => {
+        const floorRooms = rooms.filter(r => r.floorName === fl.name);
+        const section = document.createElement('div');
+        section.innerHTML = `<h3 class="floor-title">${fl.name} — ₹${fl.rate}/night</h3>`;
+        
+        const grid = document.createElement('div');
+        grid.className = 'room-grid';
+
+        floorRooms.forEach(r => {
+          if (r.status === 'vacant-clean') countVC++;
+          else if (r.status === 'occupied') countOcc++;
+          else if (r.status === 'dirty') countDirt++;
+          else if (r.status === 'cleaned') countCln++;
+
+          const card = document.createElement('div');
+          card.className = `room-card status-${r.status}`;
+          card.onclick = () => openRoomModal(r.number);
+
+          let statusLabel = r.status.toUpperCase();
+          if (r.status === 'vacant-clean') statusLabel = 'VACANT';
+
+          card.innerHTML = `
+            <div class="room-num">${r.number}</div>
+            <div class="room-type-abbr">${r.type.split(' ')[0]}</div>
+            <span class="status-tag tag-${r.status}">${statusLabel}</span>
+            ${r.guest ? `<div class="room-guest-name">${r.guest.name}</div>` : ''}
+          `;
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+        container.appendChild(section);
+      });
+
+      document.getElementById('countVacantClean').innerText = countVC;
+      document.getElementById('countOccupied').innerText = countOcc;
+      document.getElementById('countDirty').innerText = countDirt;
+      document.getElementById('countCleaned').innerText = countCln;
+    }
+
+    function openRoomModal(roomNum) {
+      selectedRoomForModal = rooms.find(r => r.number === roomNum);
+      const m = selectedRoomForModal;
+      document.getElementById('modalRoomTitle').innerText = `Room ${m.number} (${m.type})`;
+      document.getElementById('modalRoomDetails').innerHTML = `
+        <strong>Floor:</strong> ${m.floorName}<br>
+        <strong>Rate:</strong> ₹${m.rate}/night<br>
+        <strong>Current Status:</strong> ${m.status.toUpperCase()}<br>
+        ${m.guest ? `<strong>Guest:</strong> ${m.guest.name} (${m.guest.phone})<br><strong>Advance:</strong> ₹${m.advance}` : ''}
+      `;
+
+      const select = document.getElementById('modalStatusSelect');
+      if (m.status === 'occupied') {
+        select.innerHTML = `<option value="occupied">Occupied (Checkout via Front Desk)</option>`;
+        select.disabled = true;
+      } else {
+        select.disabled = false;
+        select.innerHTML = `
+          <option value="vacant-clean" ${m.status === 'vacant-clean' ? 'selected' : ''}>Vacant Clean (Ready)</option>
+          <option value="dirty" ${m.status === 'dirty' ? 'selected' : ''}>Dirty / Needs Cleaning</option>
+          <option value="cleaned" ${m.status === 'cleaned' ? 'selected' : ''}>Cleaned / Inspected</option>
+        `;
+      }
+      document.getElementById('roomModal').classList.remove('hidden');
+    }
+
+    function saveRoomStatus() {
+      if (!selectedRoomForModal || selectedRoomForModal.status === 'occupied') {
+        closeModal('roomModal');
+        return;
+      }
+      selectedRoomForModal.status = document.getElementById('modalStatusSelect').value;
+      closeModal('roomModal');
+      renderMatrix();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function refreshDeskDropdowns() {
+      const chkSelect = document.getElementById('chkRoomSelect');
+      const foodSelect = document.getElementById('foodRoomSelect');
+      const outSelect = document.getElementById('outRoomSelect');
+
+      chkSelect.innerHTML = '';
+      foodSelect.innerHTML = '';
+      outSelect.innerHTML = '';
+
+      rooms.forEach(r => {
+        if (r.status === 'vacant-clean' || r.status === 'cleaned') {
+          const opt = document.createElement('option');
+          opt.value = r.number;
+          opt.innerText = `Room ${r.number} - ${r.type} (₹${r.rate})`;
+          chkSelect.appendChild(opt);
+        } else if (r.status === 'occupied') {
+          const opt1 = document.createElement('option');
+          opt1.value = r.number;
+          opt1.innerText = `Room ${r.number} - ${r.guest.name}`;
+          foodSelect.appendChild(opt1);
+
+          const opt2 = document.createElement('option');
+          opt2.value = r.number;
+          opt2.innerText = `Room ${r.number} - ${r.guest.name}`;
+          outSelect.appendChild(opt2);
+        }
+      });
+      showCurrentFoodTotal();
+    }
+
+    function handleCheckIn() {
+      const name = document.getElementById('chkName').value.trim();
+      const phone = document.getElementById('chkPhone').value.trim();
+      const roomNum = document.getElementById('chkRoomSelect').value;
+      const advance = parseFloat(document.getElementById('chkAdvance').value) || 0;
+      const mode = document.getElementById('chkPaymentMode').value;
+
+      if (!name || !phone || !roomNum) {
+        alert("Please enter guest name, contact and room.");
+        return;
+      }
+
+      const room = rooms.find(r => r.number === roomNum);
+      room.status = 'occupied';
+      room.guest = { name, phone, checkInDate: new Date().toLocaleDateString() };
+      room.advance = advance;
+      room.paymentMode = mode;
+      room.foodCharges = 0;
+      room.foodItems = [];
+
+      document.getElementById('chkName').value = '';
+      document.getElementById('chkPhone').value = '';
+      document.getElementById('chkAdvance').value = '0';
+
+      alert(`Success: Room ${room.number} assigned to ${name} with Advance ₹${advance} (${mode}).`);
+      refreshDeskDropdowns();
+    }
+
+    function handleAddFoodBill() {
+      const roomNum = document.getElementById('foodRoomSelect').value;
+      const item = document.getElementById('foodItemName').value.trim();
+      const amount = parseFloat(document.getElementById('foodAmount').value);
+
+      if (!roomNum || !item || !amount || amount <= 0) {
+        alert("Please select room, write item description and valid amount.");
+        return;
+      }
+
+      const room = rooms.find(r => r.number === roomNum);
+      room.foodCharges += amount;
+      room.foodItems.push({ item, amount });
+
+      document.getElementById('foodItemName').value = '';
+      document.getElementById('foodAmount').value = '';
+
+      alert(`Added ₹${amount} for '${item}' to Room ${room.number}.`);
+      showCurrentFoodTotal();
+    }
+
+    function showCurrentFoodTotal() {
+      const roomNum = document.getElementById('foodRoomSelect').value;
+      const room = rooms.find(r => r.number === roomNum);
+      const summary = document.getElementById('roomFolioSummary');
+      if (room) {
+        summary.innerText = `Current Food & Services Bill on Room ${room.number}: ₹${room.foodCharges}`;
+      } else {
+        summary.innerText = '';
+      }
+    }
+
+    function handleCheckOut() {
+      const roomNum = document.getElementById('outRoomSelect').value;
+      const nights = parseInt(document.getElementById('outNights').value) || 1;
+      const settlementMode = document.getElementById('outPaymentMode').value;
+
+      if (!roomNum) {
+        alert("No occupied room selected.");
+        return;
+      }
+
+      const room = rooms.find(r => r.number === roomNum);
+      const roomTotal = room.rate * nights;
+      const subTotal = roomTotal + room.foodCharges;
+      const gst = subTotal * 0.12;
+      const grandTotal = subTotal + gst;
+      const balanceToPay = Math.max(0, grandTotal - room.advance);
+
+      // Populate Invoice
+      document.getElementById('invGuest').innerText = room.guest.name;
+      document.getElementById('invRoom').innerText = `${room.number} (${room.type})`;
+      document.getElementById('invNights').innerText = `${nights} Night(s)`;
+      document.getElementById('invRoomCharges').innerText = `₹${roomTotal} (₹${room.rate} x ${nights})`;
+      document.getElementById('invFoodCharges').innerText = `₹${room.foodCharges}`;
+      document.getElementById('invTax').innerText = `₹${gst.toFixed(2)}`;
+      document.getElementById('invGross').innerText = `₹${grandTotal.toFixed(2)}`;
+      document.getElementById('invAdvance').innerText = `- ₹${room.advance.toFixed(2)} (${room.paymentMode})`;
+      document.getElementById('invBalance').innerText = `₹${balanceToPay.toFixed(2)}`;
+      document.getElementById('invSettlementMode').innerText = settlementMode;
+
+      // Show Invoice Modal
+      document.getElementById('invoiceModal').classList.remove('hidden');
+
+      // Change status to DIRTY
+      room.status = 'dirty';
+      room.guest = null;
+      room.advance = 0;
+      room.foodCharges = 0;
+      room.foodItems = [];
+
+      refreshDeskDropdowns();
+    }
+
+    function exportToCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "Room Number,Floor,Room Type,Tariff,Status,Guest Name,Contact,Advance,Payment Mode,Food Bill\r\n";
+
+      rooms.forEach(r => {
+        const guestName = r.guest ? `"${r.guest.name}"` : "N/A";
+        const contact = r.guest ? `"${r.guest.phone}"` : "N/A";
+        const row = [
+          r.number,
+          `"${r.floorName}"`,
+          `"${r.type}"`,
+          r.rate,
+          r.status.toUpperCase(),
+          guestName,
+          contact,
+          r.advance,
+          r.paymentMode || "N/A",
+          r.foodCharges
+        ].join(",");
+        csvContent += row + "\r\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Niharika_Resort_Register_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function calculateEstimate() {
+      const rate = parseFloat(document.getElementById('estCategory').value);
+      const nights = parseInt(document.getElementById('estNights').value) || 1;
+      const sub = rate * nights;
+      const tot = sub + (sub * 0.12);
+      document.getElementById('estResult').innerText = `Estimated Total: ₹${tot.toLocaleString()} (incl. 12% GST)`;
+    }
+
+    renderMatrix();
   </script>
 </body>
 </html>
