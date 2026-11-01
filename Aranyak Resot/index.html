@@ -3,593 +3,620 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Niharika Resort & Enterprise PMS | Purulia</title>
+  <title>Niharika Resort & Retreat - Enterprise PMS</title>
   <style>
     :root {
-      --primary: #1b4332;
-      --secondary: #2d6a4f;
-      --accent: #d4a373;
-      --light: #f8f9fa;
-      --dark: #212529;
-      --vacant-clean: #2a9d8f;
-      --occupied: #e76f51;
-      --dirty: #e9c46a;
-      --cleaned: #457b9d;
+      --primary: #1e3a8a;
+      --secondary: #0d9488;
+      --vacant: #16a34a;
+      --occupied: #dc2626;
+      --dirty: #ca8a04;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f1f4f6; color: var(--dark); line-height: 1.5; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
     
-    /* Header & Navigation */
-    header { background: var(--primary); color: white; padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
-    header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
-    nav button { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 0.9rem; border-radius: 4px; font-weight: 600; cursor: pointer; margin-left: 0.4rem; transition: 0.2s; }
-    nav button:hover { background: var(--accent); color: #000; }
-    nav button.active-btn { background: var(--accent); color: #000; border-color: var(--accent); }
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .brand h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+    .brand p { font-size: 13px; color: #93c5fd; }
+    
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      padding: 15px 30px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #475569;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
 
-    .view-section { padding: 1.5rem; max-width: 1300px; margin: auto; }
-    .hidden { display: none !important; }
+    .container { max-width: 1300px; margin: 25px auto; padding: 0 20px; }
 
-    /* Guest View */
-    .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80') center/cover; color: white; text-align: center; padding: 4.5rem 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
-    .hero h2 { font-size: 2.2rem; margin-bottom: 0.5rem; }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-    .feature-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .feature-card img { width: 100%; height: 160px; object-fit: cover; }
-    .feature-card .content { padding: 1rem; }
-    .room-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-    .room-item { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .room-item img { width: 100%; height: 160px; object-fit: cover; }
-    .room-item .details { padding: 1rem; }
-    .calc-box { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    /* Summary Bar */
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .metric-card {
+      background: white;
+      padding: 18px;
+      border-radius: 8px;
+      border-left: 5px solid;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .metric-card h3 { font-size: 13px; color: #64748b; text-transform: uppercase; }
+    .metric-card p { font-size: 24px; font-weight: 700; margin-top: 5px; }
 
-    /* PMS View */
-    .pms-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    .stats-flex { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .stat-badge { padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: bold; font-size: 0.85rem; color: white; display: flex; align-items: center; gap: 0.4rem; }
-    .stat-vacant-clean { background: var(--vacant-clean); }
-    .stat-occupied { background: var(--occupied); }
-    .stat-dirty { background: var(--dirty); color: #000; }
-    .stat-cleaned { background: var(--cleaned); }
+    /* Action Buttons Bar */
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-excel-live { background: #16a34a; color: white; }
+    .btn-excel-history { background: #2563eb; color: white; }
+    .btn-clear-mem { background: #dc2626; color: white; }
 
-    .btn-export { background: #198754; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; }
-    .btn-export:hover { background: #157347; }
+    /* Grid Layout */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 12px;
+    }
+    .room-card {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      border-top: 4px solid;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s;
+    }
+    .room-card:hover { transform: translateY(-2px); }
+    .room-card.Cleaned, .room-card.Vacant { border-color: var(--vacant); }
+    .room-card.Occupied { border-color: var(--occupied); background: #fef2f2; }
+    .room-card.Dirty { border-color: var(--dirty); background: #fefce8; }
+    
+    .room-number { font-size: 16px; font-weight: 700; }
+    .room-type { font-size: 11px; color: #64748b; margin-bottom: 6px; }
+    .room-status {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: white;
+    }
+    .room-guest { font-size: 12px; font-weight: 600; color: #1e293b; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* Floor & 40 Room Matrix */
-    .floor-title { margin: 1.5rem 0 0.6rem 0; font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #ddd; padding-bottom: 0.3rem; }
-    .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 0.8rem; margin-bottom: 1.5rem; }
-    .room-card { background: white; border-radius: 6px; padding: 0.6rem 0.4rem; text-align: center; border-top: 5px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.06); cursor: pointer; transition: 0.15s; position: relative; }
-    .room-card:hover { transform: scale(1.03); }
-    .room-card.status-vacant-clean { border-top-color: var(--vacant-clean); }
-    .room-card.status-occupied { border-top-color: var(--occupied); }
-    .room-card.status-dirty { border-top-color: var(--dirty); }
-    .room-card.status-cleaned { border-top-color: var(--cleaned); }
-    .room-num { font-size: 1.1rem; font-weight: bold; }
-    .room-type-abbr { font-size: 0.7rem; color: #666; margin-bottom: 0.2rem; }
-    .status-tag { font-size: 0.65rem; font-weight: bold; padding: 0.1rem 0.3rem; border-radius: 4px; color: white; display: inline-block; }
-    .tag-vacant-clean { background: var(--vacant-clean); }
-    .tag-occupied { background: var(--occupied); }
-    .tag-dirty { background: var(--dirty); color: #000; }
-    .tag-cleaned { background: var(--cleaned); }
-    .room-guest-name { font-size: 0.75rem; font-weight: 600; margin-top: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #111; }
+    /* Forms */
+    .form-section {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+    }
+    .form-section h2 { font-size: 18px; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    
+    /* Invoice Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 550px;
+      width: 90%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .invoice-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .invoice-table td { padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .invoice-total { font-size: 16px; font-weight: 700; color: var(--primary); border-top: 2px solid #e2e8f0; }
 
-    /* PMS Work Panels */
-    .pms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
-    .box-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .box-card h3 { color: var(--primary); margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; font-size: 1.15rem; }
-    .form-group { margin-bottom: 0.9rem; }
-    .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.2rem; }
-    .form-group input, .form-group select { width: 100%; padding: 0.55rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-    .btn-action { width: 100%; padding: 0.7rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 0.95rem; margin-top: 0.5rem; }
-
-    /* Modal / Popups */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-    .modal-content { background: white; padding: 1.5rem; border-radius: 8px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-    .invoice-card { width: 500px; }
-    .invoice-header { text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 1rem; margin-bottom: 1rem; }
-    .inv-row { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.9rem; }
-    .inv-total { font-size: 1.1rem; font-weight: bold; border-top: 2px solid #222; padding-top: 0.5rem; margin-top: 0.8rem; }
-    .inv-btn-group { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+    @media print {
+      body * { visibility: hidden; }
+      .modal-box, .modal-box * { visibility: visible; }
+      .modal-box { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🌸 Niharika Resort & Retreat</h1>
-    <nav>
-      <button id="btnGuest" class="active-btn" onclick="showView('guest')">Resort View</button>
-      <button id="btnMatrix" onclick="showView('matrix')">40-Room Matrix & Housekeeping</button>
-      <button id="btnDesk" onclick="showView('desk')">Front Desk Operations</button>
-    </nav>
+    <div class="brand">
+      <h1>Niharika Resort & Retreat</h1>
+      <p>Enterprise PMS & Front-Office System (40-Room Property)</p>
+    </div>
+    <div style="font-size: 13px; text-align: right;">
+      <span>Status: <strong>Online (GitHub Live)</strong></span><br>
+      <small id="clock-display"></small>
+    </div>
   </header>
 
-  <!-- 1. GUEST LANDING VIEW -->
-  <main id="guestView" class="view-section">
-    <div class="hero">
-      <h2>Serenity Amidst Purulia Hills</h2>
-      <p>Luxury Cottages, Authentic Bengali Cuisine & Tribal Hospitality at Ayodhya Foothills.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Pool">
-        <div class="content"><h3>Natural Swimming Pool</h3><p>Stone deck pool surrounded by green Sal forest foliage.</p></div>
-      </div>
-      <div class="feature-card">
-        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Dining">
-        <div class="content"><h3>'Bonbhojon' Dining</h3><p>Local Purulia delicacies, authentic thalis and multicuisine meals.</p></div>
-      </div>
-      <div class="feature-card">
-        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Banquet">
-        <div class="content"><h3>Open-Air Banquet Lawn</h3><p>Ideal venue for evening folk dances, bonfires, and celebrations.</p></div>
-      </div>
-    </div>
-    <div class="calc-box">
-      <h3 style="margin-bottom: 0.8rem; color: var(--primary);">Estimated Stay Tariff</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Select Room Category</label>
-          <select id="estCategory">
-            <option value="1800">Standard Nature (₹1,800/night)</option>
-            <option value="2500">Deluxe Hill View Cottage (₹2,500/night)</option>
-            <option value="3800">Executive Luxury Suite (₹3,800/night)</option>
-            <option value="5500">Premium Family Villa (₹5,500/night)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Nights</label>
-          <input type="number" id="estNights" value="1" min="1">
-        </div>
-      </div>
-      <button class="btn-action" style="background: var(--secondary);" onclick="calculateEstimate()">Calculate Estimated Cost</button>
-      <h4 id="estResult" style="margin-top: 0.8rem; color: var(--secondary);"></h4>
-    </div>
-  </main>
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('matrix-view')">40-Room Matrix & Housekeeping</button>
+    <button class="tab-btn" onclick="switchTab('operations-view')">Front Desk Operations & Billing</button>
+  </nav>
 
-  <!-- 2. ROOM MATRIX & HOUSEKEEPING VIEW -->
-  <main id="matrixView" class="view-section hidden">
-    <div class="pms-toolbar">
-      <div class="stats-flex">
-        <div class="stat-badge stat-vacant-clean">🟢 Vacant Clean: <span id="countVacantClean">0</span></div>
-        <div class="stat-badge stat-occupied">🔴 Occupied: <span id="countOccupied">0</span></div>
-        <div class="stat-badge stat-dirty">🟡 Dirty: <span id="countDirty">0</span></div>
-        <div class="stat-badge stat-cleaned">🔵 Cleaned: <span id="countCleaned">0</span></div>
+  <div class="container">
+
+    <!-- KPI Summary Bar -->
+    <div class="dashboard-metrics">
+      <div class="metric-card" style="border-color: #16a34a;">
+        <h3>Vacant / Cleaned</h3>
+        <p id="counter-cleaned" style="color: #16a34a;">40</p>
       </div>
-      <button class="btn-export" onclick="exportToCSV()">📊 Export Register to Excel (CSV)</button>
+      <div class="metric-card" style="border-color: #dc2626;">
+        <h3>Occupied</h3>
+        <p id="counter-occupied" style="color: #dc2626;">0</p>
+      </div>
+      <div class="metric-card" style="border-color: #ca8a04;">
+        <h3>Dirty / Cleaning Req.</h3>
+        <p id="counter-dirty" style="color: #ca8a04;">0</p>
+      </div>
+      <div class="metric-card" style="border-color: #2563eb;">
+        <h3>Check-Out Records</h3>
+        <p id="counter-history" style="color: #2563eb;">0</p>
+      </div>
     </div>
 
-    <div id="floorsContainer"></div>
-  </main>
-
-  <!-- 3. FRONT DESK OPERATIONS VIEW -->
-  <main id="deskView" class="view-section hidden">
-    <div class="pms-grid">
-      <!-- Check-In -->
-      <div class="box-card">
-        <h3>Guest Check-In</h3>
-        <div class="form-group">
-          <label>Guest Full Name</label>
-          <input type="text" id="chkName" placeholder="e.g. Subir Sen">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Mobile Number</label>
-            <input type="tel" id="chkPhone" placeholder="10-digit number">
-          </div>
-          <div class="form-group">
-            <label>Assign Ready Room</label>
-            <select id="chkRoomSelect"></select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Advance Payment (₹)</label>
-            <input type="number" id="chkAdvance" value="0" min="0">
-          </div>
-          <div class="form-group">
-            <label>Payment Method</label>
-            <select id="chkPaymentMode">
-              <option value="UPI">UPI / GPay</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Debit/Credit Card</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-action" style="background: var(--vacant-clean);" onclick="handleCheckIn()">Check-In Guest</button>
+    <!-- TAB 1: ROOM MATRIX -->
+    <div id="matrix-view">
+      <div class="action-bar">
+        <button class="btn btn-excel-live" onclick="exportRoomRegisterCSV()">
+          📊 Export Active Room Register (CSV)
+        </button>
+        <button class="btn btn-excel-history" onclick="exportCheckoutHistoryCSV()">
+          📑 Export Check-Out & Billing History (CSV)
+        </button>
+        <button class="btn btn-clear-mem" onclick="resetSystemMemory()">
+          🔄 Reset PMS Memory
+        </button>
       </div>
 
-      <!-- Food / Room Service Billing -->
-      <div class="box-card">
-        <h3>Room Service & Food Billing</h3>
-        <div class="form-group">
-          <label>Select Occupied Room</label>
-          <select id="foodRoomSelect" onchange="showCurrentFoodTotal()"></select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Item / Service Description</label>
-            <input type="text" id="foodItemName" placeholder="e.g. 2 Bengali Thalis + Tea">
-          </div>
-          <div class="form-group">
-            <label>Amount (₹)</label>
-            <input type="number" id="foodAmount" placeholder="₹ Amount">
-          </div>
-        </div>
-        <button class="btn-action" style="background: #2b7a78;" onclick="handleAddFoodBill()">Add to Room Folio</button>
-        <p id="roomFolioSummary" style="font-size: 0.85rem; color: #444; margin-top: 0.6rem;"></p>
-      </div>
-
-      <!-- Express Checkout -->
-      <div class="box-card">
-        <h3>Express Check-Out & Final Billing</h3>
-        <div class="form-group">
-          <label>Select Occupied Room</label>
-          <select id="outRoomSelect"></select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Stay Duration (Nights)</label>
-            <input type="number" id="outNights" value="1" min="1">
-          </div>
-          <div class="form-group">
-            <label>Settlement Mode</label>
-            <select id="outPaymentMode">
-              <option value="UPI">UPI / QR Code</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-action" style="background: var(--occupied);" onclick="handleCheckOut()">Generate Invoice & Check-Out</button>
-      </div>
+      <div class="room-grid" id="rooms-container"></div>
     </div>
-  </main>
 
-  <!-- QUICK ROOM STATUS MODAL -->
-  <div id="roomModal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <h3 id="modalRoomTitle" style="margin-bottom: 0.8rem; color: var(--primary);"></h3>
-      <p id="modalRoomDetails" style="font-size: 0.9rem; margin-bottom: 1rem; color: #555;"></p>
+    <!-- TAB 2: FRONT DESK OPERATIONS -->
+    <div id="operations-view" style="display: none;">
       
-      <div class="form-group">
-        <label>Update Housekeeping Status:</label>
-        <select id="modalStatusSelect">
-          <option value="vacant-clean">Vacant Clean (Ready for Guest)</option>
-          <option value="dirty">Dirty / Needs Cleaning</option>
-          <option value="cleaned">Cleaned / Inspected</option>
-        </select>
+      <!-- CHECK-IN SECTION -->
+      <div class="form-section">
+        <h2>1. Guest Check-In & Advance</h2>
+        <form id="checkin-form" onsubmit="handleCheckIn(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Select Clean Room</label>
+              <select id="checkin-room" required></select>
+            </div>
+            <div class="form-group">
+              <label>Guest Full Name</label>
+              <input type="text" id="checkin-name" placeholder="e.g. Rahul Sen" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="checkin-phone" placeholder="e.g. 9876543210" required>
+            </div>
+            <div class="form-group">
+              <label>Advance Payment (₹)</label>
+              <input type="number" id="checkin-advance" value="1000" min="0" required>
+            </div>
+          </div>
+          <button type="submit" class="btn" style="background: var(--primary); color: white; margin-top: 15px;">
+            Check-In Guest & Lock Room
+          </button>
+        </form>
       </div>
-      <div style="display: flex; gap: 0.6rem; margin-top: 1.2rem;">
-        <button class="btn-action" style="background: var(--secondary);" onclick="saveRoomStatus()">Save Status</button>
-        <button class="btn-action" style="background: #6c757d;" onclick="closeModal('roomModal')">Close</button>
+
+      <!-- FOOD & ROOM SERVICE BILLING -->
+      <div class="form-section">
+        <h2>2. Room Service & Food Billing</h2>
+        <form id="food-form" onsubmit="handleAddFoodBill(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Occupied Room</label>
+              <select id="food-room" required></select>
+            </div>
+            <div class="form-group">
+              <label>Item / Service Description</label>
+              <input type="text" id="food-desc" placeholder="e.g. 2 Bengali Thalis + Coffee" required>
+            </div>
+            <div class="form-group">
+              <label>Amount (₹)</label>
+              <input type="number" id="food-amount" placeholder="500" min="1" required>
+            </div>
+          </div>
+          <button type="submit" class="btn" style="background: var(--secondary); color: white; margin-top: 15px;">
+            Add to Room Folio
+          </button>
+        </form>
       </div>
+
+      <!-- CHECK-OUT & SETTLEMENT -->
+      <div class="form-section">
+        <h2>3. Express Check-Out & GST Invoice Settlement</h2>
+        <form id="checkout-form" onsubmit="handleCheckOut(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Select Room to Check-Out</label>
+              <select id="checkout-room" required></select>
+            </div>
+            <div class="form-group">
+              <label>Stay Duration (Days)</label>
+              <input type="number" id="checkout-days" value="1" min="1" required>
+            </div>
+            <div class="form-group">
+              <label>Settlement Mode</label>
+              <select id="checkout-payment-mode">
+                <option value="UPI / Online">UPI / QR Code</option>
+                <option value="Cash">Cash at Counter</option>
+                <option value="Card">Debit / Credit Card</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn" style="background: var(--occupied); color: white; margin-top: 15px;">
+            Generate Final Invoice & Check-Out
+          </button>
+        </form>
+      </div>
+
     </div>
+
   </div>
 
-  <!-- INVOICE MODAL -->
-  <div id="invoiceModal" class="modal-overlay hidden">
-    <div class="modal-content invoice-card" id="printableArea">
-      <div class="invoice-header">
-        <h2>NIHARIKA RESORT & RETREAT</h2>
-        <p>Near Sirkabad / Ayodhya Foothills, Purulia, West Bengal</p>
-        <p style="font-size: 0.8rem; color: #555;">GSTIN: 19ABCDE1234F1Z5 | Tax Invoice</p>
+  <!-- INVOICE MODAL POPUP -->
+  <div class="modal-overlay" id="invoice-modal">
+    <div class="modal-box">
+      <div style="text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+        <h2 style="color: var(--primary);">Niharika Resort & Retreat</h2>
+        <p style="font-size: 12px; color: #64748b;">Tax Invoice & Guest Settlement Receipt</p>
       </div>
-      <div class="inv-row"><span>Guest Name:</span><strong id="invGuest"></strong></div>
-      <div class="inv-row"><span>Room Assigned:</span><strong id="invRoom"></strong></div>
-      <div class="inv-row"><span>Duration:</span><span id="invNights"></span></div>
-      <div class="inv-row"><span>Room Tariff:</span><span id="invRoomCharges"></span></div>
-      <div class="inv-row"><span>Food & Room Service:</span><span id="invFoodCharges"></span></div>
-      <div class="inv-row"><span>GST (12%):</span><span id="invTax"></span></div>
-      <div class="inv-row"><span>Gross Total:</span><span id="invGross"></span></div>
-      <div class="inv-row" style="color: #2a9d8f;"><span>Less Advance Paid:</span><span id="invAdvance"></span></div>
-      <div class="inv-row inv-total"><span>Balance Paid (<span id="invSettlementMode"></span>):</span><span id="invBalance"></span></div>
-      
-      <div class="inv-btn-group">
-        <button class="btn-action" style="background: var(--primary);" onclick="window.print()">Print Invoice</button>
-        <button class="btn-action" style="background: #6c757d;" onclick="closeModal('invoiceModal')">Done</button>
+      <div id="invoice-content" style="margin-top: 15px;"></div>
+      <div class="no-print" style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn" style="background: var(--primary); color: white; flex: 1;" onclick="window.print()">Print / Save PDF</button>
+        <button class="btn" style="background: #64748b; color: white;" onclick="closeModal()">Close</button>
       </div>
     </div>
   </div>
 
   <script>
-    // 1. Generate 40 Room Inventory
-    const floorsData = [
-      { name: "Ground Floor (Garden Facing)", prefix: "1", type: "Standard Nature Room", rate: 1800, count: 10 },
-      { name: "First Floor (Hill View Cottages)", prefix: "2", type: "Deluxe Hill View Cottage", rate: 2500, count: 10 },
-      { name: "Second Floor (Luxury Suites)", prefix: "3", type: "Executive Luxury Suite", rate: 3800, count: 10 },
-      { name: "Top Floor & Hill Villas", prefix: "4", type: "Premium Family Villa", rate: 5500, count: 10 }
-    ];
-
-    let rooms = [];
-    floorsData.forEach(fl => {
-      for (let i = 1; i <= fl.count; i++) {
-        const num = `${fl.prefix}${i < 10 ? '0' + i : i}`;
-        rooms.push({
-          number: num,
-          floorName: fl.name,
-          type: fl.type,
-          rate: fl.rate,
-          status: 'vacant-clean',
-          guest: null,
-          advance: 0,
-          paymentMode: '',
-          foodCharges: 0,
-          foodItems: []
+    // --- 1. PERSISTENT STORAGE & INITIAL STATE ---
+    const TOTAL_ROOMS = 40;
+    
+    function initDefaultRooms() {
+      const arr = [];
+      for (let i = 1; i <= TOTAL_ROOMS; i++) {
+        let floor = i <= 10 ? "Ground Floor" : i <= 20 ? "First Floor" : i <= 30 ? "Second Floor" : "Villa Suite";
+        let type = i <= 20 ? "Deluxe AC" : i <= 30 ? "Super Deluxe" : "Luxury Villa";
+        let tariff = i <= 20 ? 2500 : i <= 30 ? 3500 : 5500;
+        arr.push({
+          number: 100 + i,
+          floor: floor,
+          type: type,
+          tariff: tariff,
+          status: "Cleaned", // Cleaned by default
+          guest: null
         });
       }
-    });
-
-    let selectedRoomForModal = null;
-
-    function showView(viewId) {
-      ['guest', 'matrix', 'desk'].forEach(v => {
-        document.getElementById(v + 'View').classList.add('hidden');
-        document.getElementById('btn' + v.charAt(0).toUpperCase() + v.slice(1)).classList.remove('active-btn');
-      });
-      document.getElementById(viewId + 'View').classList.remove('hidden');
-      document.getElementById('btn' + viewId.charAt(0).toUpperCase() + viewId.slice(1)).classList.add('active-btn');
-
-      if (viewId === 'matrix') renderMatrix();
-      if (viewId === 'desk') refreshDeskDropdowns();
+      return arr;
     }
 
-    function renderMatrix() {
-      const container = document.getElementById('floorsContainer');
+    let rooms = JSON.parse(localStorage.getItem('niharika_rooms')) || initDefaultRooms();
+    let checkoutHistory = JSON.parse(localStorage.getItem('niharika_history')) || [];
+
+    function saveState() {
+      localStorage.setItem('niharika_rooms', JSON.stringify(rooms));
+      localStorage.setItem('niharika_history', JSON.stringify(checkoutHistory));
+      renderRooms();
+      updateDropdowns();
+      updateCounters();
+    }
+
+    // --- 2. CLOCK & NAVIGATION ---
+    setInterval(() => {
+      document.getElementById('clock-display').innerText = new Date().toLocaleString('en-IN');
+    }, 1000);
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if(tabId === 'matrix-view') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('matrix-view').style.display = 'block';
+        document.getElementById('operations-view').style.display = 'none';
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('matrix-view').style.display = 'none';
+        document.getElementById('operations-view').style.display = 'block';
+      }
+    }
+
+    // --- 3. COUNTERS (FIXED: Cleaned & Vacant accurately counted) ---
+    function updateCounters() {
+      // Fixes the zero cleaned issue
+      const cleanedCount = rooms.filter(r => r.status === 'Cleaned' || r.status === 'Vacant').length;
+      const occupiedCount = rooms.filter(r => r.status === 'Occupied').length;
+      const dirtyCount = rooms.filter(r => r.status === 'Dirty').length;
+
+      document.getElementById('counter-cleaned').innerText = cleanedCount;
+      document.getElementById('counter-occupied').innerText = occupiedCount;
+      document.getElementById('counter-dirty').innerText = dirtyCount;
+      document.getElementById('counter-history').innerText = checkoutHistory.length;
+    }
+
+    // --- 4. RENDER ROOM MATRIX ---
+    function renderRooms() {
+      const container = document.getElementById('rooms-container');
       container.innerHTML = '';
 
-      let countVC = 0, countOcc = 0, countDirt = 0, countCln = 0;
+      rooms.forEach(room => {
+        const card = document.createElement('div');
+        card.className = `room-card ${room.status}`;
+        card.onclick = () => toggleRoomStatus(room.number);
 
-      floorsData.forEach(fl => {
-        const floorRooms = rooms.filter(r => r.floorName === fl.name);
-        const section = document.createElement('div');
-        section.innerHTML = `<h3 class="floor-title">${fl.name} — ₹${fl.rate}/night</h3>`;
-        
-        const grid = document.createElement('div');
-        grid.className = 'room-grid';
+        const badgeColor = room.status === 'Occupied' ? '#dc2626' : room.status === 'Dirty' ? '#ca8a04' : '#16a34a';
 
-        floorRooms.forEach(r => {
-          if (r.status === 'vacant-clean') countVC++;
-          else if (r.status === 'occupied') countOcc++;
-          else if (r.status === 'dirty') countDirt++;
-          else if (r.status === 'cleaned') countCln++;
-
-          const card = document.createElement('div');
-          card.className = `room-card status-${r.status}`;
-          card.onclick = () => openRoomModal(r.number);
-
-          let statusLabel = r.status.toUpperCase();
-          if (r.status === 'vacant-clean') statusLabel = 'VACANT';
-
-          card.innerHTML = `
-            <div class="room-num">${r.number}</div>
-            <div class="room-type-abbr">${r.type.split(' ')[0]}</div>
-            <span class="status-tag tag-${r.status}">${statusLabel}</span>
-            ${r.guest ? `<div class="room-guest-name">${r.guest.name}</div>` : ''}
-          `;
-          grid.appendChild(card);
-        });
-
-        section.appendChild(grid);
-        container.appendChild(section);
-      });
-
-      document.getElementById('countVacantClean').innerText = countVC;
-      document.getElementById('countOccupied').innerText = countOcc;
-      document.getElementById('countDirty').innerText = countDirt;
-      document.getElementById('countCleaned').innerText = countCln;
-    }
-
-    function openRoomModal(roomNum) {
-      selectedRoomForModal = rooms.find(r => r.number === roomNum);
-      const m = selectedRoomForModal;
-      document.getElementById('modalRoomTitle').innerText = `Room ${m.number} (${m.type})`;
-      document.getElementById('modalRoomDetails').innerHTML = `
-        <strong>Floor:</strong> ${m.floorName}<br>
-        <strong>Rate:</strong> ₹${m.rate}/night<br>
-        <strong>Current Status:</strong> ${m.status.toUpperCase()}<br>
-        ${m.guest ? `<strong>Guest:</strong> ${m.guest.name} (${m.guest.phone})<br><strong>Advance:</strong> ₹${m.advance}` : ''}
-      `;
-
-      const select = document.getElementById('modalStatusSelect');
-      if (m.status === 'occupied') {
-        select.innerHTML = `<option value="occupied">Occupied (Checkout via Front Desk)</option>`;
-        select.disabled = true;
-      } else {
-        select.disabled = false;
-        select.innerHTML = `
-          <option value="vacant-clean" ${m.status === 'vacant-clean' ? 'selected' : ''}>Vacant Clean (Ready)</option>
-          <option value="dirty" ${m.status === 'dirty' ? 'selected' : ''}>Dirty / Needs Cleaning</option>
-          <option value="cleaned" ${m.status === 'cleaned' ? 'selected' : ''}>Cleaned / Inspected</option>
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="room-number">${room.number}</span>
+            <span class="room-status" style="background:${badgeColor}">${room.status}</span>
+          </div>
+          <div class="room-type">${room.type} (₹${room.tariff})</div>
+          <div class="room-guest">${room.guest ? '👤 ' + room.guest.name : room.floor}</div>
         `;
-      }
-      document.getElementById('roomModal').classList.remove('hidden');
+        container.appendChild(card);
+      });
     }
 
-    function saveRoomStatus() {
-      if (!selectedRoomForModal || selectedRoomForModal.status === 'occupied') {
-        closeModal('roomModal');
+    function toggleRoomStatus(roomNum) {
+      const room = rooms.find(r => r.number === roomNum);
+      if (room.status === 'Occupied') {
+        alert("Occupied room cannot be changed manually. Use Express Check-Out.");
         return;
       }
-      selectedRoomForModal.status = document.getElementById('modalStatusSelect').value;
-      closeModal('roomModal');
-      renderMatrix();
+      room.status = (room.status === 'Cleaned' || room.status === 'Vacant') ? 'Dirty' : 'Cleaned';
+      saveState();
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
+    // --- 5. DROPDOWNS POPULATION ---
+    function updateDropdowns() {
+      const checkinSelect = document.getElementById('checkin-room');
+      const foodSelect = document.getElementById('food-room');
+      const checkoutSelect = document.getElementById('checkout-room');
 
-    function refreshDeskDropdowns() {
-      const chkSelect = document.getElementById('chkRoomSelect');
-      const foodSelect = document.getElementById('foodRoomSelect');
-      const outSelect = document.getElementById('outRoomSelect');
-
-      chkSelect.innerHTML = '';
-      foodSelect.innerHTML = '';
-      outSelect.innerHTML = '';
+      checkinSelect.innerHTML = '<option value="">-- Choose Ready Room --</option>';
+      foodSelect.innerHTML = '<option value="">-- Choose Occupied Room --</option>';
+      checkoutSelect.innerHTML = '<option value="">-- Choose Occupied Room --</option>';
 
       rooms.forEach(r => {
-        if (r.status === 'vacant-clean' || r.status === 'cleaned') {
-          const opt = document.createElement('option');
-          opt.value = r.number;
-          opt.innerText = `Room ${r.number} - ${r.type} (₹${r.rate})`;
-          chkSelect.appendChild(opt);
-        } else if (r.status === 'occupied') {
-          const opt1 = document.createElement('option');
-          opt1.value = r.number;
-          opt1.innerText = `Room ${r.number} - ${r.guest.name}`;
-          foodSelect.appendChild(opt1);
-
-          const opt2 = document.createElement('option');
-          opt2.value = r.number;
-          opt2.innerText = `Room ${r.number} - ${r.guest.name}`;
-          outSelect.appendChild(opt2);
+        if (r.status === 'Cleaned' || r.status === 'Vacant') {
+          checkinSelect.innerHTML += `<option value="${r.number}">Room ${r.number} (${r.type} - ₹${r.tariff})</option>`;
+        } else if (r.status === 'Occupied') {
+          const opt = `<option value="${r.number}">Room ${r.number} - ${r.guest.name}</option>`;
+          foodSelect.innerHTML += opt;
+          checkoutSelect.innerHTML += opt;
         }
       });
-      showCurrentFoodTotal();
     }
 
-    function handleCheckIn() {
-      const name = document.getElementById('chkName').value.trim();
-      const phone = document.getElementById('chkPhone').value.trim();
-      const roomNum = document.getElementById('chkRoomSelect').value;
-      const advance = parseFloat(document.getElementById('chkAdvance').value) || 0;
-      const mode = document.getElementById('chkPaymentMode').value;
+    // --- 6. CHECK-IN LOGIC ---
+    function handleCheckIn(e) {
+      e.preventDefault();
+      const rNum = parseInt(document.getElementById('checkin-room').value);
+      const name = document.getElementById('checkin-name').value.trim();
+      const phone = document.getElementById('checkin-phone').value.trim();
+      const adv = parseFloat(document.getElementById('checkin-advance').value) || 0;
 
-      if (!name || !phone || !roomNum) {
-        alert("Please enter guest name, contact and room.");
-        return;
-      }
+      const room = rooms.find(r => r.number === rNum);
+      if (!room) return;
 
-      const room = rooms.find(r => r.number === roomNum);
-      room.status = 'occupied';
-      room.guest = { name, phone, checkInDate: new Date().toLocaleDateString() };
-      room.advance = advance;
-      room.paymentMode = mode;
-      room.foodCharges = 0;
-      room.foodItems = [];
+      room.status = 'Occupied';
+      room.guest = {
+        name: name,
+        phone: phone,
+        advance: adv,
+        checkinDate: new Date().toLocaleDateString('en-IN'),
+        foodBills: []
+      };
 
-      document.getElementById('chkName').value = '';
-      document.getElementById('chkPhone').value = '';
-      document.getElementById('chkAdvance').value = '0';
-
-      alert(`Success: Room ${room.number} assigned to ${name} with Advance ₹${advance} (${mode}).`);
-      refreshDeskDropdowns();
+      saveState();
+      alert(`Success: Room ${rNum} Checked-In for ${name}`);
+      document.getElementById('checkin-form').reset();
+      switchTab('matrix-view');
     }
 
-    function handleAddFoodBill() {
-      const roomNum = document.getElementById('foodRoomSelect').value;
-      const item = document.getElementById('foodItemName').value.trim();
-      const amount = parseFloat(document.getElementById('foodAmount').value);
+    // --- 7. FOOD BILLING LOGIC ---
+    function handleAddFoodBill(e) {
+      e.preventDefault();
+      const rNum = parseInt(document.getElementById('food-room').value);
+      const desc = document.getElementById('food-desc').value.trim();
+      const amt = parseFloat(document.getElementById('food-amount').value) || 0;
 
-      if (!roomNum || !item || !amount || amount <= 0) {
-        alert("Please select room, write item description and valid amount.");
-        return;
-      }
+      const room = rooms.find(r => r.number === rNum);
+      if (!room || !room.guest) return;
 
-      const room = rooms.find(r => r.number === roomNum);
-      room.foodCharges += amount;
-      room.foodItems.push({ item, amount });
-
-      document.getElementById('foodItemName').value = '';
-      document.getElementById('foodAmount').value = '';
-
-      alert(`Added ₹${amount} for '${item}' to Room ${room.number}.`);
-      showCurrentFoodTotal();
+      room.guest.foodBills.push({ desc: desc, amount: amt });
+      saveState();
+      alert(`₹${amt} added to Room ${rNum} for ${desc}`);
+      document.getElementById('food-form').reset();
     }
 
-    function showCurrentFoodTotal() {
-      const roomNum = document.getElementById('foodRoomSelect').value;
-      const room = rooms.find(r => r.number === roomNum);
-      const summary = document.getElementById('roomFolioSummary');
-      if (room) {
-        summary.innerText = `Current Food & Services Bill on Room ${room.number}: ₹${room.foodCharges}`;
-      } else {
-        summary.innerText = '';
-      }
-    }
+    // --- 8. CHECK-OUT & INVOICE GENERATION ---
+    function handleCheckOut(e) {
+      e.preventDefault();
+      const rNum = parseInt(document.getElementById('checkout-room').value);
+      const days = parseInt(document.getElementById('checkout-days').value) || 1;
+      const mode = document.getElementById('checkout-payment-mode').value;
 
-    function handleCheckOut() {
-      const roomNum = document.getElementById('outRoomSelect').value;
-      const nights = parseInt(document.getElementById('outNights').value) || 1;
-      const settlementMode = document.getElementById('outPaymentMode').value;
+      const room = rooms.find(r => r.number === rNum);
+      if (!room || !room.guest) return;
 
-      if (!roomNum) {
-        alert("No occupied room selected.");
-        return;
-      }
+      const g = room.guest;
+      const roomCharges = room.tariff * days;
+      const foodTotal = g.foodBills.reduce((sum, item) => sum + item.amount, 0);
+      const subTotal = roomCharges + foodTotal;
+      const gstAmount = Math.round(subTotal * 0.12);
+      const grandTotal = subTotal + gstAmount;
+      const balanceToPay = grandTotal - g.advance;
 
-      const room = rooms.find(r => r.number === roomNum);
-      const roomTotal = room.rate * nights;
-      const subTotal = roomTotal + room.foodCharges;
-      const gst = subTotal * 0.12;
-      const grandTotal = subTotal + gst;
-      const balanceToPay = Math.max(0, grandTotal - room.advance);
-
-      // Populate Invoice
-      document.getElementById('invGuest').innerText = room.guest.name;
-      document.getElementById('invRoom').innerText = `${room.number} (${room.type})`;
-      document.getElementById('invNights').innerText = `${nights} Night(s)`;
-      document.getElementById('invRoomCharges').innerText = `₹${roomTotal} (₹${room.rate} x ${nights})`;
-      document.getElementById('invFoodCharges').innerText = `₹${room.foodCharges}`;
-      document.getElementById('invTax').innerText = `₹${gst.toFixed(2)}`;
-      document.getElementById('invGross').innerText = `₹${grandTotal.toFixed(2)}`;
-      document.getElementById('invAdvance').innerText = `- ₹${room.advance.toFixed(2)} (${room.paymentMode})`;
-      document.getElementById('invBalance').innerText = `₹${balanceToPay.toFixed(2)}`;
-      document.getElementById('invSettlementMode').innerText = settlementMode;
-
-      // Show Invoice Modal
-      document.getElementById('invoiceModal').classList.remove('hidden');
-
-      // Change status to DIRTY
-      room.status = 'dirty';
-      room.guest = null;
-      room.advance = 0;
-      room.foodCharges = 0;
-      room.foodItems = [];
-
-      refreshDeskDropdowns();
-    }
-
-    function exportToCSV() {
-      let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "Room Number,Floor,Room Type,Tariff,Status,Guest Name,Contact,Advance,Payment Mode,Food Bill\r\n";
-
-      rooms.forEach(r => {
-        const guestName = r.guest ? `"${r.guest.name}"` : "N/A";
-        const contact = r.guest ? `"${r.guest.phone}"` : "N/A";
-        const row = [
-          r.number,
-          `"${r.floorName}"`,
-          `"${r.type}"`,
-          r.rate,
-          r.status.toUpperCase(),
-          guestName,
-          contact,
-          r.advance,
-          r.paymentMode || "N/A",
-          r.foodCharges
-        ].join(",");
-        csvContent += row + "\r\n";
+      // 1. Record to Check-Out History
+      checkoutHistory.push({
+        date: new Date().toLocaleDateString('en-IN'),
+        roomNumber: room.number,
+        guestName: g.name,
+        contact: g.phone,
+        stayDays: days,
+        roomTotal: roomCharges,
+        foodTotal: foodTotal,
+        gst: gstAmount,
+        grandTotal: grandTotal,
+        advancePaid: g.advance,
+        netSettled: balanceToPay,
+        paymentMode: mode
       });
 
-      const encodedUri = encodeURI(csvContent);
+      // 2. Render Modal Invoice
+      document.getElementById('invoice-content').innerHTML = `
+        <table class="invoice-table">
+          <tr><td><strong>Guest Name:</strong> ${g.name}</td><td><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</td></tr>
+          <tr><td><strong>Room No:</strong> ${room.number} (${room.type})</td><td><strong>Duration:</strong> ${days} Day(s)</td></tr>
+          <tr><td>Room Tariff (₹${room.tariff} × ${days})</td><td style="text-align:right;">₹${roomCharges}</td></tr>
+          <tr><td>Food & Beverage Charges</td><td style="text-align:right;">₹${foodTotal}</td></tr>
+          <tr><td>GST (12%)</td><td style="text-align:right;">₹${gstAmount}</td></tr>
+          <tr class="invoice-total"><td>Total Invoice Amount</td><td style="text-align:right;">₹${grandTotal}</td></tr>
+          <tr><td>Less: Advance Paid</td><td style="text-align:right;">- ₹${g.advance}</td></tr>
+          <tr style="font-size:15px; font-weight:700; color:#dc2626;">
+            <td>Net Payable (Settled via ${mode})</td>
+            <td style="text-align:right;">₹${balanceToPay}</td>
+          </tr>
+        </table>
+      `;
+      document.getElementById('invoice-modal').style.display = 'flex';
+
+      // 3. Mark Room as Dirty (Housekeeping Required) and clear guest
+      room.status = 'Dirty';
+      room.guest = null;
+
+      saveState();
+      document.getElementById('checkout-form').reset();
+    }
+
+    function closeModal() {
+      document.getElementById('invoice-modal').style.display = 'none';
+      switchTab('matrix-view');
+    }
+
+    // --- 9. EXCEL EXPORTS (TWO DEDICATED CSV EXPORTS) ---
+
+    // A. Export Live Occupancy Register
+    function exportRoomRegisterCSV() {
+      let csv = "Room Number,Floor,Room Type,Tariff (INR),Status,Current Guest Name,Phone,Advance Paid,Food Bills Total\n";
+      rooms.forEach(r => {
+        let gName = r.guest ? r.guest.name : "";
+        let gPhone = r.guest ? r.guest.phone : "";
+        let gAdv = r.guest ? r.guest.advance : 0;
+        let gFood = r.guest ? r.guest.foodBills.reduce((a, b) => a + b.amount, 0) : 0;
+        csv += `"${r.number}","${r.floor}","${r.type}","${r.tariff}","${r.status}","${gName}","${gPhone}","${gAdv}","${gFood}"\n`;
+      });
+      downloadCSVFile(csv, `live_room_register_${new Date().toISOString().slice(0,10)}.csv`);
+    }
+
+    // B. Export Historical Check-Out & Billing Register
+    function exportCheckoutHistoryCSV() {
+      if (checkoutHistory.length === 0) {
+        alert("Check-Out History is empty! Perform at least one check-out first.");
+        return;
+      }
+      let csv = "Date,Room Number,Guest Name,Phone,Days Stayed,Room Charges (INR),Food Charges (INR),GST 12% (INR),Grand Total (INR),Advance Deducted (INR),Net Amount Paid (INR),Settlement Mode\n";
+      checkoutHistory.forEach(h => {
+        csv += `"${h.date}","${h.roomNumber}","${h.guestName}","${h.contact}","${h.stayDays}","${h.roomTotal}","${h.foodTotal}","${h.gst}","${h.grandTotal}","${h.advancePaid}","${h.netSettled}","${h.paymentMode}"\n`;
+      });
+      downloadCSVFile(csv, `checkout_history_register_${new Date().toISOString().slice(0,10)}.csv`);
+    }
+
+    function downloadCSVFile(csvData, filename) {
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `Niharika_Resort_Register_${new Date().toISOString().slice(0,10)}.csv`);
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
 
-    function calculateEstimate() {
-      const rate = parseFloat(document.getElementById('estCategory').value);
-      const nights = parseInt(document.getElementById('estNights').value) || 1;
-      const sub = rate * nights;
-      const tot = sub + (sub * 0.12);
-      document.getElementById('estResult').innerText = `Estimated Total: ₹${tot.toLocaleString()} (incl. 12% GST)`;
+    // Reset Memory Function if needed
+    function resetSystemMemory() {
+      if(confirm("Are you sure you want to reset all rooms and clear checkout history?")) {
+        localStorage.clear();
+        rooms = initDefaultRooms();
+        checkoutHistory = [];
+        saveState();
+      }
     }
 
-    renderMatrix();
+    // Initial load
+    saveState();
   </script>
 </body>
 </html>
