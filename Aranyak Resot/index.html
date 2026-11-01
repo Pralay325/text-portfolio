@@ -29,6 +29,43 @@
     }
     .brand h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
     .brand p { font-size: 13px; color: #93c5fd; }
+
+    /* Resort Hero Overview & Gallery */
+    .hero-gallery {
+      max-width: 1300px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 15px;
+      height: 280px;
+    }
+    .gallery-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: white;
+      padding: 10px 15px;
+      font-size: 13px;
+      font-weight: 600;
+    }
     
     .nav-tabs {
       display: flex;
@@ -36,6 +73,9 @@
       padding: 15px 30px;
       background: #ffffff;
       border-bottom: 1px solid #e2e8f0;
+      max-width: 1300px;
+      margin: 20px auto 0;
+      border-radius: 8px 8px 0 0;
     }
     .tab-btn {
       padding: 10px 20px;
@@ -53,7 +93,7 @@
       border-color: var(--primary);
     }
 
-    .container { max-width: 1300px; margin: 25px auto; padding: 0 20px; }
+    .container { max-width: 1300px; margin: 0 auto 25px; padding: 20px; background: white; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
     /* Summary Bar */
     .dashboard-metrics {
@@ -63,11 +103,11 @@
       margin-bottom: 25px;
     }
     .metric-card {
-      background: white;
+      background: #f8fafc;
       padding: 18px;
       border-radius: 8px;
       border-left: 5px solid;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .metric-card h3 { font-size: 13px; color: #64748b; text-transform: uppercase; }
     .metric-card p { font-size: 24px; font-weight: 700; margin-top: 5px; }
@@ -105,6 +145,7 @@
       background: white;
       border-radius: 8px;
       padding: 12px;
+      border: 1px solid #e2e8f0;
       border-top: 4px solid;
       box-shadow: 0 2px 4px rgba(0,0,0,0.04);
       cursor: pointer;
@@ -112,9 +153,9 @@
       transition: transform 0.15s;
     }
     .room-card:hover { transform: translateY(-2px); }
-    .room-card.Cleaned, .room-card.Vacant { border-color: var(--vacant); }
-    .room-card.Occupied { border-color: var(--occupied); background: #fef2f2; }
-    .room-card.Dirty { border-color: var(--dirty); background: #fefce8; }
+    .room-card.Cleaned, .room-card.Vacant { border-top-color: var(--vacant); }
+    .room-card.Occupied { border-top-color: var(--occupied); background: #fef2f2; }
+    .room-card.Dirty { border-top-color: var(--dirty); background: #fefce8; }
     
     .room-number { font-size: 16px; font-weight: 700; }
     .room-type { font-size: 11px; color: #64748b; margin-bottom: 6px; }
@@ -130,10 +171,11 @@
 
     /* Forms */
     .form-section {
-      background: white;
+      background: #f8fafc;
       padding: 25px;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       margin-bottom: 25px;
     }
     .form-section h2 { font-size: 18px; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
@@ -149,6 +191,7 @@
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 14px;
+      background: white;
     }
     
     /* Invoice Modal */
@@ -179,6 +222,11 @@
       .modal-box { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
       .no-print { display: none !important; }
     }
+
+    @media (max-width: 768px) {
+      .hero-gallery { grid-template-columns: 1fr; height: auto; }
+      .gallery-item { height: 180px; }
+    }
   </style>
 </head>
 <body>
@@ -189,10 +237,26 @@
       <p>Enterprise PMS & Front-Office System (40-Room Property)</p>
     </div>
     <div style="font-size: 13px; text-align: right;">
-      <span>Status: <strong>Online (GitHub Live)</strong></span><br>
+      <span>Status: <strong>Online (Enterprise Live)</strong></span><br>
       <small id="clock-display"></small>
     </div>
   </header>
+
+  <!-- RESORT HERO OVERVIEW (PHOTOS SECTION) -->
+  <div class="hero-gallery">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80" alt="Resort Front View">
+      <div class="gallery-caption">Main Resort Valley & Cottages</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="Luxury Villa Room">
+      <div class="gallery-caption">Luxury Villa Suites</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80" alt="Swimming Pool">
+      <div class="gallery-caption">Infinity Pool & Lawn</div>
+    </div>
+  </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('matrix-view')">40-Room Matrix & Housekeeping</button>
@@ -341,7 +405,6 @@
   </div>
 
   <script>
-    // --- 1. PERSISTENT STORAGE & INITIAL STATE ---
     const TOTAL_ROOMS = 40;
     
     function initDefaultRooms() {
@@ -355,7 +418,7 @@
           floor: floor,
           type: type,
           tariff: tariff,
-          status: "Cleaned", // Cleaned by default
+          status: "Cleaned",
           guest: null
         });
       }
@@ -373,7 +436,6 @@
       updateCounters();
     }
 
-    // --- 2. CLOCK & NAVIGATION ---
     setInterval(() => {
       document.getElementById('clock-display').innerText = new Date().toLocaleString('en-IN');
     }, 1000);
@@ -391,9 +453,7 @@
       }
     }
 
-    // --- 3. COUNTERS (FIXED: Cleaned & Vacant accurately counted) ---
     function updateCounters() {
-      // Fixes the zero cleaned issue
       const cleanedCount = rooms.filter(r => r.status === 'Cleaned' || r.status === 'Vacant').length;
       const occupiedCount = rooms.filter(r => r.status === 'Occupied').length;
       const dirtyCount = rooms.filter(r => r.status === 'Dirty').length;
@@ -404,9 +464,9 @@
       document.getElementById('counter-history').innerText = checkoutHistory.length;
     }
 
-    // --- 4. RENDER ROOM MATRIX ---
     function renderRooms() {
       const container = document.getElementById('rooms-container');
+      if (!container) return;
       container.innerHTML = '';
 
       rooms.forEach(room => {
@@ -438,11 +498,11 @@
       saveState();
     }
 
-    // --- 5. DROPDOWNS POPULATION ---
     function updateDropdowns() {
       const checkinSelect = document.getElementById('checkin-room');
       const foodSelect = document.getElementById('food-room');
       const checkoutSelect = document.getElementById('checkout-room');
+      if (!checkinSelect || !foodSelect || !checkoutSelect) return;
 
       checkinSelect.innerHTML = '<option value="">-- Choose Ready Room --</option>';
       foodSelect.innerHTML = '<option value="">-- Choose Occupied Room --</option>';
@@ -459,7 +519,6 @@
       });
     }
 
-    // --- 6. CHECK-IN LOGIC ---
     function handleCheckIn(e) {
       e.preventDefault();
       const rNum = parseInt(document.getElementById('checkin-room').value);
@@ -485,7 +544,6 @@
       switchTab('matrix-view');
     }
 
-    // --- 7. FOOD BILLING LOGIC ---
     function handleAddFoodBill(e) {
       e.preventDefault();
       const rNum = parseInt(document.getElementById('food-room').value);
@@ -501,7 +559,6 @@
       document.getElementById('food-form').reset();
     }
 
-    // --- 8. CHECK-OUT & INVOICE GENERATION ---
     function handleCheckOut(e) {
       e.preventDefault();
       const rNum = parseInt(document.getElementById('checkout-room').value);
@@ -519,7 +576,6 @@
       const grandTotal = subTotal + gstAmount;
       const balanceToPay = grandTotal - g.advance;
 
-      // 1. Record to Check-Out History
       checkoutHistory.push({
         date: new Date().toLocaleDateString('en-IN'),
         roomNumber: room.number,
@@ -535,7 +591,6 @@
         paymentMode: mode
       });
 
-      // 2. Render Modal Invoice
       document.getElementById('invoice-content').innerHTML = `
         <table class="invoice-table">
           <tr><td><strong>Guest Name:</strong> ${g.name}</td><td><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</td></tr>
@@ -553,7 +608,6 @@
       `;
       document.getElementById('invoice-modal').style.display = 'flex';
 
-      // 3. Mark Room as Dirty (Housekeeping Required) and clear guest
       room.status = 'Dirty';
       room.guest = null;
 
@@ -566,9 +620,6 @@
       switchTab('matrix-view');
     }
 
-    // --- 9. EXCEL EXPORTS (TWO DEDICATED CSV EXPORTS) ---
-
-    // A. Export Live Occupancy Register
     function exportRoomRegisterCSV() {
       let csv = "Room Number,Floor,Room Type,Tariff (INR),Status,Current Guest Name,Phone,Advance Paid,Food Bills Total\n";
       rooms.forEach(r => {
@@ -581,7 +632,6 @@
       downloadCSVFile(csv, `live_room_register_${new Date().toISOString().slice(0,10)}.csv`);
     }
 
-    // B. Export Historical Check-Out & Billing Register
     function exportCheckoutHistoryCSV() {
       if (checkoutHistory.length === 0) {
         alert("Check-Out History is empty! Perform at least one check-out first.");
@@ -605,7 +655,6 @@
       document.body.removeChild(link);
     }
 
-    // Reset Memory Function if needed
     function resetSystemMemory() {
       if(confirm("Are you sure you want to reset all rooms and clear checkout history?")) {
         localStorage.clear();
@@ -615,7 +664,6 @@
       }
     }
 
-    // Initial load
     saveState();
   </script>
 </body>
