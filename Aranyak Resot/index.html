@@ -206,15 +206,27 @@
     }
     .modal-box {
       background: white;
-      padding: 30px;
+      padding: 25px;
       border-radius: 10px;
-      max-width: 550px;
-      width: 90%;
+      max-width: 520px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     .invoice-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
     .invoice-table td { padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
     .invoice-total { font-size: 16px; font-weight: 700; color: var(--primary); border-top: 2px solid #e2e8f0; }
+
+    /* QR Code Container */
+    .qr-container {
+      text-align: center;
+      margin-top: 15px;
+      padding: 12px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
 
     @media print {
       body * { visibility: hidden; }
@@ -373,7 +385,7 @@
             <div class="form-group">
               <label>Settlement Mode</label>
               <select id="checkout-payment-mode">
-                <option value="UPI / Online">UPI / QR Code</option>
+                <option value="UPI / QR Code">UPI / QR Code</option>
                 <option value="Cash">Cash at Counter</option>
                 <option value="Card">Debit / Credit Card</option>
               </select>
@@ -394,7 +406,7 @@
     <div class="modal-box">
       <div style="text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
         <h2 style="color: var(--primary);">Niharika Resort & Retreat</h2>
-        <p style="font-size: 12px; color: #64748b;">Tax Invoice & Guest Settlement Receipt</p>
+        <p style="font-size: 12px; color: #64748b;">Tax Invoice & Settlement Receipt</p>
       </div>
       <div id="invoice-content" style="margin-top: 15px;"></div>
       <div class="no-print" style="display: flex; gap: 10px; margin-top: 20px;">
@@ -591,6 +603,27 @@
         paymentMode: mode
       });
 
+      // UPI Payment Gateway QR Generation
+      let qrCodeSection = '';
+      if (balanceToPay > 0) {
+        const upiId = "niharikaresort@upi"; // Default Resort UPI ID
+        const upiLink = `upi://pay?pa=${upiId}&pn=Niharika%20Resort&am=${balanceToPay}&cu=INR`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
+        
+        qrCodeSection = `
+          <div class="qr-container">
+            <p style="font-size:12px; font-weight:700; color:#1e3a8a; margin-bottom:6px;">
+              📲 Scan with GPay / PhonePe / Paytm to Pay:
+            </p>
+            <img src="${qrUrl}" alt="UPI QR Code" style="width:130px; height:130px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.1);" />
+            <p style="font-size:13px; font-weight:700; color:#16a34a; margin-top:5px;">
+              Amount to Pay: ₹${balanceToPay}
+            </p>
+            <small style="color:#64748b; font-size:11px;">UPI ID: ${upiId}</small>
+          </div>
+        `;
+      }
+
       document.getElementById('invoice-content').innerHTML = `
         <table class="invoice-table">
           <tr><td><strong>Guest Name:</strong> ${g.name}</td><td><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</td></tr>
@@ -605,6 +638,7 @@
             <td style="text-align:right;">₹${balanceToPay}</td>
           </tr>
         </table>
+        ${qrCodeSection}
       `;
       document.getElementById('invoice-modal').style.display = 'flex';
 
