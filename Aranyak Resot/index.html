@@ -138,7 +138,7 @@
     /* Grid Layout */
     .room-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 12px;
     }
     .room-card {
@@ -168,6 +168,7 @@
       color: white;
     }
     .room-guest { font-size: 12px; font-weight: 600; color: #1e293b; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .room-pax { font-size: 11px; color: #0284c7; font-weight: 600; margin-top: 2px; }
 
     /* Forms */
     .form-section {
@@ -181,7 +182,7 @@
     .form-section h2 { font-size: 18px; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
     }
     .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #475569; }
@@ -218,7 +219,7 @@
     .invoice-table td { padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
     .invoice-total { font-size: 16px; font-weight: 700; color: var(--primary); border-top: 2px solid #e2e8f0; }
 
-    /* QR Code Container */
+    /* Payment Badge / QR Container */
     .qr-container {
       text-align: center;
       margin-top: 15px;
@@ -226,6 +227,17 @@
       border: 1px dashed #cbd5e1;
       border-radius: 8px;
       background: #f8fafc;
+    }
+    .payment-receipt-badge {
+      text-align: center;
+      margin-top: 15px;
+      padding: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      color: #15803d;
+      font-weight: 700;
+      font-size: 14px;
     }
 
     @media print {
@@ -317,9 +329,9 @@
     <!-- TAB 2: FRONT DESK OPERATIONS -->
     <div id="operations-view" style="display: none;">
       
-      <!-- CHECK-IN SECTION -->
+      <!-- CHECK-IN SECTION (WITH GUEST COUNT) -->
       <div class="form-section">
-        <h2>1. Guest Check-In & Advance</h2>
+        <h2>1. Guest Check-In & Person Details</h2>
         <form id="checkin-form" onsubmit="handleCheckIn(event)">
           <div class="form-grid">
             <div class="form-group">
@@ -333,6 +345,14 @@
             <div class="form-group">
               <label>Phone Number</label>
               <input type="tel" id="checkin-phone" placeholder="e.g. 9876543210" required>
+            </div>
+            <div class="form-group">
+              <label>Adults (ব্যক্তি সংখ্যা)</label>
+              <input type="number" id="checkin-adults" value="2" min="1" max="10" required>
+            </div>
+            <div class="form-group">
+              <label>Children (শিশু সংখ্যা)</label>
+              <input type="number" id="checkin-children" value="0" min="0" max="8" required>
             </div>
             <div class="form-group">
               <label>Advance Payment (₹)</label>
@@ -356,7 +376,7 @@
             </div>
             <div class="form-group">
               <label>Item / Service Description</label>
-              <input type="text" id="food-desc" placeholder="e.g. 2 Bengali Thalis + Coffee" required>
+              <input type="text" id="food-desc" placeholder="e.g. 2 Bengali Thalis + Tea" required>
             </div>
             <div class="form-group">
               <label>Amount (₹)</label>
@@ -369,9 +389,9 @@
         </form>
       </div>
 
-      <!-- CHECK-OUT & SETTLEMENT -->
+      <!-- CHECK-OUT & SETTLEMENT (EXPANDED PAYMENT MODES) -->
       <div class="form-section">
-        <h2>3. Express Check-Out & GST Invoice Settlement</h2>
+        <h2>3. Express Check-Out & Payment Settlement</h2>
         <form id="checkout-form" onsubmit="handleCheckOut(event)">
           <div class="form-grid">
             <div class="form-group">
@@ -383,11 +403,13 @@
               <input type="number" id="checkout-days" value="1" min="1" required>
             </div>
             <div class="form-group">
-              <label>Settlement Mode</label>
+              <label>Settlement Payment Mode</label>
               <select id="checkout-payment-mode">
-                <option value="UPI / QR Code">UPI / QR Code</option>
-                <option value="Cash">Cash at Counter</option>
-                <option value="Card">Debit / Credit Card</option>
+                <option value="UPI / QR Code">UPI / Dynamic QR Code</option>
+                <option value="Cash at Counter">Cash at Counter (নগদ)</option>
+                <option value="Debit Card">Debit Card (POS Swipe)</option>
+                <option value="Credit Card">Credit Card (POS Swipe)</option>
+                <option value="Digital Wallet">Digital Wallet (Paytm / Amazon Pay)</option>
               </select>
             </div>
           </div>
@@ -406,7 +428,7 @@
     <div class="modal-box">
       <div style="text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
         <h2 style="color: var(--primary);">Niharika Resort & Retreat</h2>
-        <p style="font-size: 12px; color: #64748b;">Tax Invoice & Settlement Receipt</p>
+        <p style="font-size: 12px; color: #64748b;">Tax Invoice & Guest Receipt</p>
       </div>
       <div id="invoice-content" style="margin-top: 15px;"></div>
       <div class="no-print" style="display: flex; gap: 10px; margin-top: 20px;">
@@ -488,6 +510,11 @@
 
         const badgeColor = room.status === 'Occupied' ? '#dc2626' : room.status === 'Dirty' ? '#ca8a04' : '#16a34a';
 
+        let guestPaxInfo = '';
+        if (room.guest) {
+          guestPaxInfo = `<div class="room-pax">👥 ${room.guest.adults}A, ${room.guest.children}C</div>`;
+        }
+
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span class="room-number">${room.number}</span>
@@ -495,6 +522,7 @@
           </div>
           <div class="room-type">${room.type} (₹${room.tariff})</div>
           <div class="room-guest">${room.guest ? '👤 ' + room.guest.name : room.floor}</div>
+          ${guestPaxInfo}
         `;
         container.appendChild(card);
       });
@@ -524,7 +552,7 @@
         if (r.status === 'Cleaned' || r.status === 'Vacant') {
           checkinSelect.innerHTML += `<option value="${r.number}">Room ${r.number} (${r.type} - ₹${r.tariff})</option>`;
         } else if (r.status === 'Occupied') {
-          const opt = `<option value="${r.number}">Room ${r.number} - ${r.guest.name}</option>`;
+          const opt = `<option value="${r.number}">Room ${r.number} - ${r.guest.name} (${r.guest.adults + r.guest.children} Pax)</option>`;
           foodSelect.innerHTML += opt;
           checkoutSelect.innerHTML += opt;
         }
@@ -536,6 +564,8 @@
       const rNum = parseInt(document.getElementById('checkin-room').value);
       const name = document.getElementById('checkin-name').value.trim();
       const phone = document.getElementById('checkin-phone').value.trim();
+      const adults = parseInt(document.getElementById('checkin-adults').value) || 1;
+      const children = parseInt(document.getElementById('checkin-children').value) || 0;
       const adv = parseFloat(document.getElementById('checkin-advance').value) || 0;
 
       const room = rooms.find(r => r.number === rNum);
@@ -545,13 +575,15 @@
       room.guest = {
         name: name,
         phone: phone,
+        adults: adults,
+        children: children,
         advance: adv,
         checkinDate: new Date().toLocaleDateString('en-IN'),
         foodBills: []
       };
 
       saveState();
-      alert(`Success: Room ${rNum} Checked-In for ${name}`);
+      alert(`Success: Room ${rNum} Checked-In for ${name} (${adults} Adults, ${children} Children)`);
       document.getElementById('checkin-form').reset();
       switchTab('matrix-view');
     }
@@ -593,6 +625,7 @@
         roomNumber: room.number,
         guestName: g.name,
         contact: g.phone,
+        persons: `${g.adults} Adults, ${g.children} Child`,
         stayDays: days,
         roomTotal: roomCharges,
         foodTotal: foodTotal,
@@ -603,14 +636,14 @@
         paymentMode: mode
       });
 
-      // UPI Payment Gateway QR Generation
-      let qrCodeSection = '';
-      if (balanceToPay > 0) {
-        const upiId = "niharikaresort@upi"; // Default Resort UPI ID
+      // Payment Gateway Logic (UPI vs Other Modes)
+      let paymentSectionHtml = '';
+      if (mode.includes('UPI') && balanceToPay > 0) {
+        const upiId = "niharikaresort@upi";
         const upiLink = `upi://pay?pa=${upiId}&pn=Niharika%20Resort&am=${balanceToPay}&cu=INR`;
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
         
-        qrCodeSection = `
+        paymentSectionHtml = `
           <div class="qr-container">
             <p style="font-size:12px; font-weight:700; color:#1e3a8a; margin-bottom:6px;">
               📲 Scan with GPay / PhonePe / Paytm to Pay:
@@ -622,23 +655,30 @@
             <small style="color:#64748b; font-size:11px;">UPI ID: ${upiId}</small>
           </div>
         `;
+      } else {
+        paymentSectionHtml = `
+          <div class="payment-receipt-badge">
+            ✓ Settled & Paid via: ${mode}
+          </div>
+        `;
       }
 
       document.getElementById('invoice-content').innerHTML = `
         <table class="invoice-table">
           <tr><td><strong>Guest Name:</strong> ${g.name}</td><td><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</td></tr>
+          <tr><td><strong>Contact:</strong> ${g.phone}</td><td><strong>Persons:</strong> ${g.adults} Adults, ${g.children} Child</td></tr>
           <tr><td><strong>Room No:</strong> ${room.number} (${room.type})</td><td><strong>Duration:</strong> ${days} Day(s)</td></tr>
           <tr><td>Room Tariff (₹${room.tariff} × ${days})</td><td style="text-align:right;">₹${roomCharges}</td></tr>
-          <tr><td>Food & Beverage Charges</td><td style="text-align:right;">₹${foodTotal}</td></tr>
+          <tr><td>Food & Room Service Bills</td><td style="text-align:right;">₹${foodTotal}</td></tr>
           <tr><td>GST (12%)</td><td style="text-align:right;">₹${gstAmount}</td></tr>
           <tr class="invoice-total"><td>Total Invoice Amount</td><td style="text-align:right;">₹${grandTotal}</td></tr>
           <tr><td>Less: Advance Paid</td><td style="text-align:right;">- ₹${g.advance}</td></tr>
           <tr style="font-size:15px; font-weight:700; color:#dc2626;">
-            <td>Net Payable (Settled via ${mode})</td>
+            <td>Net Payable Balance</td>
             <td style="text-align:right;">₹${balanceToPay}</td>
           </tr>
         </table>
-        ${qrCodeSection}
+        ${paymentSectionHtml}
       `;
       document.getElementById('invoice-modal').style.display = 'flex';
 
@@ -655,13 +695,15 @@
     }
 
     function exportRoomRegisterCSV() {
-      let csv = "Room Number,Floor,Room Type,Tariff (INR),Status,Current Guest Name,Phone,Advance Paid,Food Bills Total\n";
+      let csv = "Room Number,Floor,Room Type,Tariff (INR),Status,Guest Name,Contact,Adults,Children,Advance Paid,Food Bills Total\n";
       rooms.forEach(r => {
         let gName = r.guest ? r.guest.name : "";
         let gPhone = r.guest ? r.guest.phone : "";
+        let adults = r.guest ? r.guest.adults : 0;
+        let children = r.guest ? r.guest.children : 0;
         let gAdv = r.guest ? r.guest.advance : 0;
         let gFood = r.guest ? r.guest.foodBills.reduce((a, b) => a + b.amount, 0) : 0;
-        csv += `"${r.number}","${r.floor}","${r.type}","${r.tariff}","${r.status}","${gName}","${gPhone}","${gAdv}","${gFood}"\n`;
+        csv += `"${r.number}","${r.floor}","${r.type}","${r.tariff}","${r.status}","${gName}","${gPhone}","${adults}","${children}","${gAdv}","${gFood}"\n`;
       });
       downloadCSVFile(csv, `live_room_register_${new Date().toISOString().slice(0,10)}.csv`);
     }
@@ -671,9 +713,9 @@
         alert("Check-Out History is empty! Perform at least one check-out first.");
         return;
       }
-      let csv = "Date,Room Number,Guest Name,Phone,Days Stayed,Room Charges (INR),Food Charges (INR),GST 12% (INR),Grand Total (INR),Advance Deducted (INR),Net Amount Paid (INR),Settlement Mode\n";
+      let csv = "Date,Room Number,Guest Name,Contact,Persons,Stay Days,Room Total (INR),Food Total (INR),GST 12% (INR),Grand Total (INR),Advance Deducted (INR),Net Amount Paid (INR),Payment Mode\n";
       checkoutHistory.forEach(h => {
-        csv += `"${h.date}","${h.roomNumber}","${h.guestName}","${h.contact}","${h.stayDays}","${h.roomTotal}","${h.foodTotal}","${h.gst}","${h.grandTotal}","${h.advancePaid}","${h.netSettled}","${h.paymentMode}"\n`;
+        csv += `"${h.date}","${h.roomNumber}","${h.guestName}","${h.contact}","${h.persons}","${h.stayDays}","${h.roomTotal}","${h.foodTotal}","${h.gst}","${h.grandTotal}","${h.advancePaid}","${h.netSettled}","${h.paymentMode}"\n`;
       });
       downloadCSVFile(csv, `checkout_history_register_${new Date().toISOString().slice(0,10)}.csv`);
     }
