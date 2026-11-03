@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +84,7 @@
       border-bottom: 2px solid #e9ecef;
       padding-bottom: 10px;
     }
-    .grid { display: grid; grid-template-columns: 1.15fr 1.45fr; gap: 20px; }
+    .grid { display: grid; grid-template-columns: 1.05fr 1.55fr; gap: 20px; }
     @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
 
     .summary-boxes {
@@ -122,7 +121,38 @@
     .btn-success { background: var(--success); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-warning { background: var(--warning); color: #fff; }
-    .btn-sm { padding: 4px 8px; font-size: 11px; }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+    /* Compact Scrollable Folio Table for 50 Rooms */
+    .folio-table-container {
+      max-height: 540px;
+      overflow-y: auto;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+    }
+    .folio-table-container thead th {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa;
+      z-index: 10;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 11px;
+      outline: none;
+      background: #f1f4f8;
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    details[open] summary {
+      margin-bottom: 4px;
+      background: #e2e8f0;
+    }
 
     .room-matrix-visual {
       display: grid;
@@ -204,8 +234,8 @@
     .gallery-card img { width: 100%; height: 145px; object-fit: cover; }
     .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-    th, td { border: 1px solid #dee2e6; padding: 9px; text-align: left; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
 
     footer {
@@ -346,21 +376,25 @@
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
         </div>
 
+        <!-- COMPACT & HIGH-CAPACITY 50 ROOM ACTIVE FOLIO -->
         <div class="card">
-          <h2>📋 Active In-House Guest Folio Ledger</h2>
-          <div style="overflow-x: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 10px;">
+            <h2 style="margin: 0; border: none; padding: 0;">📋 Active In-House Guest Folios (50 Rooms)</h2>
+            <input type="text" id="folioSearchInput" placeholder="🔍 Search Room / Guest..." oninput="filterFolioTable()" style="max-width: 200px; padding: 5px 8px; font-size: 12px;">
+          </div>
+          
+          <div class="folio-table-container">
             <table>
               <thead>
                 <tr>
                   <th>Ref ID</th>
                   <th>Guest / Allocation</th>
-                  <th>Dates (Stay)</th>
-                  <th>Govt ID Info</th>
-                  <th>Order History (Timestamped)</th>
-                  <th>Total (₹)</th>
-                  <th>Advance (₹)</th>
-                  <th>Current Due (₹)</th>
-                  <th>Settlement</th>
+                  <th>Stay Period</th>
+                  <th>Order History (Item & Time)</th>
+                  <th>Total</th>
+                  <th>Advance</th>
+                  <th>Due</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -606,7 +640,7 @@
 
   </div>
 
-  <!-- CHECKOUT MODAL -->
+  <!-- CHECKOUT MODAL WITH TIMESTAMPS & ITEMIZED BREAKDOWN -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
@@ -724,7 +758,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v13')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v14')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -793,6 +827,7 @@
 
     let fresh50Units = [];
 
+    // 10 Heritage Cottages (₹4500)
     for(let i=1; i<=10; i++) {
       fresh50Units.push({
         id: "Cottage " + (i < 10 ? '0' + i : i),
@@ -803,6 +838,7 @@
       });
     }
 
+    // 20 Deluxe Rooms (₹2200)
     for(let i=101; i<=120; i++) {
       fresh50Units.push({
         id: "Room " + i,
@@ -813,6 +849,7 @@
       });
     }
 
+    // 10 Dormitory Units (₹850)
     for(let i=1; i<=10; i++) {
       fresh50Units.push({
         id: "Dormitory D-" + (i < 10 ? '0' + i : i),
@@ -823,6 +860,7 @@
       });
     }
 
+    // 10 Executive Suites (₹3500)
     for(let i=201; i<=210; i++) {
       fresh50Units.push({
         id: "Suite " + i,
@@ -924,7 +962,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v13')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v14')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -955,7 +993,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v13')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v14')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -974,51 +1012,70 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v13', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v13', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v13', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v14', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v14', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v14', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
     }
 
     function render() {
-      const tbody = document.getElementById('folioList');
+      filterFolioTable();
       const dSelect = document.getElementById('diningRoomSelect');
       const bSelect = document.getElementById('barRoomSelect');
-
-      tbody.innerHTML = '';
       dSelect.innerHTML = '';
       bSelect.innerHTML = '';
 
-      if (bookings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888;">No active reservations found.</td></tr>';
+      bookings.forEach((b, index) => {
+        let opt = `<option value="${index}">${b.refId} | ${b.room} - ${b.name}</option>`;
+        dSelect.innerHTML += opt;
+        bSelect.innerHTML += opt;
+      });
+    }
+
+    function filterFolioTable() {
+      const query = (document.getElementById('folioSearchInput') ? document.getElementById('folioSearchInput').value : '').toLowerCase();
+      const tbody = document.getElementById('folioList');
+      tbody.innerHTML = '';
+
+      let filtered = bookings.filter(b => 
+        b.name.toLowerCase().includes(query) || 
+        b.room.toLowerCase().includes(query) || 
+        b.refId.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888; padding:15px;">No matching in-house guest records found.</td></tr>';
+        return;
       }
 
-      bookings.forEach((b, index) => {
+      filtered.forEach((b) => {
+        let originalIndex = bookings.indexOf(b);
         let due = Math.max(0, b.total - b.paid);
+        let orderCount = (b.orders || []).length;
         let orderListHtml = (b.orders || []).map(o => `<li style="font-size:11px; margin-bottom:2px;">${o}</li>`).join('');
 
         let row = `<tr>
           <td><strong>${b.refId}</strong></td>
           <td><strong>${b.name}</strong><br><small>${b.room} (${b.adults}A, ${b.children}C)<br>📞 ${b.phone}</small></td>
-          <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights} Night${b.nights>1?'s':''})</small></td>
-          <td><small><strong>${b.idType || 'ID Proof'}</strong><br>${b.idNumber || 'N/A'}</small></td>
-          <td><ul style="padding-left:15px; margin:0;">${orderListHtml}</ul></td>
+          <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights}N)</small></td>
+          <td>
+            <details>
+              <summary>📋 ${orderCount} Items (View)</summary>
+              <ul style="padding-left:14px; margin:4px 0 0;">${orderListHtml}</ul>
+            </details>
+          </td>
           <td>₹${b.total.toFixed(2)}</td>
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
           <td>
-            <button onclick="openCheckoutModal(${index})" class="btn btn-sm btn-danger">
-              🛎️ Check-Out & Settle
+            <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-sm btn-danger">
+              🛎️ Check-Out
             </button>
           </td>
         </tr>`;
         tbody.innerHTML += row;
-
-        let opt = `<option value="${index}">${b.refId} | ${b.room} - ${b.name}</option>`;
-        dSelect.innerHTML += opt;
-        bSelect.innerHTML += opt;
       });
     }
 
@@ -1059,7 +1116,7 @@
       }
 
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      let initialOrder = [`Room Tariff: ₹${totalTariff} [${nights} Night(s) @ ₹${dailyRate}/nt]`];
+      let initialOrder = [`Room Tariff: ₹${totalTariff} [${nights} Night(s) @ ₹${dailyRate}/nt - ${nowTime}]`];
 
       bookings.push({ 
         refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
@@ -1092,7 +1149,7 @@
       if (!bookings[idx].orders) bookings[idx].orders = [];
       bookings[idx].orders.push(`Dining: ${item} - ₹${val} [${time}]`);
 
-      alert(`${item} (₹${val}) added to ${bookings[idx].room} folio.`);
+      alert(`${item} (₹${val}) added to ${bookings[idx].room} folio at ${time}.`);
       saveState();
     }
 
@@ -1108,7 +1165,7 @@
       if (!bookings[idx].orders) bookings[idx].orders = [];
       bookings[idx].orders.push(`Bar: ${item} - ₹${val} [${time}]`);
 
-      alert(`Bar Service ${item} (₹${val}) added to ${bookings[idx].room} folio.`);
+      alert(`Bar Service ${item} (₹${val}) added to ${bookings[idx].room} folio at ${time}.`);
       saveState();
     }
 
@@ -1126,8 +1183,8 @@
           <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small><br>
           <small><strong>ID on File:</strong> ${b.idType || 'Proof'} - ${b.idNumber || 'Recorded'}</small>
         </div>
-        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Order History:</h5>
-        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:100px; overflow-y:auto; font-size:12px; margin:0;">
+        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Food, Bar & Room Charges (Timestamped):</h5>
+        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:120px; overflow-y:auto; font-size:12px; margin:0;">
           ${orderListHtml}
         </ul>
         <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; font-size:13px;">
