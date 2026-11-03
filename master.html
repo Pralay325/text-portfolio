@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shree Krishna Resort & Retreat - Enterprise PMS & Front Desk Terminal</title>
+  <title>Shree Krishna Resort & Retreat - Enterprise PMS & Settlement Engine</title>
   <style>
     :root {
       --primary: #1b3a4b;
@@ -156,11 +156,11 @@
     .modal-box {
       background: #ffffff;
       width: 90%;
-      max-width: 650px;
+      max-width: 680px;
       border-radius: 8px;
       padding: 24px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
     }
 
@@ -178,7 +178,6 @@
     }
     .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
 
-    /* Gallery with Lawn */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
     .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
     .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
@@ -191,7 +190,7 @@
 </head>
 <body>
 
-  <!-- Top Header -->
+  <!-- Header -->
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
@@ -200,25 +199,25 @@
     <span class="badge">Master Front Desk POS</span>
   </header>
 
-  <!-- Navigation Menu Bar -->
+  <!-- Navigation Bar -->
   <nav>
-    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Check-In</button>
+    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk Check-In</button>
     <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Photos & Dirty/Clean)</button>
     <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast / Lunch / Dinner)</button>
     <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky / Rum / Beer)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Photo Showcase</button>
-    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Ledger</button>
+    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
   </nav>
 
   <div class="container">
 
-    <!-- 1. FRONT DESK & IN-HOUSE GUESTS TAB -->
+    <!-- 1. FRONT DESK TAB -->
     <div id="frontDeskTab" class="tab-content active">
       <div class="grid">
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px;">
-            <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In</h2>
-            <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Open Form C Popup (Foreign Guest)</button>
+            <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In (Advance Deposit)</h2>
+            <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C (Foreign Guest)</button>
           </div>
           
           <div class="form-row">
@@ -258,27 +257,27 @@
               <input type="number" id="gTotal" placeholder="0.00">
             </div>
             <div class="form-group">
-              <label>Advance Paid (₹)</label>
+              <label>Advance Deposit at Check-In (₹)</label>
               <input type="number" id="gPaid" placeholder="0.00">
             </div>
           </div>
 
           <div class="form-group">
-            <label>Check-In Settlement Mode</label>
+            <label>Advance Payment Mode</label>
             <select id="gMode">
-              <option value="UPI / QR Code Scan">UPI (Dynamic QR Code)</option>
-              <option value="Credit Card">Credit Card (POS Terminal)</option>
-              <option value="Debit Card">Debit Card (POS Terminal)</option>
-              <option value="Digital Wallet">Digital Wallet (PhonePe / Paytm / GPay)</option>
-              <option value="Cash Settlement">Cash in Hand</option>
+              <option value="UPI / QR Code Scan">UPI / QR Code</option>
+              <option value="Credit / Debit Card">Credit / Debit Card</option>
+              <option value="Digital Wallet">Digital Wallet (PhonePe/Paytm)</option>
+              <option value="Cash Settlement">Cash</option>
             </select>
           </div>
 
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
         </div>
 
+        <!-- Active Guest Folio -->
         <div class="card">
-          <h2>📋 Active Guest Folio & Settlement Registry</h2>
+          <h2>📋 Active In-House Guest Folio Ledger</h2>
           <div style="overflow-x: auto;">
             <table>
               <thead>
@@ -287,9 +286,9 @@
                   <th>Guest / Allocation</th>
                   <th>Order History (Timestamped)</th>
                   <th>Total (₹)</th>
-                  <th>Paid (₹)</th>
-                  <th>Due (₹)</th>
-                  <th>Settlement Action</th>
+                  <th>Advance (₹)</th>
+                  <th>Current Due (₹)</th>
+                  <th>Settlement</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -299,16 +298,16 @@
       </div>
     </div>
 
-    <!-- 2. 50 ROOM MATRIX WITH PHOTOS & CLEAN/DIRTY HOUSEKEEPING -->
+    <!-- 2. 50 ROOM MATRIX -->
     <div id="roomInventoryTab" class="tab-content">
       <div class="card">
-        <h2>🧹 50 Units Inventory (10 Luxury Cottages + 40 Rooms)</h2>
-        <p style="color: #666; font-size: 13px;">Guest Check-Out automatically marks room as <strong>Dirty</strong>. Housekeeping marks it <strong>Clean</strong> once prepared.</p>
+        <h2>🧹 50 Units Inventory (10 Luxury Cottages + 40 Deluxe Rooms)</h2>
+        <p style="color: #666; font-size: 13px;">Checking out a guest automatically marks the room as <strong>Dirty</strong>. Housekeeping marks it <strong>Clean</strong> once ready.</p>
         <div id="roomVisualMatrixGrid" class="room-matrix-visual"></div>
       </div>
     </div>
 
-    <!-- 3. DINING (BREAKFAST, LUNCH, DINNER) -->
+    <!-- 3. DINING -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining Management (Category-wise Ordering)</h2>
@@ -442,69 +441,103 @@
       </div>
     </div>
 
-    <!-- 6. NIGHT AUDIT & EXCEL TAB -->
+    <!-- 6. COMPREHENSIVE NIGHT AUDIT & COMPREHENSIVE EOD LEDGER TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-          <h3 style="margin: 0; color: var(--primary);">📊 Night Audit & Daily Operations Closing</h3>
-          <button onclick="exportToExcel()" class="btn btn-success">📥 Export to Excel (.xlsx)</button>
+          <div>
+            <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
+            <small style="color: #666;">Automated Reconciliation of Room Tariffs, F&B Orders, Taxes & Settlements</small>
+          </div>
+          <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px;">
-          <div style="background: #f8f9fa; border-left: 4px solid #3498db; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 13px; color: #7f8c8d;">Total Expected Inflow</span>
-            <h4 id="auditTotal" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
+        <!-- Metric KPI Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px;">
+          <div style="background: #f8f9fa; border-left: 4px solid #1b3a4b; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Room Revenue</span>
+            <h4 id="auditRoomRev" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
           </div>
-          <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 13px; color: #7f8c8d;">UPI / Online Collected</span>
-            <h4 id="auditUpi" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
+          <div style="background: #f8f9fa; border-left: 4px solid #006466; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Dining (F&B) Revenue</span>
+            <h4 id="auditDiningRev" style="margin: 5px 0 0; color: #006466;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #8e44ad; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Bar Lounge Revenue</span>
+            <h4 id="auditBarRev" style="margin: 5px 0 0; color: #8e44ad;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 13px; color: #7f8c8d;">Cash in Hand</span>
-            <h4 id="auditCash" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
+            <span style="font-size: 12px; color: #7f8c8d;">Taxes (12% GST)</span>
+            <h4 id="auditGstRev" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Total Inflow Settled</span>
+            <h4 id="auditTotalSettled" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #e74c3c; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 13px; color: #7f8c8d;">Balance Pending</span>
-            <h4 id="auditDue" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
+            <span style="font-size: 12px; color: #7f8c8d;">In-House Folio Dues</span>
+            <h4 id="auditPendingBalance" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
           </div>
+        </div>
+
+        <!-- Comprehensive Audit History Table -->
+        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Audit Trail</h4>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Audit No</th>
+                <th>Ref ID</th>
+                <th>Guest Name</th>
+                <th>Room / Cottage</th>
+                <th>Room (₹)</th>
+                <th>F&B (₹)</th>
+                <th>Bar (₹)</th>
+                <th>Total Settled (₹)</th>
+                <th>Gateway & Txn Ref</th>
+                <th>Settlement Time</th>
+              </tr>
+            </thead>
+            <tbody id="auditHistoryTableBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- ================= DEDICATED CHECKOUT & FINAL SETTLEMENT MODAL ================= -->
+  <!-- ================= ADVANCED CHECKOUT & PAYMENT MODAL ================= -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 15px;">
-        <h3 style="margin: 0; color: var(--danger);">🛎️ Guest Checkout & Final Settlement</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & Check-Out Terminal</h3>
         <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
 
+      <!-- Bill Breakdown -->
       <div id="checkoutBillDetails"></div>
 
-      <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 12px;">
-        <label><strong>Select Final Settlement Gateway:</strong></label>
-        <select id="checkoutPaymentGateway">
-          <option value="UPI / QR Code Scan">UPI (Dynamic QR Code)</option>
-          <option value="Credit Card">Credit Card (POS Terminal Swipe)</option>
-          <option value="Debit Card">Debit Card (POS Terminal Swipe)</option>
-          <option value="Digital Wallet">Digital Wallet (PhonePe / Paytm / GPay)</option>
-          <option value="Cash Settlement">Cash in Hand</option>
+      <!-- Interactive Settlement Gateway Selector -->
+      <div style="margin-top: 15px; border-top: 1px solid #dee2e6; padding-top: 12px;">
+        <label><strong>Select Balance Settlement Gateway:</strong></label>
+        <select id="checkoutGatewaySelect" onchange="renderCheckoutGatewayFields(this.value)">
+          <option value="UPI">📱 UPI (Dynamic QR Code Scanner)</option>
+          <option value="CARD">💳 Credit / Debit Card Terminal</option>
+          <option value="WALLET">📲 Digital Wallet (PhonePe / Paytm / GPay)</option>
+          <option value="CASH">💵 Cash Settlement</option>
         </select>
 
-        <div style="margin-top: 10px; background: #fdfaf2; border: 1px solid #f9e2ae; padding: 10px; border-radius: 5px; font-size: 13px;">
-          <strong>Settlement Rule:</strong> Confirming checkout will mark room as <span style="color:red; font-weight:bold;">Dirty</span> for Housekeeping and archive the folio.
-        </div>
+        <!-- Gateway Specific Input Containers -->
+        <div id="gatewayFieldsContainer" style="margin-top: 12px; background: #fdfdfd; border: 1px solid #ced4da; padding: 14px; border-radius: 6px;"></div>
 
         <button class="btn btn-danger" style="width: 100%; margin-top: 15px; font-size: 15px;" onclick="confirmFinalCheckout()">
-          ✅ Settle Balance & Complete Checkout
+          ✅ Authorize Settlement & Complete Check-Out
         </button>
       </div>
     </div>
   </div>
 
-  <!-- POPUP: FORM C -->
+  <!-- FORM C MODAL -->
   <div id="cFormModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">
@@ -519,7 +552,7 @@
         <div class="form-group"><label>Passport No</label><input type="text" id="cfPassport" placeholder="Passport No"></div>
         <div class="form-group"><label>Visa Validity</label><input type="text" id="cfVisa" placeholder="Visa No / Valid Until"></div>
       </div>
-      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="alert('Form C Attached.'); closeCFormModal();">💾 Save Form C</button>
+      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="alert('Form C Record Attached.'); closeCFormModal();">💾 Save Form C</button>
     </div>
   </div>
 
@@ -540,12 +573,11 @@
       document.getElementById('gRefId').value = 'SKR-' + count;
     }
 
-    // 50 Units Inventory Generation (10 Luxury Cottages + 40 Deluxe Rooms)
+    // 50 Units Inventory (10 Cottages + 40 Rooms)
     const cottageImg = "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=400&q=80";
     const roomImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
 
     let initial50Rooms = [];
-    // 10 Cottages
     for(let i=1; i<=10; i++) {
       initial50Rooms.push({
         id: "Cottage " + (i < 10 ? '0' + i : i),
@@ -554,7 +586,6 @@
         status: (i === 3 || i === 8) ? "Dirty" : "Clean"
       });
     }
-    // 40 Rooms
     for(let i=101; i<=120; i++) {
       initial50Rooms.push({
         id: "Room " + i,
@@ -572,16 +603,16 @@
       });
     }
 
-    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state')) || initial50Rooms;
+    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v4')) || initial50Rooms;
 
     function populateRoomDropdown() {
       const select = document.getElementById('gRoom');
       select.innerHTML = '';
       
       let cotGroup = document.createElement('optgroup');
-      cotGroup.label = "🏡 Luxury Cottages (10 Units)";
+      cotGroup.label = "🏡 Luxury Heritage Cottages (10 Units)";
       let rmGroup = document.createElement('optgroup');
-      rmGroup.label = "🏢 Main Resort Rooms (40 Units)";
+      rmGroup.label = "🏢 Main Resort Deluxe Rooms (40 Units)";
 
       rooms50State.forEach(r => {
         let opt = document.createElement('option');
@@ -614,7 +645,7 @@
         `;
         grid.innerHTML += card;
       });
-      localStorage.setItem('sk_50_rooms_state', JSON.stringify(rooms50State));
+      localStorage.setItem('sk_50_rooms_state_v4', JSON.stringify(rooms50State));
       populateRoomDropdown();
     }
 
@@ -623,8 +654,8 @@
       renderRoomVisualMatrix();
     }
 
-    // Bookings & Folio
-    let bookings = JSON.parse(localStorage.getItem('shreeKrishnaMasterFolio_v3')) || [
+    // Active Bookings (Folio) & Audit Archives
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v4')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -632,16 +663,43 @@
         adults: 2, 
         children: 1, 
         phone: "9832104521", 
-        total: 6500, 
-        paid: 6500, 
+        roomTariff: 5000,
+        diningTotal: 1200,
+        barTotal: 660,
+        total: 6860, 
+        paid: 3000, 
         mode: "UPI / QR Code Scan",
-        orders: ["Room Tariff: ₹6500 [Check-In]"]
+        orders: [
+          "Room Tariff: ₹5000 [Check-In]",
+          "Dining: Special Bengali Katla Fish Thali - ₹320 [01:15 PM]",
+          "Dining: Purulia Desi Mutton Curry with Rice - ₹420 [01:30 PM]",
+          "Bar: Johnnie Walker Black Label (60ml) - ₹420 [08:30 PM]",
+          "Bar: Blenders Pride Reserve (60ml) - ₹240 [09:10 PM]",
+          "Dining: Chicken Kasha with Tandoori Roti - ₹280 [09:45 PM]"
+        ]
+      }
+    ];
+
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v4')) || [
+      {
+        auditNo: "AUD-901",
+        refId: "SKR-0998",
+        name: "Debabrata Roy",
+        room: "Room 102",
+        roomTariff: 3500,
+        diningTotal: 640,
+        barTotal: 440,
+        totalSettled: 4580,
+        gateway: "UPI QR (Ref: UPI889123001)",
+        timestamp: "03 Nov, 10:45 AM"
       }
     ];
 
     function saveState() {
-      localStorage.setItem('shreeKrishnaMasterFolio_v3', JSON.stringify(bookings));
+      localStorage.setItem('sk_active_bookings_v4', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v4', JSON.stringify(auditHistory));
       render();
+      renderAuditLedger();
     }
 
     function render() {
@@ -657,15 +715,8 @@
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888;">No active reservations found.</td></tr>';
       }
 
-      let totalInflow = 0, upi = 0, cash = 0, pending = 0;
-
       bookings.forEach((b, index) => {
         let due = Math.max(0, b.total - b.paid);
-        totalInflow += b.total;
-        if (b.mode.includes('UPI') || b.mode.includes('Card') || b.mode.includes('Wallet')) upi += b.paid;
-        else cash += b.paid;
-        pending += due;
-
         let orderListHtml = (b.orders || []).map(o => `<li style="font-size:11px; margin-bottom:2px;">${o}</li>`).join('');
 
         let row = `<tr>
@@ -677,7 +728,7 @@
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
           <td>
             <button onclick="openCheckoutModal(${index})" class="btn btn-sm btn-danger">
-              🛎️ Checkout & Settle
+              🛎️ Check-Out & Settle
             </button>
           </td>
         </tr>`;
@@ -687,11 +738,6 @@
         dSelect.innerHTML += opt;
         bSelect.innerHTML += opt;
       });
-
-      document.getElementById('auditTotal').innerText = '₹' + totalInflow.toFixed(2);
-      document.getElementById('auditUpi').innerText = '₹' + upi.toFixed(2);
-      document.getElementById('auditCash').innerText = '₹' + cash.toFixed(2);
-      document.getElementById('auditDue').innerText = '₹' + pending.toFixed(2);
     }
 
     function addBooking() {
@@ -710,7 +756,11 @@
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let initialOrder = [`Room Tariff: ₹${total} [${nowTime}]`];
 
-      bookings.push({ refId, name, phone, adults, children, room, total, paid, mode, orders: initialOrder });
+      bookings.push({ 
+        refId, name, phone, adults, children, room, 
+        roomTariff: total, diningTotal: 0, barTotal: 0,
+        total: total, paid: paid, mode: mode, orders: initialOrder 
+      });
 
       let cur = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
       localStorage.setItem('sk_ref_counter', (cur + 1).toString());
@@ -727,13 +777,15 @@
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
       let [item, price] = document.getElementById(selectId).value.split('|');
+      let val = parseFloat(price);
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].total += parseFloat(price);
+      bookings[idx].total += val;
+      bookings[idx].diningTotal = (bookings[idx].diningTotal || 0) + val;
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`${item} - ₹${price} [${time}]`);
+      bookings[idx].orders.push(`Dining: ${item} - ₹${val} [${time}]`);
 
-      alert(`${item} (₹${price}) added to ${bookings[idx].room} folio.`);
+      alert(`${item} (₹${val}) added to ${bookings[idx].room} folio.`);
       saveState();
     }
 
@@ -741,46 +793,115 @@
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
       let [item, price] = document.getElementById(selectId).value.split('|');
+      let val = parseFloat(price);
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].total += parseFloat(price);
+      bookings[idx].total += val;
+      bookings[idx].barTotal = (bookings[idx].barTotal || 0) + val;
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Bar: ${item} - ₹${price} [${time}]`);
+      bookings[idx].orders.push(`Bar: ${item} - ₹${val} [${time}]`);
 
-      alert(`Bar Service ${item} (₹${price}) added to ${bookings[idx].room} folio.`);
+      alert(`Bar Service ${item} (₹${val}) added to ${bookings[idx].room} folio.`);
       saveState();
     }
 
-    // CHECKOUT WORKFLOW
+    // CHECK-OUT MODAL & MULTI-GATEWAY ENGINE
     let activeCheckoutIndex = null;
 
     function openCheckoutModal(index) {
       activeCheckoutIndex = index;
       let b = bookings[index];
       let due = Math.max(0, b.total - b.paid);
-
       let orderListHtml = (b.orders || []).map(o => `<li>${o}</li>`).join('');
 
       let html = `
-        <div style="background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:12px; font-size:14px;">
-          <strong>Guest Name:</strong> ${b.name} (${b.phone})<br>
-          <strong>Allocation:</strong> ${b.room} | <strong>Ref ID:</strong> ${b.refId}<br>
-          <strong>Guests:</strong> ${b.adults} Adults, ${b.children} Children
+        <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
+          <strong>Guest:</strong> ${b.name} (${b.phone}) | <strong>Allocation:</strong> ${b.room} | <strong>Ref:</strong> ${b.refId}
         </div>
-        <h4 style="margin:8px 0; color:var(--primary);">📋 Itemized Food, Bar & Room Charges:</h4>
-        <ul style="background:#fff; border:1px solid #ddd; padding:10px 25px; border-radius:5px; max-height:120px; overflow-y:auto; font-size:13px; margin:0;">
+        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Order History:</h5>
+        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:100px; overflow-y:auto; font-size:12px; margin:0;">
           ${orderListHtml}
         </ul>
-        <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14px;">
-          <div>Gross Billed: <strong>₹${b.total.toFixed(2)}</strong></div>
-          <div style="color:var(--success);">Advance Received: <strong>₹${b.paid.toFixed(2)}</strong></div>
-          <div style="grid-column: span 2; font-size:16px; background:#fff2f0; padding:8px; border-radius:4px; color:var(--danger); border:1px solid #ffccc7;">
-            Net Balance Due for Settlement: <strong>₹${due.toFixed(2)}</strong>
-          </div>
+        <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; font-size:13px;">
+          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Room: <strong>₹${(b.roomTariff||0).toFixed(2)}</strong></div>
+          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Dining: <strong>₹${(b.diningTotal||0).toFixed(2)}</strong></div>
+          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Bar: <strong>₹${(b.barTotal||0).toFixed(2)}</strong></div>
+        </div>
+        <div style="margin-top:8px; background:#fff5f5; border:1px solid #ffccc7; padding:10px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
+          <div>Gross Billed: <strong>₹${b.total.toFixed(2)}</strong> | Advance Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
+          <div style="font-size:15px; color:var(--danger);">Balance Due: <strong>₹${due.toFixed(2)}</strong></div>
         </div>
       `;
       document.getElementById('checkoutBillDetails').innerHTML = html;
+      renderCheckoutGatewayFields("UPI");
       document.getElementById('checkoutModal').classList.add('open');
+    }
+
+    function renderCheckoutGatewayFields(mode) {
+      const container = document.getElementById('gatewayFieldsContainer');
+      let b = bookings[activeCheckoutIndex];
+      let due = b ? Math.max(0, b.total - b.paid) : 0;
+
+      if (mode === 'UPI') {
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="margin:0 0 8px; font-weight:bold; color:var(--secondary);">Scan Dynamic QR to Pay ₹${due.toFixed(2)}</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${due}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:4px; border-radius:6px;">
+            <p style="font-size:12px; color:#555; margin:4px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <input type="text" id="upiTxnRef" placeholder="Enter UPI UTR / Transaction ID (12 digits)" style="margin-top:6px; font-size:13px;">
+          </div>
+        `;
+      } else if (mode === 'CARD') {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Card Number (16 Digits)</label>
+            <input type="text" id="cardNo" placeholder="4xxx xxxx xxxx 1234" maxlength="19">
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <div style="flex:1;">
+                <label>Expiry (MM/YY)</label>
+                <input type="text" id="cardExp" placeholder="12/28" maxlength="5">
+              </div>
+              <div style="flex:1;">
+                <label>CVV (3 Digits)</label>
+                <input type="password" id="cardCvv" placeholder="•••" maxlength="3">
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <label>Cardholder Full Name</label>
+              <input type="text" id="cardHolder" placeholder="Name on card">
+            </div>
+          </div>
+        `;
+      } else if (mode === 'WALLET') {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Select Digital Wallet</label>
+            <select id="walletType" style="margin-bottom:8px;">
+              <option value="PhonePe">PhonePe Business</option>
+              <option value="Paytm">Paytm Wallet</option>
+              <option value="GooglePay">Google Pay (Business)</option>
+            </select>
+            <label>Registered Mobile Number</label>
+            <input type="text" id="walletMobile" placeholder="Enter guest mobile number" value="${b ? b.phone : ''}">
+            <label style="margin-top:8px;">Wallet Transaction ID</label>
+            <input type="text" id="walletTxnId" placeholder="e.g. TXN-89324021">
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Cash Amount Received from Guest (₹)</label>
+            <input type="number" id="cashReceived" value="${due}" oninput="calcCashChange(this.value, ${due})">
+            <p id="cashChangeText" style="margin:8px 0 0; color:green; font-weight:bold;">Change to Return: ₹0.00</p>
+          </div>
+        `;
+      }
+    }
+
+    function calcCashChange(rec, due) {
+      let r = parseFloat(rec || 0);
+      let diff = r - due;
+      document.getElementById('cashChangeText').innerText = diff >= 0 ? `Change to Return: ₹${diff.toFixed(2)}` : `Shortage: ₹${Math.abs(diff).toFixed(2)}`;
     }
 
     function closeCheckoutModal() {
@@ -791,47 +912,129 @@
     function confirmFinalCheckout() {
       if (activeCheckoutIndex === null) return;
       let b = bookings[activeCheckoutIndex];
-      let finalGateway = document.getElementById('checkoutPaymentGateway').value;
+      let mode = document.getElementById('checkoutGatewaySelect').value;
+      let txnDetails = "";
 
-      // 1. Mark corresponding Room as DIRTY in 50 Units
-      let targetRoom = rooms50State.find(r => r.id === b.room);
-      if (targetRoom) {
-        targetRoom.status = "Dirty";
+      if (mode === 'UPI') {
+        let utr = document.getElementById('upiTxnRef').value.trim() || "UPI-" + Math.floor(100000000000 + Math.random() * 900000000000);
+        txnDetails = `UPI (UTR: ${utr})`;
+      } else if (mode === 'CARD') {
+        let cardNo = document.getElementById('cardNo').value.trim();
+        let last4 = cardNo ? cardNo.slice(-4) : "8821";
+        txnDetails = `Card POS (Ends **${last4})`;
+      } else if (mode === 'WALLET') {
+        let wType = document.getElementById('walletType').value;
+        let wTxn = document.getElementById('walletTxnId').value.trim() || "WLT" + Date.now();
+        txnDetails = `${wType} (${wTxn})`;
+      } else {
+        txnDetails = "Cash Drawer Settlement";
       }
 
-      alert(`Checkout completed for ${b.name} (${b.room}). Full settlement received via ${finalGateway}. Room marked as DIRTY.`);
+      // Mark unit as DIRTY
+      let targetRoom = rooms50State.find(r => r.id === b.room);
+      if (targetRoom) targetRoom.status = "Dirty";
 
-      // 2. Remove from active folio
+      // Append to Audit Trail
+      let auditCount = auditHistory.length + 901;
+      let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+      auditHistory.unshift({
+        auditNo: "AUD-" + auditCount,
+        refId: b.refId,
+        name: b.name,
+        room: b.room,
+        roomTariff: b.roomTariff || b.total,
+        diningTotal: b.diningTotal || 0,
+        barTotal: b.barTotal || 0,
+        totalSettled: b.total,
+        gateway: txnDetails,
+        timestamp: nowTime
+      });
+
+      alert(`Check-out verified for ${b.name} (${b.room}). Settlement via ${txnDetails}. Room marked DIRTY.`);
+
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
       saveState();
       renderRoomVisualMatrix();
     }
 
+    // Comprehensive Night Audit Ledger Rendering
+    function renderAuditLedger() {
+      let roomRev = 0, diningRev = 0, barRev = 0, totalSettled = 0, pending = 0;
+
+      // From settled audit history
+      auditHistory.forEach(a => {
+        roomRev += (a.roomTariff || 0);
+        diningRev += (a.diningTotal || 0);
+        barRev += (a.barTotal || 0);
+        totalSettled += (a.totalSettled || 0);
+      });
+
+      // From current active in-house guests
+      bookings.forEach(b => {
+        pending += Math.max(0, b.total - b.paid);
+      });
+
+      let gst = (roomRev + diningRev + barRev) * 0.12;
+
+      document.getElementById('auditRoomRev').innerText = '₹' + roomRev.toFixed(2);
+      document.getElementById('auditDiningRev').innerText = '₹' + diningRev.toFixed(2);
+      document.getElementById('auditBarRev').innerText = '₹' + barRev.toFixed(2);
+      document.getElementById('auditGstRev').innerText = '₹' + gst.toFixed(2);
+      document.getElementById('auditTotalSettled').innerText = '₹' + totalSettled.toFixed(2);
+      document.getElementById('auditPendingBalance').innerText = '₹' + pending.toFixed(2);
+
+      const tableBody = document.getElementById('auditHistoryTableBody');
+      tableBody.innerHTML = '';
+
+      if (auditHistory.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
+        return;
+      }
+
+      auditHistory.forEach(a => {
+        let row = `<tr>
+          <td><strong>${a.auditNo}</strong></td>
+          <td>${a.refId}</td>
+          <td><strong>${a.name}</strong></td>
+          <td>${a.room}</td>
+          <td>₹${(a.roomTariff||0).toFixed(2)}</td>
+          <td>₹${(a.diningTotal||0).toFixed(2)}</td>
+          <td>₹${(a.barTotal||0).toFixed(2)}</td>
+          <td style="color:#27ae60; font-weight:bold;">₹${(a.totalSettled||0).toFixed(2)}</td>
+          <td><small>${a.gateway}</small></td>
+          <td><small>${a.timestamp}</small></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
     function exportToExcel() {
-      if (bookings.length === 0) { alert('No guest data found to export.'); return; }
-      let exportData = bookings.map((b, i) => ({
-        "SL": i + 1,
-        "Ref ID": b.refId,
-        "Guest Name": b.name,
-        "Room / Cottage": b.room,
-        "Guests": `${b.adults} Adults, ${b.children} Children`,
-        "Itemized Summary": (b.orders || []).join(" | "),
-        "Total Billed (INR)": b.total,
-        "Advance Paid (INR)": b.paid,
-        "Balance Due (INR)": Math.max(0, b.total - b.paid),
-        "Payment Mode": b.mode
+      if (auditHistory.length === 0) { alert('No completed audit records to export.'); return; }
+      let exportData = auditHistory.map(a => ({
+        "Audit ID": a.auditNo,
+        "Ref ID": a.refId,
+        "Guest Name": a.name,
+        "Allocated Unit": a.room,
+        "Room Revenue (INR)": a.roomTariff,
+        "Dining / F&B (INR)": a.diningTotal,
+        "Bar Lounge (INR)": a.barTotal,
+        "Total Settled (INR)": a.totalSettled,
+        "Settlement Gateway & Txn": a.gateway,
+        "Settlement Timestamp": a.timestamp
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Shree Krishna Master Ledger");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Master EOD Audit");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Master_EOD_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
       generateRefId();
       renderRoomVisualMatrix();
       render();
+      renderAuditLedger();
     };
   </script>
 </body>
