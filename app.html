@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resort Property Management & Front Desk System</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #1abc9c;
+      --accent: #e67e22;
+      --light: #f8f9fa;
+      --dark: #34495e;
+      --danger: #e74c3c;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 15px;
+      background: #eef2f5;
+      color: #333;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 18px 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header h1 { margin: 0; font-size: 24px; }
+    .badge { background: var(--secondary); padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    .card h2, .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--dark);
+    }
+    input, select {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: var(--secondary); color: white; }
+    .btn-primary:hover { background: #16a085; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-success { background: #27ae60; color: white; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #f1f4f6;
+      color: var(--dark);
+    }
+    .status-paid { color: #27ae60; font-weight: bold; }
+    .status-pending { color: #d35400; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>🌿 Resort Front Desk & PMS</h1>
+      <small style="color:#bdc3c7;">Guest Management, Cottage Billing & Auditing</small>
+    </div>
+    <span class="badge">Live Front Office</span>
+  </header>
+
+  <div class="grid">
+    <!-- Booking & Guest Check-In Form -->
+    <div class="card">
+      <h2>🛎️ Guest Check-In / Booking</h2>
+      <div class="form-group">
+        <label>Guest Full Name</label>
+        <input type="text" id="guestName" placeholder="অতীথির নাম">
+      </div>
+      <div class="form-group">
+        <label>Contact Number</label>
+        <input type="text" id="guestPhone" placeholder="মোবাইল নম্বর">
+      </div>
+      <div class="form-group">
+        <label>Room / Cottage Allocation</label>
+        <select id="roomNumber">
+          <option value="Cottage 1">Cottage 1 (AC)</option>
+          <option value="Cottage 2">Cottage 2 (AC)</option>
+          <option value="Cottage 3">Cottage 3 (Deluxe)</option>
+          <option value="Room 101">Room 101 (Standard)</option>
+          <option value="Room 102">Room 102 (Standard)</option>
+          <option value="Room 201">Room 201 (Executive)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Check-In Date</label>
+        <input type="date" id="checkInDate">
+      </div>
+      <div class="form-group">
+        <label>Total Tariff / Bill Amount (₹)</label>
+        <input type="number" id="totalAmount" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Advance Received (₹)</label>
+        <input type="number" id="advancePaid" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Payment Mode</label>
+        <select id="paymentMode">
+          <option value="Cash">Cash in Hand</option>
+          <option value="UPI / Online">UPI / QR Code Scan</option>
+          <option value="Card">Card Swipe</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="addResortBooking()" style="width: 100%; margin-top: 10px;">
+        ➕ Confirm Check-In & Save
+      </button>
+    </div>
+
+    <!-- Active Guest Folio Register -->
+    <div class="card">
+      <h2>📋 Active In-House Guest Folio</h2>
+      <div style="overflow-x: auto;">
+        <table id="folioTable">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>Guest Name</th>
+              <th>Cottage/Room</th>
+              <th>Total (₹)</th>
+              <th>Paid (₹)</th>
+              <th>Due (₹)</th>
+              <th>Mode</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="folioListBody">
+            <!-- Dynamic rows will render here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= NIGHT AUDIT & EXCEL EXPORT SECTION ================= -->
+  <div class="card" style="margin-top: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2c3e50; padding-bottom: 10px;">
+      <h3 style="margin: 0; color: #2c3e50;">📊 Night Audit & Daily Operations Closing</h3>
+      <button onclick="exportToExcelPMS()" class="btn btn-success">
+        📥 Export to Excel (.xlsx)
+      </button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+      <div style="background: #f8f9fa; border-left: 4px solid #3498db; padding: 12px; border-radius: 4px;">
+        <span style="font-size: 13px; color: #7f8c8d;">Total Expected Inflow</span>
+        <h4 id="auditTotalRevenue" style="margin: 5px 0 0; color: #2c3e50;">₹0.00</h4>
+      </div>
+      <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
+        <span style="font-size: 13px; color: #7f8c8d;">UPI / Online Collected</span>
+        <h4 id="auditUpiRevenue" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
+      </div>
+      <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
+        <span style="font-size: 13px; color: #7f8c8d;">Cash in Hand</span>
+        <h4 id="auditCashRevenue" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
+      </div>
+      <div style="background: #f8f9fa; border-left: 4px solid #e74c3c; padding: 12px; border-radius: 4px;">
+        <span style="font-size: 13px; color: #7f8c8d;">Balance Pending</span>
+        <h4 id="auditPendingBalance" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Excel Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // Initial Load & Persistence
+    let resortBookings = JSON.parse(localStorage.getItem('resortBookings')) || [
+      { id: 1, guestName: "Sample Guest (Purulia)", roomNumber: "Cottage 1", totalAmount: 3500, advancePaid: 3500, paymentMode: "UPI / Online" }
+    ];
+
+    function saveAndRender() {
+      localStorage.setItem('resortBookings', JSON.stringify(resortBookings));
+      renderFolio();
+      runNightAuditSummary();
+    }
+
+    function renderFolio() {
+      const tbody = document.getElementById('folioListBody');
+      tbody.innerHTML = '';
+
+      if (resortBookings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#95a5a6;">কোনো সক্রিয় গেস্ট রেকর্ড নেই।</td></tr>';
+        return;
+      }
+
+      resortBookings.forEach((b, index) => {
+        let total = parseFloat(b.totalAmount || 0);
+        let paid = parseFloat(b.advancePaid || 0);
+        let due = Math.max(0, total - paid);
+
+        let row = `
+          <tr>
+            <td>${index + 1}</td>
+            <td><strong>${b.guestName}</strong></td>
+            <td>${b.roomNumber}</td>
+            <td>₹${total.toFixed(2)}</td>
+            <td class="status-paid">₹${paid.toFixed(2)}</td>
+            <td class="status-pending">₹${due.toFixed(2)}</td>
+            <td>${b.paymentMode}</td>
+            <td>
+              <button onclick="removeGuest(${index})" style="background:none; border:none; color:red; cursor:pointer;">❌ Checkout</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function addResortBooking() {
+      let name = document.getElementById('guestName').value.trim();
+      let room = document.getElementById('roomNumber').value;
+      let total = parseFloat(document.getElementById('totalAmount').value || 0);
+      let paid = parseFloat(document.getElementById('advancePaid').value || 0);
+      let mode = document.getElementById('paymentMode').value;
+
+      if (!name) {
+        alert('অনুগ্রহ করে অতিথির নাম লিখুন।');
+        return;
+      }
+
+      resortBookings.push({
+        id: Date.now(),
+        guestName: name,
+        roomNumber: room,
+        totalAmount: total,
+        advancePaid: paid,
+        paymentMode: mode
+      });
+
+      // Reset Form
+      document.getElementById('guestName').value = '';
+      document.getElementById('totalAmount').value = '';
+      document.getElementById('advancePaid').value = '';
+
+      saveAndRender();
+    }
+
+    function removeGuest(index) {
+      if (confirm('অতিথি চেক-আউট সম্পন্ন করতে চান?')) {
+        resortBookings.splice(index, 1);
+        saveAndRender();
+      }
+    }
+
+    function runNightAuditSummary() {
+      let totalRev = 0, upiRev = 0, cashRev = 0, pendingRev = 0;
+
+      resortBookings.forEach(b => {
+        let amt = parseFloat(b.totalAmount || 0);
+        let paid = parseFloat(b.advancePaid || 0);
+        let mode = (b.paymentMode || '').toLowerCase();
+
+        totalRev += amt;
+        if (mode.includes('upi') || mode.includes('online')) {
+          upiRev += paid;
+        } else {
+          cashRev += paid;
+        }
+        pendingRev += Math.max(0, amt - paid);
+      });
+
+      document.getElementById('auditTotalRevenue').innerText = '₹' + totalRev.toFixed(2);
+      document.getElementById('auditUpiRevenue').innerText = '₹' + upiRev.toFixed(2);
+      document.getElementById('auditCashRevenue').innerText = '₹' + cashRev.toFixed(2);
+      document.getElementById('auditPendingBalance').innerText = '₹' + pendingRev.toFixed(2);
+    }
+
+    function exportToExcelPMS() {
+      if (resortBookings.length === 0) {
+        alert('এক্সেল এক্সপোর্ট করার জন্য কোনো গেস্ট রেকর্ড নেই।');
+        return;
+      }
+      let exportData = resortBookings.map((b, i) => ({
+        "SL": i + 1,
+        "Guest Name": b.guestName,
+        "Room / Cottage": b.roomNumber,
+        "Payment Mode": b.paymentMode,
+        "Total Billed (₹)": b.totalAmount,
+        "Paid (₹)": b.advancePaid,
+        "Due Balance (₹)": Math.max(0, b.totalAmount - b.advancePaid)
+      }));
+
+      let ws = XLSX.utils.json_to_sheet(exportData);
+      let wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Daily Night Audit");
+      XLSX.writeFile(wb, "Resort_Night_Audit_" + new Date().toISOString().slice(0, 10) + ".xlsx");
+    }
+
+    window.onload = function() {
+      let today = new Date().toISOString().split('T')[0];
+      if (document.getElementById('checkInDate')) {
+        document.getElementById('checkInDate').value = today;
+      }
+      saveAndRender();
+    };
+  </script>
+</body>
+</html>
