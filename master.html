@@ -84,10 +84,9 @@
       border-bottom: 2px solid #e9ecef;
       padding-bottom: 10px;
     }
-    .grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; }
+    .grid { display: grid; grid-template-columns: 1.1fr 1.5fr; gap: 20px; }
     @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
 
-    /* Summary KPI Metric Boxes */
     .summary-boxes {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -208,7 +207,6 @@
     th, td { border: 1px solid #dee2e6; padding: 9px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
 
-    /* Clean Footer Copyright */
     footer {
       background: var(--primary);
       color: #cbd5e0;
@@ -218,7 +216,6 @@
       border-top: 3px solid var(--accent);
       font-size: 13px;
     }
-    footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -277,7 +274,6 @@
             </div>
           </div>
 
-          <!-- Government ID Type & Number -->
           <div class="form-row">
             <div class="form-group">
               <label>Government ID Proof</label>
@@ -307,19 +303,23 @@
             </div>
             <div class="form-group">
               <label>Advance Deposit at Check-In (₹)</label>
-              <input type="number" id="gPaid" placeholder="0.00">
+              <input type="number" id="gPaid" placeholder="0.00" oninput="updateCheckInGatewayDisplay()">
             </div>
           </div>
 
+          <!-- CHECK-IN PAYMENT GATEWAY SELECTOR -->
           <div class="form-group">
             <label>Advance Payment Mode</label>
-            <select id="gMode">
-              <option value="UPI / QR Code Scan">UPI / QR Code</option>
-              <option value="Credit / Debit Card">Credit / Debit Card</option>
-              <option value="Digital Wallet">Digital Wallet (PhonePe/Paytm)</option>
-              <option value="Cash Settlement">Cash</option>
+            <select id="gMode" onchange="updateCheckInGatewayDisplay()">
+              <option value="UPI">📱 UPI (Dynamic QR Code Scanner)</option>
+              <option value="CARD">💳 Credit / Debit Card Terminal</option>
+              <option value="WALLET">📲 Digital Wallet (PhonePe / Paytm / GPay)</option>
+              <option value="CASH">💵 Cash Settlement</option>
             </select>
           </div>
+
+          <!-- INTERACTIVE CHECK-IN PAYMENT BOX & SCANNER -->
+          <div id="checkInGatewayBox" style="background: #fdfdfd; border: 1px dashed #006466; padding: 12px; border-radius: 6px; margin-bottom: 15px;"></div>
 
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
         </div>
@@ -518,7 +518,7 @@
       </div>
     </div>
 
-    <!-- 6. COMPREHENSIVE NIGHT AUDIT & COMPREHENSIVE EOD LEDGER TAB -->
+    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
@@ -610,11 +610,11 @@
     </div>
   </div>
 
-  <!-- FORM C MODAL -->
+  <!-- ================= FORM C MODAL (WITH ARRIVED FROM & DESTINATION RESTORED) ================= -->
   <div id="cFormModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">
-        <h3 style="margin: 0; color: var(--primary);">📄 Foreign Guest Registration (Form C)</h3>
+        <h3 style="margin: 0; color: var(--primary);">📄 Foreign Guest Registration (Form C Compliance)</h3>
         <button onclick="closeCFormModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
       <div class="form-row">
@@ -622,14 +622,18 @@
         <div class="form-group"><label>Nationality</label><input type="text" id="cfNation" placeholder="Country"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Passport No</label><input type="text" id="cfPassport" placeholder="Passport No"></div>
+        <div class="form-group"><label>Passport Number</label><input type="text" id="cfPassport" placeholder="Passport No"></div>
         <div class="form-group"><label>Visa Validity</label><input type="text" id="cfVisa" placeholder="Visa No / Valid Until"></div>
       </div>
-      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="alert('Form C Record Attached.'); closeCFormModal();">💾 Save Form C</button>
+      <!-- RESTORED ARRIVED FROM & DESTINATION -->
+      <div class="form-row">
+        <div class="form-group"><label>Arrived From (City / Country)</label><input type="text" id="cfFrom" placeholder="Port of arrival / Previous city"></div>
+        <div class="form-group"><label>Next Destination</label><input type="text" id="cfTo" placeholder="Next traveling city / country"></div>
+      </div>
+      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="saveFormCDetails()">💾 Save & Attach Form C</button>
     </div>
   </div>
 
-  <!-- CLEAN EXCLUSIVE COPYRIGHT FOOTER -->
   <footer>
     <div>
       © 2026 <strong>Shree Krishna Resort & Retreat</strong>. All Rights Reserved.
@@ -650,13 +654,21 @@
 
     function openCFormModal() { document.getElementById('cFormModal').classList.add('open'); }
     function closeCFormModal() { document.getElementById('cFormModal').classList.remove('open'); }
+    function saveFormCDetails() {
+      let p = document.getElementById('cfPassport').value;
+      let from = document.getElementById('cfFrom').value;
+      let to = document.getElementById('cfTo').value;
+      if (!p) { alert('Please enter passport number.'); return; }
+      alert(`Form C attached successfully.\nRoute: ${from || 'N/A'} ➔ ${to || 'N/A'}`);
+      closeCFormModal();
+    }
 
     function generateRefId() {
       let count = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
       document.getElementById('gRefId').value = 'SKR-' + count;
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v10')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v11')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -671,6 +683,54 @@
       }
     }
 
+    // CHECK-IN ADVANCE GATEWAY DISPLAY ENGINE
+    function updateCheckInGatewayDisplay() {
+      const mode = document.getElementById('gMode').value;
+      const box = document.getElementById('checkInGatewayBox');
+      const advance = parseFloat(document.getElementById('gPaid').value || 0);
+
+      if (mode === 'UPI') {
+        box.innerHTML = `
+          <div style="text-align:center;">
+            <p style="margin:0 0 6px; font-weight:bold; color:var(--secondary);">Scan to Deposit Advance (₹${advance.toFixed(2)})</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=125x125&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${advance}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:3px; border-radius:5px;">
+            <p style="font-size:11px; color:#555; margin:3px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <input type="text" id="chkUpiRef" placeholder="Enter UPI UTR / Transaction ID" style="margin-top:5px; font-size:12px; padding:6px;">
+          </div>
+        `;
+      } else if (mode === 'CARD') {
+        box.innerHTML = `
+          <div style="font-size:12px;">
+            <label>Card Number (16 Digits)</label>
+            <input type="text" id="chkCardNo" placeholder="4xxx xxxx xxxx 1234" maxlength="19" style="padding:6px;">
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <div style="flex:1;"><label>Expiry</label><input type="text" id="chkCardExp" placeholder="MM/YY" maxlength="5" style="padding:6px;"></div>
+              <div style="flex:1;"><label>CVV</label><input type="password" id="chkCardCvv" placeholder="•••" maxlength="3" style="padding:6px;"></div>
+            </div>
+          </div>
+        `;
+      } else if (mode === 'WALLET') {
+        box.innerHTML = `
+          <div style="font-size:12px;">
+            <label>Digital Wallet Service</label>
+            <select id="chkWalletType" style="margin-bottom:6px; padding:6px;">
+              <option value="PhonePe">PhonePe Merchant</option>
+              <option value="Paytm">Paytm Business</option>
+              <option value="GooglePay">Google Pay</option>
+            </select>
+            <label>Wallet Reference / Txn ID</label>
+            <input type="text" id="chkWalletRef" placeholder="Txn ID" style="padding:6px;">
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div style="font-size:12px; color:#333;">
+            <strong>💵 Cash Desk:</strong> Advance payment ₹${advance.toFixed(2)} received in cash drawer.
+          </div>
+        `;
+      }
+    }
+
     const cottageImg = "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=400&q=80";
     const deluxeImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
     const dormImg = "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80";
@@ -678,7 +738,6 @@
 
     let fresh50Units = [];
 
-    // 10 Heritage Cottages
     for(let i=1; i<=10; i++) {
       fresh50Units.push({
         id: "Cottage " + (i < 10 ? '0' + i : i),
@@ -688,7 +747,6 @@
       });
     }
 
-    // 20 Deluxe Rooms
     for(let i=101; i<=120; i++) {
       fresh50Units.push({
         id: "Room " + i,
@@ -698,7 +756,6 @@
       });
     }
 
-    // 10 Dormitory Units
     for(let i=1; i<=10; i++) {
       fresh50Units.push({
         id: "Dormitory D-" + (i < 10 ? '0' + i : i),
@@ -708,7 +765,6 @@
       });
     }
 
-    // 10 Executive Suites
     for(let i=201; i<=210; i++) {
       fresh50Units.push({
         id: "Suite " + i,
@@ -806,7 +862,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v10')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v11')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -821,7 +877,7 @@
         barTotal: 660,
         total: 6860, 
         paid: 3000, 
-        mode: "UPI / QR Code Scan",
+        mode: "UPI (Ref: UPI88912301)",
         orders: [
           "Room Tariff: ₹5000 [Check-In]",
           "Dining: Special Bengali Katla Fish Thali - ₹320 [01:15 PM]",
@@ -833,7 +889,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v10')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v11')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -851,9 +907,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v10', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v10', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v10', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v11', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v11', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v11', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -916,13 +972,27 @@
 
       guestDirectory[phone] = { name: name, idType: idType, idNumber: idNumber };
 
+      let paymentDetails = mode;
+      if (mode === 'UPI') {
+        let u = document.getElementById('chkUpiRef') ? document.getElementById('chkUpiRef').value : '';
+        paymentDetails = `UPI (UTR: ${u || 'Verified'})`;
+      } else if (mode === 'CARD') {
+        let c = document.getElementById('chkCardNo') ? document.getElementById('chkCardNo').value : '';
+        paymentDetails = `Card POS (Ends ${c.slice(-4) || 'Terminal'})`;
+      } else if (mode === 'WALLET') {
+        let w = document.getElementById('chkWalletType') ? document.getElementById('chkWalletType').value : 'Wallet';
+        paymentDetails = `${w} Wallet`;
+      } else {
+        paymentDetails = "Cash in Hand";
+      }
+
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let initialOrder = [`Room Tariff: ₹${total} [${nowTime}]`];
 
       bookings.push({ 
         refId, name, phone, idType, idNumber, adults, children, room, 
         roomTariff: total, diningTotal: 0, barTotal: 0,
-        total: total, paid: paid, mode: mode, orders: initialOrder 
+        total: total, paid: paid, mode: paymentDetails, orders: initialOrder 
       });
 
       let cur = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
@@ -936,6 +1006,7 @@
       generateRefId();
       saveState();
       renderRoomVisualMatrix();
+      updateCheckInGatewayDisplay();
     }
 
     function postFoodOrder(selectId) {
@@ -1199,6 +1270,7 @@
       render();
       renderRoomVisualMatrix();
       renderAuditLedger();
+      updateCheckInGatewayDisplay();
     };
   </script>
 </body>
