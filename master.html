@@ -123,7 +123,6 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-sm { padding: 5px 10px; font-size: 11px; }
 
-    /* Compact Scrollable Folio Table for 50 Rooms */
     .folio-table-container {
       max-height: 540px;
       overflow-y: auto;
@@ -344,14 +343,25 @@
             <select id="gRoom" onchange="calculateRoomTariff()"></select>
           </div>
 
-          <!-- AUTO-COMPUTED TARIFF BREAKDOWN -->
+          <!-- AUTO-COMPUTED TARIFF BREAKDOWN WITH ROOM GST (12%) -->
           <div class="form-row">
             <div class="form-group">
-              <label>Daily Room Rate (₹/Night)</label>
+              <label>Daily Room Rate (₹/Nt)</label>
               <input type="number" id="gDailyRate" readonly>
             </div>
             <div class="form-group">
-              <label>Total Room Tariff (₹)</label>
+              <label>Base Tariff (₹)</label>
+              <input type="number" id="gBaseTariff" readonly>
+            </div>
+            <div class="form-group">
+              <label>Room GST 12% (₹)</label>
+              <input type="number" id="gRoomGst" readonly>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Room Bill (Incl. GST) (₹)</label>
               <input type="number" id="gTotal" readonly>
             </div>
             <div class="form-group">
@@ -376,7 +386,7 @@
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
         </div>
 
-        <!-- COMPACT & HIGH-CAPACITY 50 ROOM ACTIVE FOLIO -->
+        <!-- COMPACT 50 ROOM ACTIVE FOLIO TABLE -->
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 10px;">
             <h2 style="margin: 0; border: none; padding: 0;">📋 Active In-House Guest Folios (50 Rooms)</h2>
@@ -390,8 +400,9 @@
                   <th>Ref ID</th>
                   <th>Guest / Allocation</th>
                   <th>Stay Period</th>
-                  <th>Order History (Item & Time)</th>
-                  <th>Total</th>
+                  <th>Orders & Timestamps</th>
+                  <th>Gross Bill</th>
+                  <th>GST Breakdown</th>
                   <th>Advance</th>
                   <th>Due</th>
                   <th>Action</th>
@@ -448,40 +459,40 @@
 
         <div class="menu-columns">
           <div class="menu-box">
-            <h4>🍳 Breakfast Menu</h4>
+            <h4>🍳 Breakfast Menu (5% GST Applied)</h4>
             <div class="form-group">
               <select id="bfItemSelect">
-                <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120)</option>
-                <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140)</option>
-                <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110)</option>
-                <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180)</option>
-                <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50)</option>
+                <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120 + 5% GST)</option>
+                <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140 + 5% GST)</option>
+                <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110 + 5% GST)</option>
+                <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180 + 5% GST)</option>
+                <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50 + 5% GST)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect')">➕ Post Breakfast Bill</button>
           </div>
 
           <div class="menu-box">
-            <h4>🍛 Lunch Menu</h4>
+            <h4>🍛 Lunch Menu (5% GST Applied)</h4>
             <div class="form-group">
               <select id="lunchItemSelect">
-                <option value="Special Bengali Katla Fish Thali|320">Bengali Fish Thali - Katla (₹320)</option>
-                <option value="Purulia Desi Mutton Curry with Rice|420">Desi Mutton Curry & Rice (₹420)</option>
-                <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550)</option>
-                <option value="Pure Veg Deluxe Bengali Thali|240">Pure Veg Deluxe Thali (₹240)</option>
+                <option value="Special Bengali Katla Fish Thali|320">Bengali Fish Thali - Katla (₹320 + 5% GST)</option>
+                <option value="Purulia Desi Mutton Curry with Rice|420">Desi Mutton Curry & Rice (₹420 + 5% GST)</option>
+                <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550 + 5% GST)</option>
+                <option value="Pure Veg Deluxe Bengali Thali|240">Pure Veg Deluxe Thali (₹240 + 5% GST)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
           </div>
 
           <div class="menu-box">
-            <h4>🍲 Dinner Menu</h4>
+            <h4>🍲 Dinner Menu (5% GST Applied)</h4>
             <div class="form-group">
               <select id="dinnerItemSelect">
-                <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280)</option>
-                <option value="Purulia Mutton Kasha with Rumali Roti|390">Mutton Kasha & Rumali Roti (₹390)</option>
-                <option value="Paneer Butter Masala with Butter Naan|250">Paneer Butter Masala & Naan (₹250)</option>
-                <option value="Mixed Fried Rice & Chilli Chicken|310">Fried Rice & Chilli Chicken (₹310)</option>
+                <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280 + 5% GST)</option>
+                <option value="Purulia Mutton Kasha with Rumali Roti|390">Mutton Kasha & Rumali Roti (₹390 + 5% GST)</option>
+                <option value="Paneer Butter Masala with Butter Naan|250">Paneer Butter Masala & Naan (₹250 + 5% GST)</option>
+                <option value="Mixed Fried Rice & Chilli Chicken|310">Fried Rice & Chilli Chicken (₹310 + 5% GST)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect')">➕ Post Dinner Bill</button>
@@ -575,32 +586,32 @@
       </div>
     </div>
 
-    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB -->
+    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB (ITEMIZED GST AUDIT) -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
           <div>
             <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
-            <small style="color: #666;">Automated Reconciliation of Room Tariffs, F&B Orders, Taxes & Settlements</small>
+            <small style="color: #666;">Automated Reconciliation of Room Tariffs, F&B Orders, Itemized GST & Settlements</small>
           </div>
           <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-top: 15px;">
           <div style="background: #f8f9fa; border-left: 4px solid #1b3a4b; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Room Revenue</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Net Room Base</span>
             <h4 id="auditRoomRev" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #006466; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Dining (F&B) Revenue</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Net Dining (F&B) Base</span>
             <h4 id="auditDiningRev" style="margin: 5px 0 0; color: #006466;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #8e44ad; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Bar Lounge Revenue</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Bar Lounge Sales</span>
             <h4 id="auditBarRev" style="margin: 5px 0 0; color: #8e44ad;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Taxes (12% GST)</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Total GST Collected</span>
             <h4 id="auditGstRev" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
@@ -613,7 +624,7 @@
           </div>
         </div>
 
-        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Audit Trail</h4>
+        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Tax Audit Trail</h4>
         <div style="overflow-x: auto;">
           <table>
             <thead>
@@ -621,15 +632,15 @@
                 <th>Audit No</th>
                 <th>Ref ID</th>
                 <th>Guest Name</th>
-                <th>Room / Unit</th>
-                <th>Stay Period</th>
-                <th>ID Details</th>
-                <th>Room (₹)</th>
-                <th>F&B (₹)</th>
+                <th>Room</th>
+                <th>Room Base (₹)</th>
+                <th>Room GST 12% (₹)</th>
+                <th>Dining Base (₹)</th>
+                <th>Dining GST 5% (₹)</th>
                 <th>Bar (₹)</th>
                 <th>Total Settled (₹)</th>
-                <th>Gateway & Txn Ref</th>
-                <th>Settlement Time</th>
+                <th>Payment Mode</th>
+                <th>Timestamp</th>
               </tr>
             </thead>
             <tbody id="auditHistoryTableBody"></tbody>
@@ -640,11 +651,11 @@
 
   </div>
 
-  <!-- CHECKOUT MODAL WITH TIMESTAMPS & ITEMIZED BREAKDOWN -->
+  <!-- CHECKOUT MODAL WITH COMPLETE ITEMIZED GST BREAKDOWN -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & Check-Out Terminal</h3>
+        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & GST Tax Invoice Terminal</h3>
         <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
 
@@ -734,6 +745,7 @@
       document.getElementById('gCheckOutDate').value = tomorrow.toISOString().split('T')[0];
     }
 
+    // ROOM TARIFF & TAX CALCULATOR (12% GST = 6% CGST + 6% SGST)
     function calculateRoomTariff() {
       const inDateVal = document.getElementById('gCheckInDate').value;
       const outDateVal = document.getElementById('gCheckOutDate').value;
@@ -751,14 +763,19 @@
       const selectedOption = roomSelect.options[roomSelect.selectedIndex];
       const rate = selectedOption ? parseFloat(selectedOption.getAttribute('data-rate') || 2200) : 2200;
 
+      const baseTariff = rate * nights;
+      const roomGst = baseTariff * 0.12; // 12% GST
+      const totalRoomBill = baseTariff + roomGst;
+
       document.getElementById('gDailyRate').value = rate;
-      const totalTariff = rate * nights;
-      document.getElementById('gTotal').value = totalTariff;
+      document.getElementById('gBaseTariff').value = baseTariff.toFixed(2);
+      document.getElementById('gRoomGst').value = roomGst.toFixed(2);
+      document.getElementById('gTotal').value = totalRoomBill.toFixed(2);
 
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v14')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v15')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -962,7 +979,8 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v14')) || [
+    // TAX DATA MODEL: Room (12% GST), Dining (5% GST), Bar (0% GST)
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v16')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -976,45 +994,51 @@
         checkOutDate: "2026-11-05",
         nights: 2,
         dailyRate: 4500,
-        roomTariff: 9000,
-        diningTotal: 1200,
+        roomBase: 9000,
+        roomGst: 1080, // 12%
+        diningBase: 1200,
+        diningGst: 60,  // 5%
         barTotal: 660,
-        total: 10860, 
+        totalGst: 1140,
+        total: 12000, // 9000+1080 + 1200+60 + 660
         paid: 5000, 
         mode: "UPI (Ref: UPI88912301)",
         orders: [
-          "Room Tariff: ₹9000 [2 Nights @ ₹4500]",
-          "Dining: Special Bengali Katla Fish Thali - ₹320 [01:15 PM]",
-          "Dining: Purulia Desi Mutton Curry with Rice - ₹420 [01:30 PM]",
-          "Bar: Johnnie Walker Black Label (60ml) - ₹420 [08:30 PM]",
-          "Bar: Blenders Pride Reserve (60ml) - ₹240 [09:10 PM]",
-          "Dining: Chicken Kasha with Tandoori Roti - ₹280 [09:45 PM]"
+          "Room Base Tariff: ₹9000.00 [2 Nights @ ₹4500.00]",
+          "Room Tax: ₹1080.00 (12% GST = 6% CGST + 6% SGST)",
+          "Dining: Special Bengali Katla Fish Thali - ₹320.00 (+5% GST) [01:15 PM]",
+          "Dining: Purulia Desi Mutton Curry with Rice - ₹420.00 (+5% GST) [01:30 PM]",
+          "Dining: Chicken Kasha with Tandoori Roti - ₹280.00 (+5% GST) [09:45 PM]",
+          "Dining Tax: ₹60.00 (5% GST = 2.5% CGST + 2.5% SGST)",
+          "Bar: Johnnie Walker Black Label (60ml) - ₹420.00 [08:30 PM]",
+          "Bar: Blenders Pride Reserve (60ml) - ₹240.00 [09:10 PM]"
         ]
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v14')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v16')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
         name: "Debabrata Roy",
         room: "Room 102",
-        idType: "PAN Card",
-        idNumber: "ABCDE1234F",
         stayPeriod: "2026-11-01 to 2026-11-02 (1 Night)",
-        roomTariff: 2200,
-        diningTotal: 640,
+        roomBase: 2200,
+        roomGst: 264,
+        diningBase: 640,
+        diningGst: 32,
         barTotal: 440,
-        totalSettled: 3280,
+        totalGst: 296,
+        totalSettled: 3576,
         gateway: "UPI QR (Ref: UPI889123001)",
         timestamp: "03 Nov, 10:45 AM"
       }
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v14', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v14', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v14', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v16', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v16', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v15', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1046,7 +1070,7 @@
       );
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888; padding:15px;">No matching in-house guest records found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888; padding:15px;">No matching in-house guest records found.</td></tr>';
         return;
       }
 
@@ -1066,7 +1090,14 @@
               <ul style="padding-left:14px; margin:4px 0 0;">${orderListHtml}</ul>
             </details>
           </td>
-          <td>₹${b.total.toFixed(2)}</td>
+          <td><strong>₹${b.total.toFixed(2)}</strong></td>
+          <td>
+            <small style="color:var(--secondary);">
+              Room GST: ₹${(b.roomGst||0).toFixed(2)}<br>
+              Food GST: ₹${(b.diningGst||0).toFixed(2)}<br>
+              <strong>Total GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
+            </small>
+          </td>
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
           <td>
@@ -1092,6 +1123,8 @@
       let children = parseInt(document.getElementById('gChildren').value || 0);
       let room = document.getElementById('gRoom').value;
       let dailyRate = parseFloat(document.getElementById('gDailyRate').value || 0);
+      let roomBase = parseFloat(document.getElementById('gBaseTariff').value || 0);
+      let roomGst = parseFloat(document.getElementById('gRoomGst').value || 0);
       let totalTariff = parseFloat(document.getElementById('gTotal').value || 0);
       let paid = parseFloat(document.getElementById('gPaid').value || 0);
       let mode = document.getElementById('gMode').value;
@@ -1116,11 +1149,17 @@
       }
 
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      let initialOrder = [`Room Tariff: ₹${totalTariff} [${nights} Night(s) @ ₹${dailyRate}/nt - ${nowTime}]`];
+      let initialOrder = [
+        `Room Base Tariff: ₹${roomBase.toFixed(2)} [${nights} Night(s) @ ₹${dailyRate}/nt]`,
+        `Room Tax: ₹${roomGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST) [${nowTime}]`
+      ];
 
       bookings.push({ 
         refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
-        dailyRate: dailyRate, adults, children, room, roomTariff: totalTariff, diningTotal: 0, barTotal: 0,
+        dailyRate: dailyRate, adults, children, room, 
+        roomBase: roomBase, roomGst: roomGst,
+        diningBase: 0, diningGst: 0, barTotal: 0,
+        totalGst: roomGst,
         total: totalTariff, paid: paid, mode: paymentDetails, orders: initialOrder 
       });
 
@@ -1137,22 +1176,29 @@
       updateCheckInGatewayDisplay();
     }
 
+    // FOOD ORDER WITH 5% GST (2.5% CGST + 2.5% SGST)
     function postFoodOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
       let [item, price] = document.getElementById(selectId).value.split('|');
-      let val = parseFloat(price);
+      let baseVal = parseFloat(price);
+      let gstVal = baseVal * 0.05; // 5% GST
+      let totalItem = baseVal + gstVal;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].total += val;
-      bookings[idx].diningTotal = (bookings[idx].diningTotal || 0) + val;
-      if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Dining: ${item} - ₹${val} [${time}]`);
+      bookings[idx].diningBase = (bookings[idx].diningBase || 0) + baseVal;
+      bookings[idx].diningGst = (bookings[idx].diningGst || 0) + gstVal;
+      bookings[idx].totalGst = (bookings[idx].totalGst || 0) + gstVal;
+      bookings[idx].total += totalItem;
 
-      alert(`${item} (₹${val}) added to ${bookings[idx].room} folio at ${time}.`);
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`Dining: ${item} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
+
+      alert(`${item} (Base: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
       saveState();
     }
 
+    // BAR ORDER (DIRECT VAT/BEVERAGE EXEMPT FROM NORMAL GST ENGINE)
     function postBarOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
@@ -1160,22 +1206,29 @@
       let val = parseFloat(price);
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].total += val;
       bookings[idx].barTotal = (bookings[idx].barTotal || 0) + val;
-      if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Bar: ${item} - ₹${val} [${time}]`);
+      bookings[idx].total += val;
 
-      alert(`Bar Service ${item} (₹${val}) added to ${bookings[idx].room} folio at ${time}.`);
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`Bar: ${item} - ₹${val.toFixed(2)} [${time}]`);
+
+      alert(`Bar Service ${item} (₹${val.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
       saveState();
     }
 
     let activeCheckoutIndex = null;
 
+    // CHECKOUT MODAL WITH COMPREHENSIVE TAX INVOICE BREAKDOWN
     function openCheckoutModal(index) {
       activeCheckoutIndex = index;
       let b = bookings[index];
       let due = Math.max(0, b.total - b.paid);
       let orderListHtml = (b.orders || []).map(o => `<li>${o}</li>`).join('');
+
+      let roomCgst = (b.roomGst || 0) / 2;
+      let roomSgst = (b.roomGst || 0) / 2;
+      let foodCgst = (b.diningGst || 0) / 2;
+      let foodSgst = (b.diningGst || 0) / 2;
 
       let html = `
         <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
@@ -1183,18 +1236,49 @@
           <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small><br>
           <small><strong>ID on File:</strong> ${b.idType || 'Proof'} - ${b.idNumber || 'Recorded'}</small>
         </div>
-        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Food, Bar & Room Charges (Timestamped):</h5>
-        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:120px; overflow-y:auto; font-size:12px; margin:0;">
+
+        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Bill & Timestamps:</h5>
+        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:110px; overflow-y:auto; font-size:12px; margin:0;">
           ${orderListHtml}
         </ul>
-        <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; font-size:13px;">
-          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Room: <strong>₹${(b.roomTariff||0).toFixed(2)}</strong></div>
-          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Dining: <strong>₹${(b.diningTotal||0).toFixed(2)}</strong></div>
-          <div style="background:#f1f4f8; padding:8px; border-radius:4px;">Bar: <strong>₹${(b.barTotal||0).toFixed(2)}</strong></div>
+
+        <!-- DETAILED TAX INVOICE BREAKDOWN -->
+        <div style="margin-top:12px; background:#fdfdfd; border:1px solid #ced4da; border-radius:6px; padding:10px; font-size:12px;">
+          <table style="width:100%; border:none; margin:0;">
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Net Room Base Charges:</td>
+              <td style="text-align:right;"><strong>₹${(b.roomBase||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee; color:#555;">
+              <td>&nbsp; ↳ Room GST 12% (CGST 6%: ₹${roomCgst.toFixed(2)} | SGST 6%: ₹${roomSgst.toFixed(2)}):</td>
+              <td style="text-align:right;">+ ₹${(b.roomGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Net Dining (F&B) Base Charges:</td>
+              <td style="text-align:right;"><strong>₹${(b.diningBase||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee; color:#555;">
+              <td>&nbsp; ↳ Dining GST 5% (CGST 2.5%: ₹${foodCgst.toFixed(2)} | SGST 2.5%: ₹${foodSgst.toFixed(2)}):</td>
+              <td style="text-align:right;">+ ₹${(b.diningGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Bar & Beverage Lounge Total:</td>
+              <td style="text-align:right;"><strong>₹${(b.barTotal||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #ccc; background:#f4f7f6; font-weight:bold;">
+              <td style="padding:5px 0;">Total Combined GST Tax (12% Room + 5% Food):</td>
+              <td style="text-align:right; color:var(--secondary); padding:5px 0;">₹${(b.totalGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="font-size:14px; font-weight:bold;">
+              <td style="padding:6px 0;">Gross Tax Invoice Total (Incl. Taxes):</td>
+              <td style="text-align:right; color:var(--primary); padding:6px 0;">₹${b.total.toFixed(2)}</td>
+            </tr>
+          </table>
         </div>
+
         <div style="margin-top:8px; background:#fff5f5; border:1px solid #ffccc7; padding:10px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
-          <div>Gross Billed: <strong>₹${b.total.toFixed(2)}</strong> | Advance Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
-          <div style="font-size:15px; color:var(--danger);">Balance Due: <strong>₹${due.toFixed(2)}</strong></div>
+          <div>Advance Deposit Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
+          <div style="font-size:15px; color:var(--danger);">Net Balance Due: <strong>₹${due.toFixed(2)}</strong></div>
         </div>
       `;
       document.getElementById('checkoutBillDetails').innerHTML = html;
@@ -1307,17 +1391,18 @@
         name: b.name,
         room: b.room,
         stayPeriod: `${b.checkInDate} to ${b.checkOutDate} (${b.nights} Nights)`,
-        idType: b.idType || "N/A",
-        idNumber: b.idNumber || "N/A",
-        roomTariff: b.roomTariff || b.total,
-        diningTotal: b.diningTotal || 0,
+        roomBase: b.roomBase || 0,
+        roomGst: b.roomGst || 0,
+        diningBase: b.diningBase || 0,
+        diningGst: b.diningGst || 0,
         barTotal: b.barTotal || 0,
+        totalGst: b.totalGst || 0,
         totalSettled: b.total,
         gateway: txnDetails,
         timestamp: nowTime
       });
 
-      alert(`Check-out verified for ${b.name} (${b.room}). Settlement via ${txnDetails}. Room marked DIRTY.`);
+      alert(`Tax Invoice & Check-out authorized for ${b.name} (${b.room}).\nGross Settled: ₹${b.total.toFixed(2)} (Incl. ₹${(b.totalGst||0).toFixed(2)} GST).\nRoom marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
@@ -1326,25 +1411,27 @@
     }
 
     function renderAuditLedger() {
-      let roomRev = 0, diningRev = 0, barRev = 0, totalSettled = 0, pending = 0;
+      let roomBase = 0, roomGst = 0, diningBase = 0, diningGst = 0, barRev = 0, totalSettled = 0, pending = 0;
 
       auditHistory.forEach(a => {
-        roomRev += (a.roomTariff || 0);
-        diningRev += (a.diningTotal || 0);
+        roomBase += (a.roomBase || 0);
+        roomGst += (a.roomGst || 0);
+        diningBase += (a.diningBase || 0);
+        diningGst += (a.diningGst || 0);
         barRev += (a.barTotal || 0);
         totalSettled += (a.totalSettled || 0);
       });
+
+      let totalGstCollected = roomGst + diningGst;
 
       bookings.forEach(b => {
         pending += Math.max(0, b.total - b.paid);
       });
 
-      let gst = (roomRev + diningRev + barRev) * 0.12;
-
-      document.getElementById('auditRoomRev').innerText = '₹' + roomRev.toFixed(2);
-      document.getElementById('auditDiningRev').innerText = '₹' + diningRev.toFixed(2);
+      document.getElementById('auditRoomRev').innerText = '₹' + roomBase.toFixed(2);
+      document.getElementById('auditDiningRev').innerText = '₹' + diningBase.toFixed(2);
       document.getElementById('auditBarRev').innerText = '₹' + barRev.toFixed(2);
-      document.getElementById('auditGstRev').innerText = '₹' + gst.toFixed(2);
+      document.getElementById('auditGstRev').innerText = '₹' + totalGstCollected.toFixed(2);
       document.getElementById('auditTotalSettled').innerText = '₹' + totalSettled.toFixed(2);
       document.getElementById('auditPendingBalance').innerText = '₹' + pending.toFixed(2);
 
@@ -1362,10 +1449,10 @@
           <td>${a.refId}</td>
           <td><strong>${a.name}</strong></td>
           <td>${a.room}</td>
-          <td><small>${a.stayPeriod || 'N/A'}</small></td>
-          <td><small>${a.idType}: ${a.idNumber}</small></td>
-          <td>₹${(a.roomTariff||0).toFixed(2)}</td>
-          <td>₹${(a.diningTotal||0).toFixed(2)}</td>
+          <td>₹${(a.roomBase||0).toFixed(2)}</td>
+          <td style="color:var(--secondary);">₹${(a.roomGst||0).toFixed(2)}</td>
+          <td>₹${(a.diningBase||0).toFixed(2)}</td>
+          <td style="color:var(--secondary);">₹${(a.diningGst||0).toFixed(2)}</td>
           <td>₹${(a.barTotal||0).toFixed(2)}</td>
           <td style="color:#27ae60; font-weight:bold;">₹${(a.totalSettled||0).toFixed(2)}</td>
           <td><small>${a.gateway}</small></td>
@@ -1383,18 +1470,20 @@
         "Guest Name": a.name,
         "Allocated Unit": a.room,
         "Stay Period": a.stayPeriod,
-        "ID Proof": `${a.idType}: ${a.idNumber}`,
-        "Room Revenue (INR)": a.roomTariff,
-        "Dining / F&B (INR)": a.diningTotal,
-        "Bar Lounge (INR)": a.barTotal,
-        "Total Settled (INR)": a.totalSettled,
-        "Settlement Gateway & Txn": a.gateway,
-        "Settlement Timestamp": a.timestamp
+        "Room Base (INR)": a.roomBase,
+        "Room GST 12% (INR)": a.roomGst,
+        "Dining Base (INR)": a.diningBase,
+        "Dining GST 5% (INR)": a.diningGst,
+        "Bar Sales (INR)": a.barTotal,
+        "Total GST Collected (INR)": a.totalGst,
+        "Grand Total Settled (INR)": a.totalSettled,
+        "Payment Mode & Txn": a.gateway,
+        "Timestamp": a.timestamp
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Master EOD Audit");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_Master_EOD_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Master GST Audit");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_GST_Tax_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
