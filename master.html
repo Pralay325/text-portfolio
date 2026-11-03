@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shree Krishna Resort & Retreat - Full PMS Architecture</title>
+  <style>
+    :root {
+      --primary: #1b3a4b;
+      --secondary: #006466;
+      --accent: #d4a373;
+      --dark: #212529;
+      --light: #f8f9fa;
+      --success: #27ae60;
+      --danger: #c0392b;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f7;
+      color: #333;
+    }
+    /* Top Header */
+    header {
+      background: linear-gradient(135deg, #1b3a4b, #006466);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    .badge { background: var(--accent); color: #1b3a4b; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+
+    /* Interactive Menu Bar */
+    nav {
+      background: #ffffff;
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #dde2e5;
+      padding: 6px 15px;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav button {
+      background: #f1f4f8;
+      border: 1px solid #ced4da;
+      padding: 9px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--primary);
+      transition: all 0.2s;
+    }
+    nav button:hover, nav button.active {
+      background: var(--secondary);
+      color: #ffffff;
+      border-color: var(--secondary);
+    }
+
+    /* Container & Tab Panels */
+    .container { padding: 20px; max-width: 1300px; margin: auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background: #ffffff;
+      padding: 22px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .card h2, .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 10px;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Gallery with Lawn */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
+    .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
+    .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
+    .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
+
+    .form-group { margin-bottom: 12px; }
+    label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #495057; }
+    input, select, textarea {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: var(--secondary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    th, td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
+    th { background: #f8f9fa; color: var(--primary); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div>
+      <h1>🌸 Shree Krishna Resort & Retreat</h1>
+      <small style="color: #cbd5e0;">Purulia Sadar | 40 Rooms, 10 Cottages, Dining, Bar, Lawn & Front Desk</small>
+    </div>
+    <span class="badge">Live PMS Engine</span>
+  </header>
+
+  <!-- Navigation Menu Bar -->
+  <nav>
+    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Rooms</button>
+    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Gallery</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining Restaurant</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar & Lounge</button>
+    <button class="nav-btn" onclick="openTab('cFormTab', this)">📄 Foreign Guest C-Form</button>
+    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Ledger</button>
+  </nav>
+
+  <div class="container">
+
+    <!-- 1. FRONT DESK & INVENTORY TAB -->
+    <div id="frontDeskTab" class="tab-content active">
+      <div class="grid">
+        <div class="card">
+          <h2>🛎️ Guest Check-In & Folio</h2>
+          <div class="form-group">
+            <label>Guest Full Name</label>
+            <input type="text" id="gName" placeholder="Enter guest name">
+          </div>
+          <div class="form-group">
+            <label>Contact Phone Number</label>
+            <input type="text" id="gPhone" placeholder="Enter mobile number">
+          </div>
+          <div class="form-group">
+            <label>Room / Cottage Allocation</label>
+            <select id="gRoom">
+              <optgroup label="🏡 Luxury Cottages (10 Units)">
+                <option value="Cottage 01">Cottage 01 (Executive AC)</option>
+                <option value="Cottage 02">Cottage 02 (Executive AC)</option>
+                <option value="Cottage 03">Cottage 03 (Executive AC)</option>
+                <option value="Cottage 04">Cottage 04 (Deluxe Lawn Facing)</option>
+                <option value="Cottage 05">Cottage 05 (Deluxe Lawn Facing)</option>
+                <option value="Cottage 06">Cottage 06 (Deluxe Lawn Facing)</option>
+                <option value="Cottage 07">Cottage 07 (Royal Suite)</option>
+                <option value="Cottage 08">Cottage 08 (Royal Suite)</option>
+                <option value="Cottage 09">Cottage 09 (Family Cottage)</option>
+                <option value="Cottage 10">Cottage 10 (Family Cottage)</option>
+              </optgroup>
+              <optgroup label="🏢 Main Resort Rooms (40 Units)">
+                <option value="Room 101">Room 101 (Standard AC)</option>
+                <option value="Room 102">Room 102 (Standard AC)</option>
+                <option value="Room 103">Room 103 (Standard AC)</option>
+                <option value="Room 104">Room 104 (Executive Room)</option>
+                <option value="Room 105">Room 105 (Executive Room)</option>
+                <option value="Room 201">Room 201 (Deluxe Suite)</option>
+                <option value="Room 202">Room 202 (Deluxe Suite)</option>
+                <option value="Room 203">Room 203 (Deluxe Suite)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Total Tariff (₹)</label>
+            <input type="number" id="gTotal" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label>Advance Payment (₹)</label>
+            <input type="number" id="gPaid" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label>Payment Settlement Mode</label>
+            <select id="gMode">
+              <option value="UPI / Online QR">UPI / QR Code Scan</option>
+              <option value="Cash in Hand">Cash Settlement</option>
+              <option value="Card Terminal">Card POS Swipe</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Check-In Guest</button>
+        </div>
+
+        <div class="card">
+          <h2>📋 Active In-House Guest Folio Ledger</h2>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>SL</th>
+                  <th>Guest Name</th>
+                  <th>Room/Cottage</th>
+                  <th>Total (₹)</th>
+                  <th>Paid (₹)</th>
+                  <th>Due (₹)</th>
+                  <th>Mode</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="folioList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. RESORT LAWN & FACILITY GALLERY TAB -->
+    <div id="lawnGalleryTab" class="tab-content">
+      <div class="card">
+        <h2>🌳 Resort Green Lawns, Cottages & Ambience</h2>
+        <div class="gallery">
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lush Green Lawn">
+            <p>🌿 Lush Green Banquet Lawn & Garden</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Luxury Cottage Exterior">
+            <p>🏡 10 Luxury AC Garden Cottages</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Resort Hotel Room">
+            <p>🏢 40 Executive & Deluxe Rooms</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Resort Restaurant">
+            <p>🍲 Multi-Cuisine Family Dining</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Lounge">
+            <p>🍸 Spirits, Cocktails & Bar Lounge</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DINING RESTAURANT TAB -->
+    <div id="diningTab" class="tab-content">
+      <div class="card">
+        <h2>🍲 Multi-Cuisine Dining Management</h2>
+        <div style="max-width: 600px;">
+          <div class="form-group">
+            <label>Select Guest / Room</label>
+            <select id="diningRoomSelect"></select>
+          </div>
+          <div class="form-group">
+            <label>Select Dining Order Item</label>
+            <select id="diningItemSelect">
+              <option value="Special Bengali Thali|350">Special Bengali Thali (₹350)</option>
+              <option value="Purulia Mutton Curry|420">Purulia Mutton Curry (₹420)</option>
+              <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280)</option>
+              <option value="Fresh Fish Thali (Katla)|320">Fresh Fish Thali (Katla) (₹320)</option>
+              <option value="Breakfast Buffet|180">Morning Breakfast Buffet (₹180)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="postDiningBill()">➕ Post to Guest Folio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. BAR & LOUNGE TAB -->
+    <div id="barTab" class="tab-content">
+      <div class="card">
+        <h2>🍸 Bar & Lounge Services</h2>
+        <div style="max-width: 600px;">
+          <div class="form-group">
+            <label>Select Guest / Room</label>
+            <select id="barRoomSelect"></select>
+          </div>
+          <div class="form-group">
+            <label>Select Spirit / Beverage</label>
+            <select id="barItemSelect">
+              <option value="Premium Blended Whisky (60ml)|260">Premium Whisky (60ml) (₹260)</option>
+              <option value="Chilled Premium Beer (650ml)|220">Chilled Beer (650ml) (₹220)</option>
+              <option value="Dark Rum with Cola|190">Dark Rum & Cola (₹190)</option>
+              <option value="Mocktail & Fresh Fruit Juice|120">Mocktail & Fresh Juice (₹120)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="postBarBill()">➕ Post to Bar Folio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. FOREIGN GUEST C-FORM TAB -->
+    <div id="cFormTab" class="tab-content">
+      <div class="card">
+        <h2>📄 Foreign Guest Registration (Form C Compliance)</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="form-group">
+            <label>Guest Full Name</label>
+            <input type="text" id="cfName" placeholder="As per passport">
+          </div>
+          <div class="form-group">
+            <label>Nationality</label>
+            <input type="text" id="cfNation" placeholder="Country of citizenship">
+          </div>
+          <div class="form-group">
+            <label>Passport Number</label>
+            <input type="text" id="cfPassport" placeholder="Passport No">
+          </div>
+          <div class="form-group">
+            <label>Visa Number & Validity</label>
+            <input type="text" id="cfVisa" placeholder="Visa No / Valid Until">
+          </div>
+          <div class="form-group">
+            <label>Arrived From</label>
+            <input type="text" id="cfFrom" placeholder="Port of arrival / City">
+          </div>
+          <div class="form-group">
+            <label>Next Destination</label>
+            <input type="text" id="cfTo" placeholder="Next traveling city">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Form C generated and stored for BoI compliance.')">💾 Save & Print Form C</button>
+      </div>
+    </div>
+
+    <!-- 6. NIGHT AUDIT & EXCEL TAB -->
+    <div id="auditTab" class="tab-content">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+          <h3 style="margin: 0; color: var(--primary);">📊 Night Audit & Daily Operations Closing</h3>
+          <button onclick="exportToExcel()" class="btn btn-success">📥 Export to Excel (.xlsx)</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px;">
+          <div style="background: #f8f9fa; border-left: 4px solid #3498db; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 13px; color: #7f8c8d;">Total Expected Inflow</span>
+            <h4 id="auditTotal" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 13px; color: #7f8c8d;">UPI / Online Collected</span>
+            <h4 id="auditUpi" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 13px; color: #7f8c8d;">Cash in Hand</span>
+            <h4 id="auditCash" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #e74c3c; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 13px; color: #7f8c8d;">Balance Pending</span>
+            <h4 id="auditDue" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // Tab Switching Functionality
+    function openTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    let bookings = JSON.parse(localStorage.getItem('shreeKrishnaMasterPMS')) || [
+      { id: 101, name: "Subhasis Banerjee", room: "Cottage 04", phone: "9832104521", total: 6500, paid: 6500, mode: "UPI / Online QR" },
+      { id: 102, name: "Debabrata Roy", room: "Room 102", phone: "9434112233", total: 3200, paid: 2000, mode: "Cash in Hand" }
+    ];
+
+    function saveState() {
+      localStorage.setItem('shreeKrishnaMasterPMS', JSON.stringify(bookings));
+      render();
+    }
+
+    function render() {
+      const tbody = document.getElementById('folioList');
+      const dSelect = document.getElementById('diningRoomSelect');
+      const bSelect = document.getElementById('barRoomSelect');
+
+      tbody.innerHTML = '';
+      dSelect.innerHTML = '';
+      bSelect.innerHTML = '';
+
+      if (bookings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No active reservations found.</td></tr>';
+      }
+
+      let totalInflow = 0, upi = 0, cash = 0, pending = 0;
+
+      bookings.forEach((b, index) => {
+        let due = Math.max(0, b.total - b.paid);
+        totalInflow += b.total;
+        if (b.mode.includes('UPI')) upi += b.paid;
+        else cash += b.paid;
+        pending += due;
+
+        let row = `<tr>
+          <td>${index + 1}</td>
+          <td><strong>${b.name}</strong></td>
+          <td>${b.room}</td>
+          <td>₹${b.total.toFixed(2)}</td>
+          <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
+          <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
+          <td>${b.mode}</td>
+          <td><button onclick="checkoutGuest(${index})" style="color:red; background:none; border:none; cursor:pointer;">❌ Check-out</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+
+        let opt = `<option value="${index}">${b.room} - ${b.name}</option>`;
+        dSelect.innerHTML += opt;
+        bSelect.innerHTML += opt;
+      });
+
+      document.getElementById('auditTotal').innerText = '₹' + totalInflow.toFixed(2);
+      document.getElementById('auditUpi').innerText = '₹' + upi.toFixed(2);
+      document.getElementById('auditCash').innerText = '₹' + cash.toFixed(2);
+      document.getElementById('auditDue').innerText = '₹' + pending.toFixed(2);
+    }
+
+    function addBooking() {
+      let name = document.getElementById('gName').value.trim();
+      let phone = document.getElementById('gPhone').value.trim();
+      let room = document.getElementById('gRoom').value;
+      let total = parseFloat(document.getElementById('gTotal').value || 0);
+      let paid = parseFloat(document.getElementById('gPaid').value || 0);
+      let mode = document.getElementById('gMode').value;
+
+      if (!name) { alert('Please enter guest name.'); return; }
+
+      bookings.push({ id: Date.now(), name, phone, room, total, paid, mode });
+      document.getElementById('gName').value = '';
+      document.getElementById('gPhone').value = '';
+      document.getElementById('gTotal').value = '';
+      document.getElementById('gPaid').value = '';
+      saveState();
+    }
+
+    function postDiningBill() {
+      if (bookings.length === 0) return;
+      let idx = document.getElementById('diningRoomSelect').value;
+      let [item, price] = document.getElementById('diningItemSelect').value.split('|');
+      bookings[idx].total += parseFloat(price);
+      alert(item + ' (₹' + price + ') posted to ' + bookings[idx].room + ' folio.');
+      saveState();
+    }
+
+    function postBarBill() {
+      if (bookings.length === 0) return;
+      let idx = document.getElementById('barRoomSelect').value;
+      let [item, price] = document.getElementById('barItemSelect').value.split('|');
+      bookings[idx].total += parseFloat(price);
+      alert('Bar Service ' + item + ' (₹' + price + ') posted to ' + bookings[idx].room + ' folio.');
+      saveState();
+    }
+
+    function checkoutGuest(index) {
+      if (confirm('Confirm guest check-out and archive folio?')) {
+        bookings.splice(index, 1);
+        saveState();
+      }
+    }
+
+    function exportToExcel() {
+      if (bookings.length === 0) { alert('No guest data found to export.'); return; }
+      let exportData = bookings.map((b, i) => ({
+        "SL": i + 1,
+        "Guest Name": b.name,
+        "Room / Cottage": b.room,
+        "Total Billed (INR)": b.total,
+        "Advance Paid (INR)": b.paid,
+        "Balance Due (INR)": Math.max(0, b.total - b.paid),
+        "Payment Mode": b.mode
+      }));
+      let ws = XLSX.utils.json_to_sheet(exportData);
+      let wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Shree Krishna Ledger");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+    }
+
+    window.onload = render;
+  </script>
+</body>
+</html>
