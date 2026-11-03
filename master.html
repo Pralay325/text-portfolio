@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shree Krishna Resort & Retreat - Complete Master PMS</title>
+  <title>Shree Krishna Resort & Retreat - Front Desk PMS & POS</title>
   <style>
     :root {
       --primary: #1b3a4b;
@@ -13,7 +13,6 @@
       --light: #f8f9fa;
       --success: #27ae60;
       --danger: #c0392b;
-      --warning: #f39c12;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,16 +31,15 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
     header h1 { margin: 0; font-size: 22px; }
-    .badge { background: var(--accent); color: #1b3a4b; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+    .badge { background: var(--accent); color: #1b3a4b; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
 
-    /* Sticky Menu Navigation Bar */
     nav {
       background: #ffffff;
       display: flex;
       flex-wrap: wrap;
       border-bottom: 2px solid #dde2e5;
-      padding: 6px 15px;
-      gap: 8px;
+      padding: 8px 16px;
+      gap: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       position: sticky;
       top: 0;
@@ -50,7 +48,7 @@
     nav button {
       background: #f1f4f8;
       border: 1px solid #ced4da;
-      padding: 9px 15px;
+      padding: 9px 16px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
@@ -64,7 +62,7 @@
       border-color: var(--secondary);
     }
 
-    .container { padding: 20px; max-width: 1300px; margin: auto; }
+    .container { padding: 20px; max-width: 1350px; margin: auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
@@ -81,41 +79,11 @@
       border-bottom: 2px solid #e9ecef;
       padding-bottom: 10px;
     }
-    .grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .grid { display: grid; grid-template-columns: 1.1fr 1.6fr; gap: 20px; }
+    @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
 
-    /* Room Matrix Grid (Dirty / Clean Status) */
-    .room-matrix {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-      gap: 12px;
-      margin-top: 15px;
-    }
-    .room-box {
-      border: 1px solid #ced4da;
-      padding: 10px;
-      border-radius: 6px;
-      text-align: center;
-      background: #ffffff;
-    }
-    .room-box.clean { border-top: 4px solid var(--success); }
-    .room-box.dirty { border-top: 4px solid var(--danger); background: #fff5f5; }
-    .status-tag { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
-    .tag-clean { background: #e8f8f0; color: var(--success); }
-    .tag-dirty { background: #fde8e8; color: var(--danger); }
-
-    /* Gallery with Lawn */
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
-    .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
-    .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
-    .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
-
-    /* Sub-tabs for Food & Bar */
-    .sub-tabs { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
-    .sub-btn { background: #edf2f7; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; }
-    .sub-btn.active { background: var(--secondary); color: #fff; }
-
-    .form-group { margin-bottom: 12px; }
+    .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .form-group { margin-bottom: 12px; flex: 1; }
     label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #495057; }
     input, select {
       width: 100%;
@@ -125,14 +93,80 @@
       box-sizing: border-box;
       font-size: 14px;
     }
-    .btn { padding: 9px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+    input[readonly] { background-color: #e9ecef; font-weight: bold; color: var(--primary); }
+
+    .btn { padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
     .btn-primary { background: var(--secondary); color: #fff; }
     .btn-success { background: var(--success); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
+    .btn-warning { background: #e67e22; color: #fff; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
 
+    /* Modal / Pop-up Styles for Form C & QR */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #ffffff;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Menu layout */
+    .menu-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
+    }
+    .menu-box {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 16px;
+      background: #fdfdfd;
+    }
+    .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
+
+    /* Room Housekeeping Status Grid */
+    .room-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .room-box {
+      border: 1px solid #ced4da;
+      padding: 8px;
+      border-radius: 6px;
+      text-align: center;
+      background: #ffffff;
+    }
+    .room-box.clean { border-top: 4px solid var(--success); }
+    .room-box.dirty { border-top: 4px solid var(--danger); background: #fff8f8; }
+    .status-tag { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+    .tag-clean { background: #e8f8f0; color: var(--success); }
+    .tag-dirty { background: #fde8e8; color: var(--danger); }
+
+    /* Gallery with Lawn */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
+    .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
+    .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
+    .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
+
     table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-    th, td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
+    th, td { border: 1px solid #dee2e6; padding: 9px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
   </style>
 </head>
@@ -142,41 +176,62 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">Purulia Sadar | 40 Rooms, 10 Cottages, Dining, Bar, Lawn & Housekeeping</small>
+      <small style="color: #cbd5e0;">Purulia Sadar | 40 Deluxe Rooms, 10 Cottages, Dining & Bar Lounge</small>
     </div>
-    <span class="badge">Master PMS Terminal</span>
+    <span class="badge">Master Front Desk POS</span>
   </header>
 
-  <!-- Interactive Menu Bar -->
+  <!-- Navigation Menu Bar -->
   <nav>
-    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Folio</button>
-    <button class="nav-btn" onclick="openTab('housekeepingTab', this)">🧹 Room Status (Dirty/Clean)</button>
-    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Gallery</button>
-    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast/Lunch/Dinner)</button>
-    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky/Rum/Beer)</button>
-    <button class="nav-btn" onclick="openTab('cFormTab', this)">📄 Foreign Guest C-Form</button>
+    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Check-In</button>
+    <button class="nav-btn" onclick="openTab('housekeepingTab', this)">🧹 Room Status (Dirty / Clean)</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast / Lunch / Dinner)</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky / Rum / Beer)</button>
+    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Photo Showcase</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Ledger</button>
   </nav>
 
   <div class="container">
 
-    <!-- 1. FRONT DESK & IN-HOUSE GUEST TAB -->
+    <!-- 1. FRONT DESK TAB -->
     <div id="frontDeskTab" class="tab-content active">
       <div class="grid">
         <div class="card">
-          <h2>🛎️ Guest Check-In & Billing</h2>
-          <div class="form-group">
-            <label>Guest Full Name</label>
-            <input type="text" id="gName" placeholder="Enter guest name">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px;">
+            <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In</h2>
+            <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Open Form C Popup (Foreign Guest)</button>
           </div>
-          <div class="form-group">
-            <label>Contact Phone Number</label>
-            <input type="text" id="gPhone" placeholder="Enter mobile number">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reference ID</label>
+              <input type="text" id="gRefId" readonly>
+            </div>
+            <div class="form-group">
+              <label>Guest Full Name</label>
+              <input type="text" id="gName" placeholder="Full name">
+            </div>
           </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Phone</label>
+              <input type="text" id="gPhone" placeholder="Mobile number">
+            </div>
+            <div class="form-group">
+              <label>Adults</label>
+              <input type="number" id="gAdults" value="2" min="1">
+            </div>
+            <div class="form-group">
+              <label>Children</label>
+              <input type="number" id="gChildren" value="0" min="0">
+            </div>
+          </div>
+
           <div class="form-group">
-            <label>Room / Cottage Allocation</label>
+            <label>Allocation (10 Cottages + 40 Rooms)</label>
             <select id="gRoom">
-              <optgroup label="🏡 Luxury Cottages (10 Units)">
+              <optgroup label="🏡 Luxury Heritage Cottages (10 Units)">
                 <option value="Cottage 01">Cottage 01 (Executive AC)</option>
                 <option value="Cottage 02">Cottage 02 (Executive AC)</option>
                 <option value="Cottage 03">Cottage 03 (Executive AC)</option>
@@ -188,48 +243,78 @@
                 <option value="Cottage 09">Cottage 09 (Family Suite)</option>
                 <option value="Cottage 10">Cottage 10 (Family Suite)</option>
               </optgroup>
-              <optgroup label="🏢 Main Resort Rooms (40 Units)">
-                <option value="Room 101">Room 101 (Standard AC)</option>
-                <option value="Room 102">Room 102 (Standard AC)</option>
-                <option value="Room 103">Room 103 (Standard AC)</option>
-                <option value="Room 104">Room 104 (Executive AC)</option>
-                <option value="Room 201">Room 201 (Deluxe Suite)</option>
-                <option value="Room 202">Room 202 (Deluxe Suite)</option>
+              <optgroup label="🏢 Main Resort Deluxe & Executive Rooms (40 Units)">
+                <option value="Room 101">Room 101 (Deluxe AC)</option>
+                <option value="Room 102">Room 102 (Deluxe AC)</option>
+                <option value="Room 103">Room 103 (Deluxe AC)</option>
+                <option value="Room 104">Room 104 (Deluxe AC)</option>
+                <option value="Room 105">Room 105 (Deluxe AC)</option>
+                <option value="Room 201">Room 201 (Executive Suite)</option>
+                <option value="Room 202">Room 202 (Executive Suite)</option>
+                <option value="Room 203">Room 203 (Executive Suite)</option>
               </optgroup>
             </select>
           </div>
-          <div class="form-group">
-            <label>Total Tariff (₹)</label>
-            <input type="number" id="gTotal" placeholder="0.00">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Room Tariff (₹)</label>
+              <input type="number" id="gTotal" placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label>Advance Paid (₹)</label>
+              <input type="number" id="gPaid" placeholder="0.00">
+            </div>
           </div>
+
+          <!-- Comprehensive Payment Gateways -->
           <div class="form-group">
-            <label>Advance Payment (₹)</label>
-            <input type="number" id="gPaid" placeholder="0.00">
-          </div>
-          <div class="form-group">
-            <label>Payment Settlement Mode</label>
-            <select id="gMode">
-              <option value="UPI / Online QR">UPI / Dynamic QR</option>
-              <option value="Cash in Hand">Cash Settlement</option>
-              <option value="Card Terminal">Card POS Terminal</option>
+            <label>Payment Settlement Gateway</label>
+            <select id="gMode" onchange="togglePaymentGateway(this.value)">
+              <option value="UPI / QR Code Scan">UPI (Dynamic QR Code)</option>
+              <option value="Credit Card">Credit Card (POS Terminal)</option>
+              <option value="Debit Card">Debit Card (POS Terminal)</option>
+              <option value="Digital Wallet">Digital Wallet (PhonePe / Paytm / GPay)</option>
+              <option value="Cash Settlement">Cash in Hand</option>
             </select>
           </div>
-          <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Check-In Guest</button>
+
+          <!-- Payment Interactive Details Box -->
+          <div id="paymentGatewayInfo" style="background: #f8f9fa; border: 1px dashed #ced4da; padding: 10px; border-radius: 5px; margin-bottom: 12px; font-size: 13px;">
+            <div id="upiGatewayBlock">
+              <strong>📱 Dynamic UPI QR Settlement:</strong>
+              <p style="margin: 4px 0 0; color: #27ae60;">UPI ID: <code>shree.krishna.resort@icici</code> (Instant QR Verification)</p>
+            </div>
+            <div id="cardGatewayBlock" style="display: none;">
+              <strong>💳 Card Processing (Merchant Terminal):</strong>
+              <p style="margin: 4px 0 0; color: #1b3a4b;">Supports Visa, MasterCard, RuPay, and Amex (Txn Slip Generated)</p>
+            </div>
+            <div id="walletGatewayBlock" style="display: none;">
+              <strong>📲 Digital Wallet Transfer:</strong>
+              <p style="margin: 4px 0 0; color: #006466;">Paytm / PhonePe Business Merchant Account Linked</p>
+            </div>
+            <div id="cashGatewayBlock" style="display: none;">
+              <strong>💵 Front Desk Cashiering:</strong>
+              <p style="margin: 4px 0 0; color: #e67e22;">Direct Cash drawer receipt balance entry</p>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Generate Folio</button>
         </div>
 
+        <!-- In-House Folio with Detailed Order Item History -->
         <div class="card">
-          <h2>📋 Active In-House Guest Folio Ledger</h2>
+          <h2>📋 Active Guest Folio & Itemized Ledger</h2>
           <div style="overflow-x: auto;">
             <table>
               <thead>
                 <tr>
-                  <th>SL</th>
-                  <th>Guest Name</th>
-                  <th>Room/Cottage</th>
+                  <th>Ref ID</th>
+                  <th>Guest / Allocation</th>
+                  <th>Order History (Timestamped)</th>
                   <th>Total (₹)</th>
                   <th>Paid (₹)</th>
                   <th>Due (₹)</th>
-                  <th>Mode</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -240,127 +325,150 @@
       </div>
     </div>
 
-    <!-- 2. ROOM STATUS MATRIX (DIRTY / CLEAN) -->
+    <!-- 2. ROOM STATUS MATRIX -->
     <div id="housekeepingTab" class="tab-content">
       <div class="card">
-        <h2>🧹 Housekeeping & Room Cleanliness Matrix</h2>
-        <p style="color: #666; font-size: 13px;">Manage ready rooms (Clean) and rooms vacated by guests (Dirty) requiring housekeeping audit.</p>
+        <h2>🧹 Housekeeping & Room Cleanliness Matrix (50 Units)</h2>
+        <p style="color: #666; font-size: 13px;">Green: Clean & Ready | Red: Dirty / Vacated (Requires Housekeeping Attention)</p>
         <div id="roomMatrixGrid" class="room-matrix"></div>
       </div>
     </div>
 
-    <!-- 3. RESORT LAWN & FACILITY GALLERY -->
+    <!-- 3. DINING (BREAKFAST, LUNCH, DINNER) -->
+    <div id="diningTab" class="tab-content">
+      <div class="card">
+        <h2>🍲 Dining Management (Category-wise Ordering)</h2>
+        <div class="form-group" style="max-width: 450px;">
+          <label>Select In-House Room / Guest Folio</label>
+          <select id="diningRoomSelect"></select>
+        </div>
+
+        <div class="menu-columns">
+          <div class="menu-box">
+            <h4>🍳 Breakfast Menu</h4>
+            <div class="form-group">
+              <select id="bfItemSelect">
+                <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120)</option>
+                <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140)</option>
+                <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110)</option>
+                <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180)</option>
+                <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect')">➕ Post Breakfast Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍛 Lunch Menu</h4>
+            <div class="form-group">
+              <select id="lunchItemSelect">
+                <option value="Special Bengali Katla Fish Thali|320">Bengali Fish Thali - Katla (₹320)</option>
+                <option value="Purulia Desi Mutton Curry with Rice|420">Desi Mutton Curry & Rice (₹420)</option>
+                <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550)</option>
+                <option value="Pure Veg Deluxe Bengali Thali|240">Pure Veg Deluxe Thali (₹240)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍲 Dinner Menu</h4>
+            <div class="form-group">
+              <select id="dinnerItemSelect">
+                <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280)</option>
+                <option value="Purulia Mutton Kasha with Rumali Roti|390">Mutton Kasha & Rumali Roti (₹390)</option>
+                <option value="Paneer Butter Masala with Butter Naan|250">Paneer Butter Masala & Naan (₹250)</option>
+                <option value="Mixed Fried Rice & Chilli Chicken|310">Fried Rice & Chilli Chicken (₹310)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect')">➕ Post Dinner Bill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. BAR & LOUNGE -->
+    <div id="barTab" class="tab-content">
+      <div class="card">
+        <h2>🍸 Bar & Lounge Services (Brand & Peg Breakdown)</h2>
+        <div class="form-group" style="max-width: 450px;">
+          <label>Select In-House Room / Guest Folio</label>
+          <select id="barRoomSelect"></select>
+        </div>
+
+        <div class="menu-columns">
+          <div class="menu-box">
+            <h4>🥃 Premium Whisky (Pegs)</h4>
+            <div class="form-group">
+              <select id="whiskySelect">
+                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label (60ml) (₹420)</option>
+                <option value="Blenders Pride Reserve (60ml)|240">Blenders Pride Reserve (60ml) (₹240)</option>
+                <option value="Royal Challenge Select (60ml)|190">Royal Challenge (60ml) (₹190)</option>
+                <option value="Antiquity Blue Premium (60ml)|260">Antiquity Blue (60ml) (₹260)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect')">➕ Post Whisky Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍹 Rum & Spirits (Pegs)</h4>
+            <div class="form-group">
+              <select id="rumSelect">
+                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (60ml) (₹160)</option>
+                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (60ml) (₹220)</option>
+                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (60ml) (₹230)</option>
+                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments (60ml) (₹180)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Rum/Spirit Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍺 Chilled Beer & Mixers</h4>
+            <div class="form-group">
+              <select id="beerSelect">
+                <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220)</option>
+                <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230)</option>
+                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White (Pint) (₹260)</option>
+                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Mixers (₹90)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect')">➕ Post Beer Bill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. LAWN & GALLERY -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
-        <h2>🌳 Resort Green Lawns, Cottages & Ambience</h2>
+        <h2>🌳 Resort Green Lawns, Cottages & Ambience Showcase</h2>
         <div class="gallery">
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lawn">
+            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lush Lawn">
             <p>🌿 Lush Green Banquet Lawn & Garden</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Cottage Exterior">
+            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Deluxe Cottages">
             <p>🏡 10 Luxury AC Garden Cottages</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Executive Room">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Executive Deluxe Rooms">
             <p>🏢 40 Executive & Deluxe Rooms</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurant">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Multi-Cuisine Dining">
             <p>🍲 Multi-Cuisine Family Dining</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Lounge">
+            <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Beverage Lounge">
             <p>🍸 Spirits, Cocktails & Bar Lounge</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4. DINING (BREAKFAST / LUNCH / DINNER) -->
-    <div id="diningTab" class="tab-content">
-      <div class="card">
-        <h2>🍲 Dining Management (Category-wise)</h2>
-        <div class="sub-tabs">
-          <button class="sub-btn active" onclick="switchFoodCat('bf', this)">🍳 Breakfast Menu</button>
-          <button class="sub-btn" onclick="switchFoodCat('lunch', this)">🍛 Lunch Menu</button>
-          <button class="sub-btn" onclick="switchFoodCat('dinner', this)">🍲 Dinner Menu</button>
-        </div>
-
-        <div style="max-width: 600px;">
-          <div class="form-group">
-            <label>Select Guest / Room</label>
-            <select id="diningRoomSelect"></select>
-          </div>
-          <div class="form-group">
-            <label>Menu Item</label>
-            <select id="diningItemSelect"></select>
-          </div>
-          <button class="btn btn-primary" onclick="postDiningBill()">➕ Post to Guest Folio</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. BAR (WHISKY / RUM / BEER) -->
-    <div id="barTab" class="tab-content">
-      <div class="card">
-        <h2>🍸 Bar & Lounge Services (Category-wise)</h2>
-        <div class="sub-tabs">
-          <button class="sub-btn active" onclick="switchBarCat('whisky', this)">🥃 Premium Whisky</button>
-          <button class="sub-btn" onclick="switchBarCat('rum', this)">🍹 Rum & Spirits</button>
-          <button class="sub-btn" onclick="switchBarCat('beer', this)">🍺 Chilled Beer & Mixers</button>
-        </div>
-
-        <div style="max-width: 600px;">
-          <div class="form-group">
-            <label>Select Guest / Room</label>
-            <select id="barRoomSelect"></select>
-          </div>
-          <div class="form-group">
-            <label>Beverage / Spirit Selection</label>
-            <select id="barItemSelect"></select>
-          </div>
-          <button class="btn btn-primary" onclick="postBarBill()">➕ Post to Bar Folio</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. FOREIGN GUEST C-FORM -->
-    <div id="cFormTab" class="tab-content">
-      <div class="card">
-        <h2>📄 Foreign Guest Registration (Form C Compliance)</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <div class="form-group">
-            <label>Guest Full Name</label>
-            <input type="text" id="cfName" placeholder="As per passport">
-          </div>
-          <div class="form-group">
-            <label>Nationality</label>
-            <input type="text" id="cfNation" placeholder="Country of citizenship">
-          </div>
-          <div class="form-group">
-            <label>Passport Number</label>
-            <input type="text" id="cfPassport" placeholder="Passport No">
-          </div>
-          <div class="form-group">
-            <label>Visa Number & Validity</label>
-            <input type="text" id="cfVisa" placeholder="Visa No / Valid Until">
-          </div>
-          <div class="form-group">
-            <label>Arrived From</label>
-            <input type="text" id="cfFrom" placeholder="Port of arrival / City">
-          </div>
-          <div class="form-group">
-            <label>Next Destination</label>
-            <input type="text" id="cfTo" placeholder="Next traveling city">
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="alert('Form C generated and stored for BoI compliance.')">💾 Save & Print Form C</button>
-      </div>
-    </div>
-
-    <!-- 7. NIGHT AUDIT & EXCEL -->
+    <!-- 6. NIGHT AUDIT & EXCEL TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
@@ -391,9 +499,49 @@
 
   </div>
 
+  <!-- ================= POPUP MODAL: FORM C FOR FOREIGN GUEST ================= -->
+  <div id="cFormModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">
+        <h3 style="margin: 0; color: var(--primary);">📄 Foreign Guest Registration (Form C)</h3>
+        <button onclick="closeCFormModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Foreign Guest Full Name</label>
+          <input type="text" id="cfName" placeholder="As per passport">
+        </div>
+        <div class="form-group">
+          <label>Nationality</label>
+          <input type="text" id="cfNation" placeholder="Country">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Passport Number</label>
+          <input type="text" id="cfPassport" placeholder="Passport No">
+        </div>
+        <div class="form-group">
+          <label>Visa Number & Validity</label>
+          <input type="text" id="cfVisa" placeholder="Visa No / Valid Until">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Arrived From (City / Country)</label>
+          <input type="text" id="cfFrom" placeholder="Port of arrival">
+        </div>
+        <div class="form-group">
+          <label>Next Destination</label>
+          <input type="text" id="cfTo" placeholder="Next destination">
+        </div>
+      </div>
+      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="saveFormCRecord()">💾 Save & Attach to Current Check-In</button>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    // Tab Switching
     function openTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -401,8 +549,35 @@
       btn.classList.add('active');
     }
 
-    // Room Inventory Matrix (10 Cottages + 40 Rooms)
-    let roomsState = JSON.parse(localStorage.getItem('sk_room_status')) || [
+    // Modal Control
+    function openCFormModal() {
+      document.getElementById('cFormModal').classList.add('open');
+    }
+    function closeCFormModal() {
+      document.getElementById('cFormModal').classList.remove('open');
+    }
+    function saveFormCRecord() {
+      let pNo = document.getElementById('cfPassport').value;
+      if (!pNo) { alert('Please enter passport number.'); return; }
+      alert('Form C details attached successfully.');
+      closeCFormModal();
+    }
+
+    // Dynamic Payment Mode Gateway Switcher
+    function togglePaymentGateway(mode) {
+      document.getElementById('upiGatewayBlock').style.display = mode.includes('UPI') ? 'block' : 'none';
+      document.getElementById('cardGatewayBlock').style.display = (mode.includes('Credit') || mode.includes('Debit')) ? 'block' : 'none';
+      document.getElementById('walletGatewayBlock').style.display = mode.includes('Wallet') ? 'block' : 'none';
+      document.getElementById('cashGatewayBlock').style.display = mode.includes('Cash') ? 'block' : 'none';
+    }
+
+    function generateRefId() {
+      let count = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
+      document.getElementById('gRefId').value = 'SKR-' + count;
+    }
+
+    // 50 Units Room Housekeeping Matrix
+    let roomsState = JSON.parse(localStorage.getItem('sk_master_rooms_v2')) || [
       { id: "Cottage 01", status: "Clean" }, { id: "Cottage 02", status: "Clean" },
       { id: "Cottage 03", status: "Dirty" }, { id: "Cottage 04", status: "Clean" },
       { id: "Cottage 05", status: "Clean" }, { id: "Cottage 06", status: "Clean" },
@@ -429,7 +604,7 @@
         `;
         grid.innerHTML += box;
       });
-      localStorage.setItem('sk_room_status', JSON.stringify(roomsState));
+      localStorage.setItem('sk_master_rooms_v2', JSON.stringify(roomsState));
     }
 
     function toggleRoomStatus(idx) {
@@ -437,75 +612,24 @@
       renderRoomMatrix();
     }
 
-    // Food Menus (Breakfast, Lunch, Dinner)
-    const foodMenus = {
-      bf: [
-        { name: "Puri Sabji & Sweet", price: 120 },
-        { name: "Aloo Paratha with Curd & Pickle", price: 140 },
-        { name: "Continental Breakfast (Eggs & Toast)", price: 180 },
-        { name: "Masala Tea / Coffee with Cookies", price: 50 }
-      ],
-      lunch: [
-        { name: "Special Bengali Fish Thali (Katla)", price: 320 },
-        { name: "Purulia Desi Mutton Curry with Rice", price: 420 },
-        { name: "Shorshe Ilish Thali (Seasonal)", price: 550 },
-        { name: "Pure Veg Deluxe Thali", price: 240 }
-      ],
-      dinner: [
-        { name: "Chicken Kasha with Tandoori Roti", price: 280 },
-        { name: "Mutton Kasha & Rumali Roti", price: 390 },
-        { name: "Paneer Butter Masala with Naan", price: 250 },
-        { name: "Mixed Fried Rice & Chilli Chicken", price: 310 }
-      ]
-    };
-
-    function switchFoodCat(cat, btn) {
-      document.querySelectorAll('#diningTab .sub-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const select = document.getElementById('diningItemSelect');
-      select.innerHTML = '';
-      foodMenus[cat].forEach(item => {
-        select.innerHTML += `<option value="${item.name}|${item.price}">${item.name} (₹${item.price})</option>`;
-      });
-    }
-
-    // Bar Menus (Whisky, Rum, Beer)
-    const barMenus = {
-      whisky: [
-        { name: "Johnnie Walker Black Label (60ml)", price: 420 },
-        { name: "Blenders Pride Reserve (60ml)", price: 240 },
-        { name: "Royal Challenge Select (60ml)", price: 190 }
-      ],
-      rum: [
-        { name: "Old Monk Dark Rum (60ml)", price: 160 },
-        { name: "Bacardi White Rum & Cola", price: 220 },
-        { name: "Smirnoff Vodka with Tonic", price: 230 }
-      ],
-      beer: [
-        { name: "Kingfisher Premium (650ml)", price: 220 },
-        { name: "Tuborg Strong Chilled (650ml)", price: 230 },
-        { name: "Fresh Lime Soda & Mixers", price: 80 }
-      ]
-    };
-
-    function switchBarCat(cat, btn) {
-      document.querySelectorAll('#barTab .sub-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const select = document.getElementById('barItemSelect');
-      select.innerHTML = '';
-      barMenus[cat].forEach(item => {
-        select.innerHTML += `<option value="${item.name}|${item.price}">${item.name} (₹${item.price})</option>`;
-      });
-    }
-
-    // Active Bookings & Ledger State
-    let bookings = JSON.parse(localStorage.getItem('shreeKrishnaMasterPMS')) || [
-      { id: 101, name: "Subhasis Banerjee", room: "Cottage 04", phone: "9832104521", total: 6500, paid: 6500, mode: "UPI / Online QR" },
-      { id: 102, name: "Debabrata Roy", room: "Room 102", phone: "9434112233", total: 3200, paid: 2000, mode: "Cash in Hand" }
+    // In-House Guest Folio with Itemized Timestamped Orders
+    let bookings = JSON.parse(localStorage.getItem('shreeKrishnaMasterFolio_v2')) || [
+      { 
+        refId: "SKR-1001", 
+        name: "Subhasis Banerjee", 
+        room: "Cottage 04", 
+        adults: 2, 
+        children: 1, 
+        phone: "9832104521", 
+        total: 6500, 
+        paid: 6500, 
+        mode: "UPI / QR Code Scan",
+        orders: ["Room Tariff: ₹6500 [Check-In]"]
+      }
     ];
 
     function saveState() {
-      localStorage.setItem('shreeKrishnaMasterPMS', JSON.stringify(bookings));
+      localStorage.setItem('shreeKrishnaMasterFolio_v2', JSON.stringify(bookings));
       render();
     }
 
@@ -519,7 +643,7 @@
       bSelect.innerHTML = '';
 
       if (bookings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No active reservations found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888;">No active reservations found.</td></tr>';
       }
 
       let totalInflow = 0, upi = 0, cash = 0, pending = 0;
@@ -527,23 +651,24 @@
       bookings.forEach((b, index) => {
         let due = Math.max(0, b.total - b.paid);
         totalInflow += b.total;
-        if (b.mode.includes('UPI')) upi += b.paid;
+        if (b.mode.includes('UPI') || b.mode.includes('Card') || b.mode.includes('Wallet')) upi += b.paid;
         else cash += b.paid;
         pending += due;
 
+        let orderListHtml = (b.orders || []).map(o => `<li style="font-size:11px; margin-bottom:2px;">${o}</li>`).join('');
+
         let row = `<tr>
-          <td>${index + 1}</td>
-          <td><strong>${b.name}</strong></td>
-          <td>${b.room}</td>
+          <td><strong>${b.refId}</strong></td>
+          <td><strong>${b.name}</strong><br><small>${b.room} (${b.adults}A, ${b.children}C)</small></td>
+          <td><ul style="padding-left:15px; margin:0;">${orderListHtml}</ul></td>
           <td>₹${b.total.toFixed(2)}</td>
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
-          <td>${b.mode}</td>
           <td><button onclick="checkoutGuest(${index})" style="color:red; background:none; border:none; cursor:pointer;">❌ Check-out</button></td>
         </tr>`;
         tbody.innerHTML += row;
 
-        let opt = `<option value="${index}">${b.room} - ${b.name}</option>`;
+        let opt = `<option value="${index}">${b.refId} | ${b.room} - ${b.name}</option>`;
         dSelect.innerHTML += opt;
         bSelect.innerHTML += opt;
       });
@@ -555,38 +680,60 @@
     }
 
     function addBooking() {
+      let refId = document.getElementById('gRefId').value;
       let name = document.getElementById('gName').value.trim();
       let phone = document.getElementById('gPhone').value.trim();
+      let adults = parseInt(document.getElementById('gAdults').value || 1);
+      let children = parseInt(document.getElementById('gChildren').value || 0);
       let room = document.getElementById('gRoom').value;
       let total = parseFloat(document.getElementById('gTotal').value || 0);
       let paid = parseFloat(document.getElementById('gPaid').value || 0);
       let mode = document.getElementById('gMode').value;
 
-      if (!name) { alert('Please enter guest name.'); return; }
+      if (!name) { alert('Please enter guest full name.'); return; }
 
-      bookings.push({ id: Date.now(), name, phone, room, total, paid, mode });
+      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let initialOrder = [`Room Tariff: ₹${total} [${nowTime}]`];
+
+      bookings.push({ refId, name, phone, adults, children, room, total, paid, mode, orders: initialOrder });
+
+      let cur = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
+      localStorage.setItem('sk_ref_counter', (cur + 1).toString());
+
       document.getElementById('gName').value = '';
       document.getElementById('gPhone').value = '';
       document.getElementById('gTotal').value = '';
       document.getElementById('gPaid').value = '';
+      generateRefId();
       saveState();
     }
 
-    function postDiningBill() {
+    // Adding Dining & Bar Orders with Exact Time Stamps
+    function postFoodOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
-      let [item, price] = document.getElementById('diningItemSelect').value.split('|');
+      let [item, price] = document.getElementById(selectId).value.split('|');
+      let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
       bookings[idx].total += parseFloat(price);
-      alert(item + ' (₹' + price + ') posted to ' + bookings[idx].room + ' folio.');
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`${item} - ₹${price} [${time}]`);
+
+      alert(`${item} (₹${price}) posted with timestamp to ${bookings[idx].room}.`);
       saveState();
     }
 
-    function postBarBill() {
+    function postBarOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
-      let [item, price] = document.getElementById('barItemSelect').value.split('|');
+      let [item, price] = document.getElementById(selectId).value.split('|');
+      let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
       bookings[idx].total += parseFloat(price);
-      alert('Bar Service ' + item + ' (₹' + price + ') posted to ' + bookings[idx].room + ' folio.');
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`Bar: ${item} - ₹${price} [${time}]`);
+
+      alert(`Bar Service ${item} (₹${price}) posted with timestamp to ${bookings[idx].room}.`);
       saveState();
     }
 
@@ -605,8 +752,11 @@
       if (bookings.length === 0) { alert('No guest data found to export.'); return; }
       let exportData = bookings.map((b, i) => ({
         "SL": i + 1,
+        "Ref ID": b.refId,
         "Guest Name": b.name,
         "Room / Cottage": b.room,
+        "Guests": `${b.adults} Adults, ${b.children} Children`,
+        "Itemized Order Summary": (b.orders || []).join(" | "),
         "Total Billed (INR)": b.total,
         "Advance Paid (INR)": b.paid,
         "Balance Due (INR)": Math.max(0, b.total - b.paid),
@@ -615,14 +765,13 @@
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Shree Krishna Master Ledger");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_Master_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
+      generateRefId();
       render();
       renderRoomMatrix();
-      switchFoodCat('bf', document.querySelector('#diningTab .sub-btn'));
-      switchBarCat('whisky', document.querySelector('#barTab .sub-btn'));
     };
   </script>
 </body>
