@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1b3a4b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Shree Krishna Resort & Retreat - Enterprise PMS & Settlement Engine</title>
   <style>
     :root {
@@ -196,7 +199,6 @@
     }
     .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
 
-    /* Gallery without lawn */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 15px; }
     .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
     .gallery-card img { width: 100%; height: 145px; object-fit: cover; }
@@ -205,6 +207,18 @@
     table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
     th, td { border: 1px solid #dee2e6; padding: 9px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
+
+    /* Clean Footer Copyright */
+    footer {
+      background: var(--primary);
+      color: #cbd5e0;
+      text-align: center;
+      padding: 18px 10px;
+      margin-top: 35px;
+      border-top: 3px solid var(--accent);
+      font-size: 13px;
+    }
+    footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -212,9 +226,9 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">Purulia Sadar | 10 Cottages, 20 Deluxe Rooms, 10 Dormitory, 10 Suites | Full PMS</small>
+      <small style="color: #cbd5e0;">PMS, Accommodations, Dining & Bar Management System</small>
     </div>
-    <span class="badge">Master Front Desk POS</span>
+    <span class="badge">Enterprise Terminal</span>
   </header>
 
   <nav>
@@ -471,37 +485,31 @@
       </div>
     </div>
 
-    <!-- 5. POOL & PHOTO SHOWCASE (LAWN COMPLETELY REMOVED) -->
+    <!-- 5. POOL & PHOTO SHOWCASE -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
         <h2>🖼️ Resort Swimming Pool & Ambience Showcase</h2>
         <div class="gallery">
-          <!-- Swimming Pool -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Resort Swimming Pool">
             <p>🏊 Luxury Outdoor Swimming Pool</p>
           </div>
-          <!-- Cottages Exterior -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Deluxe Cottages">
             <p>🏡 10 Luxury Heritage Cottages</p>
           </div>
-          <!-- Deluxe Rooms -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Deluxe Rooms">
             <p>🏢 20 Deluxe & 10 Dormitory Rooms</p>
           </div>
-          <!-- Executive Suites -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=600&q=80" alt="Executive Suites">
             <p>👑 10 Executive Suites</p>
           </div>
-          <!-- Dining -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Multi-Cuisine Dining">
             <p>🍲 Multi-Cuisine Family Dining</p>
           </div>
-          <!-- Bar Lounge -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Beverage Lounge">
             <p>🍸 Spirits, Cocktails & Bar Lounge</p>
@@ -621,6 +629,16 @@
     </div>
   </div>
 
+  <!-- CLEAN EXCLUSIVE COPYRIGHT FOOTER -->
+  <footer>
+    <div>
+      © 2026 <strong>Shree Krishna Resort & Retreat</strong>. All Rights Reserved.
+    </div>
+    <div style="margin-top: 5px; font-size: 11px; color: #a0aec0;">
+      Enterprise PMS, F&B Billing & Night Audit Management Terminal
+    </div>
+  </footer>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
     function openTab(tabId, btn) {
@@ -638,8 +656,7 @@
       document.getElementById('gRefId').value = 'SKR-' + count;
     }
 
-    // Returning Customer Directory Database in LocalStorage
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v9')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v10')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -789,7 +806,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v9')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v10')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -816,7 +833,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v9')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v10')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -834,9 +851,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v9', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v9', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v9', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v10', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v10', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v10', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -897,7 +914,6 @@
       if (!name) { alert('Please enter guest full name.'); return; }
       if (!phone) { alert('Please enter guest contact phone.'); return; }
 
-      // Save/Update in permanent returning customer directory
       guestDirectory[phone] = { name: name, idType: idType, idNumber: idNumber };
 
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
