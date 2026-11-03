@@ -103,7 +103,6 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    /* 50 Rooms Visual Cards Grid */
     .room-matrix-visual {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -142,7 +141,6 @@
     .pill-clean { background: #e8f8f0; color: var(--success); }
     .pill-dirty { background: #fde8e8; color: var(--danger); }
 
-    /* Modal / Popups */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -412,13 +410,14 @@
       </div>
     </div>
 
-    <!-- 5. LAWN & PHOTO SHOWCASE -->
+    <!-- 5. LAWN & PHOTO SHOWCASE (UPDATED HIGH RESOLUTION BANQUET LAWN PHOTO) -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
         <h2>🌳 Resort Green Lawns, Cottages & Ambience Showcase</h2>
         <div class="gallery">
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lush Lawn">
+            <!-- Verified Reliable High Quality Resort Lawn Photo -->
+            <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Resort Lawn Green Banquet Lawn and Garden">
             <p>🌿 Lush Green Banquet Lawn & Garden</p>
           </div>
           <div class="gallery-card">
@@ -506,7 +505,7 @@
 
   </div>
 
-  <!-- ================= ADVANCED CHECKOUT & PAYMENT MODAL ================= -->
+  <!-- CHECKOUT MODAL -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
@@ -514,10 +513,8 @@
         <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
 
-      <!-- Bill Breakdown -->
       <div id="checkoutBillDetails"></div>
 
-      <!-- Interactive Settlement Gateway Selector -->
       <div style="margin-top: 15px; border-top: 1px solid #dee2e6; padding-top: 12px;">
         <label><strong>Select Balance Settlement Gateway:</strong></label>
         <select id="checkoutGatewaySelect" onchange="renderCheckoutGatewayFields(this.value)">
@@ -527,7 +524,6 @@
           <option value="CASH">💵 Cash Settlement</option>
         </select>
 
-        <!-- Gateway Specific Input Containers -->
         <div id="gatewayFieldsContainer" style="margin-top: 12px; background: #fdfdfd; border: 1px solid #ced4da; padding: 14px; border-radius: 6px;"></div>
 
         <button class="btn btn-danger" style="width: 100%; margin-top: 15px; font-size: 15px;" onclick="confirmFinalCheckout()">
@@ -573,7 +569,6 @@
       document.getElementById('gRefId').value = 'SKR-' + count;
     }
 
-    // 50 Units Inventory (10 Cottages + 40 Rooms)
     const cottageImg = "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=400&q=80";
     const roomImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
 
@@ -603,7 +598,7 @@
       });
     }
 
-    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v4')) || initial50Rooms;
+    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v5')) || initial50Rooms;
 
     function populateRoomDropdown() {
       const select = document.getElementById('gRoom');
@@ -645,7 +640,7 @@
         `;
         grid.innerHTML += card;
       });
-      localStorage.setItem('sk_50_rooms_state_v4', JSON.stringify(rooms50State));
+      localStorage.setItem('sk_50_rooms_state_v5', JSON.stringify(rooms50State));
       populateRoomDropdown();
     }
 
@@ -654,8 +649,7 @@
       renderRoomVisualMatrix();
     }
 
-    // Active Bookings (Folio) & Audit Archives
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v4')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v5')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -680,7 +674,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v4')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v5')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -696,8 +690,8 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v4', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v4', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_active_bookings_v5', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v5', JSON.stringify(auditHistory));
       render();
       renderAuditLedger();
     }
@@ -805,7 +799,6 @@
       saveState();
     }
 
-    // CHECK-OUT MODAL & MULTI-GATEWAY ENGINE
     let activeCheckoutIndex = null;
 
     function openCheckoutModal(index) {
@@ -930,11 +923,9 @@
         txnDetails = "Cash Drawer Settlement";
       }
 
-      // Mark unit as DIRTY
       let targetRoom = rooms50State.find(r => r.id === b.room);
       if (targetRoom) targetRoom.status = "Dirty";
 
-      // Append to Audit Trail
       let auditCount = auditHistory.length + 901;
       let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 
@@ -959,11 +950,9 @@
       renderRoomVisualMatrix();
     }
 
-    // Comprehensive Night Audit Ledger Rendering
     function renderAuditLedger() {
       let roomRev = 0, diningRev = 0, barRev = 0, totalSettled = 0, pending = 0;
 
-      // From settled audit history
       auditHistory.forEach(a => {
         roomRev += (a.roomTariff || 0);
         diningRev += (a.diningTotal || 0);
@@ -971,7 +960,6 @@
         totalSettled += (a.totalSettled || 0);
       });
 
-      // From current active in-house guests
       bookings.forEach(b => {
         pending += Math.max(0, b.total - b.paid);
       });
