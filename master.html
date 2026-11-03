@@ -103,7 +103,6 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    /* 50 Rooms Visual Cards Grid */
     .room-matrix-visual {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -177,7 +176,6 @@
     }
     .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
 
-    /* Gallery with Lawn & Pool */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 15px; }
     .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
     .gallery-card img { width: 100%; height: 145px; object-fit: cover; }
@@ -194,7 +192,7 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">Purulia Sadar | 50 Units (10 Cottages + 40 Rooms), Dining, Bar Lounge & Checkout Terminal</small>
+      <small style="color: #cbd5e0;">Purulia Sadar | 10 Cottages, 20 Deluxe Rooms, 10 Dormitory, 10 Suites | Full PMS</small>
     </div>
     <span class="badge">Master Front Desk POS</span>
   </header>
@@ -247,7 +245,7 @@
           </div>
 
           <div class="form-group">
-            <label>Allocation (10 Luxury Cottages + 40 Deluxe Rooms)</label>
+            <label>Allocation (10 Cottages, 20 Deluxe, 10 Dormitory, 10 Suites)</label>
             <select id="gRoom"></select>
           </div>
 
@@ -301,7 +299,7 @@
     <!-- 2. 50 ROOM MATRIX -->
     <div id="roomInventoryTab" class="tab-content">
       <div class="card">
-        <h2>🧹 50 Units Inventory (10 Luxury Cottages + 40 Deluxe Rooms)</h2>
+        <h2>🧹 50 Units Inventory (10 Cottages + 20 Deluxe + 10 Dormitory + 10 Suites)</h2>
         <p style="color: #666; font-size: 13px;">Checking out a guest automatically marks the room as <strong>Dirty</strong>. Housekeeping marks it <strong>Clean</strong> once ready.</p>
         <div id="roomVisualMatrixGrid" class="room-matrix-visual"></div>
       </div>
@@ -412,30 +410,34 @@
       </div>
     </div>
 
-    <!-- 5. LAWN, POOL & PHOTO SHOWCASE (GREEN LAWN & SWIMMING POOL ADDED) -->
+    <!-- 5. LAWN, POOL & PHOTO SHOWCASE (FAIL-SAFE IMAGE ARCHITECTURE) -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
         <h2>🌳 Resort Green Lawns, Swimming Pool & Ambience Showcase</h2>
         <div class="gallery">
-          <!-- Green Open Lawn -->
+          <!-- Guaranteed Reliable Green Open Lawn Image -->
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1592417817098-8f3d6910985b?auto=format&fit=crop&w=600&q=80" alt="Lush Green Resort Lawn">
-            <p>🌿 Lush Green Open Lawn & Garden</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Green_lawn.jpg/800px-Green_lawn.jpg" 
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80';"
+                 alt="Resort Lawn Green Banquet Lawn and Garden">
+            <p>🌿 Lush Green Open Banquet Lawn</p>
           </div>
-          <!-- Luxury Resort Swimming Pool -->
+          <!-- Guaranteed Reliable Swimming Pool Image -->
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Resort Swimming Pool">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Swimming_pool_at_a_resort.jpg/800px-Swimming_pool_at_a_resort.jpg" 
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80';"
+                 alt="Resort Swimming Pool">
             <p>🏊 Luxury Outdoor Swimming Pool</p>
           </div>
           <!-- Cottages Exterior -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Deluxe Cottages">
-            <p>🏡 10 Luxury AC Garden Cottages</p>
+            <p>🏡 10 Luxury Heritage Cottages</p>
           </div>
-          <!-- Rooms -->
+          <!-- Deluxe Rooms & Dormitory -->
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Executive Deluxe Rooms">
-            <p>🏢 40 Executive & Deluxe Rooms</p>
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Deluxe Rooms">
+            <p>🏢 20 Deluxe & 10 Dormitory Rooms</p>
           </div>
           <!-- Dining -->
           <div class="gallery-card">
@@ -462,7 +464,6 @@
           <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
         </div>
 
-        <!-- Metric KPI Cards -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px;">
           <div style="background: #f8f9fa; border-left: 4px solid #1b3a4b; padding: 12px; border-radius: 4px;">
             <span style="font-size: 12px; color: #7f8c8d;">Room Revenue</span>
@@ -490,7 +491,6 @@
           </div>
         </div>
 
-        <!-- Comprehensive Audit History Table -->
         <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Audit Trail</h4>
         <div style="overflow-x: auto;">
           <table>
@@ -499,7 +499,7 @@
                 <th>Audit No</th>
                 <th>Ref ID</th>
                 <th>Guest Name</th>
-                <th>Room / Cottage</th>
+                <th>Room / Unit</th>
                 <th>Room (₹)</th>
                 <th>F&B (₹)</th>
                 <th>Bar (₹)</th>
@@ -581,35 +581,58 @@
     }
 
     const cottageImg = "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=400&q=80";
-    const roomImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
+    const deluxeImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
+    const dormImg = "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80";
+    const suiteImg = "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=400&q=80";
 
-    let initial50Rooms = [];
+    // 50 Units Inventory Architecture:
+    // 10 Cottages (01-10)
+    // 20 Deluxe Rooms (101-120)
+    // 10 Dormitories (D-01 to D-10)
+    // 10 Executive Suites (201-210)
+    let fresh50Units = [];
+
+    // 10 Heritage Cottages
     for(let i=1; i<=10; i++) {
-      initial50Rooms.push({
+      fresh50Units.push({
         id: "Cottage " + (i < 10 ? '0' + i : i),
         type: "Heritage AC Cottage",
         img: cottageImg,
         status: (i === 3 || i === 8) ? "Dirty" : "Clean"
       });
     }
+
+    // 20 Deluxe Rooms
     for(let i=101; i<=120; i++) {
-      initial50Rooms.push({
+      fresh50Units.push({
         id: "Room " + i,
         type: "Deluxe AC Room",
-        img: roomImg,
-        status: (i === 104) ? "Dirty" : "Clean"
+        img: deluxeImg,
+        status: (i === 104 || i === 115) ? "Dirty" : "Clean"
       });
     }
-    for(let i=201; i<=220; i++) {
-      initial50Rooms.push({
-        id: "Room " + i,
-        type: "Executive Suite Room",
-        img: roomImg,
+
+    // 10 Dormitory Units
+    for(let i=1; i<=10; i++) {
+      fresh50Units.push({
+        id: "Dormitory D-" + (i < 10 ? '0' + i : i),
+        type: "Shared / Group Dormitory",
+        img: dormImg,
         status: "Clean"
       });
     }
 
-    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v6')) || initial50Rooms;
+    // 10 Executive Suites
+    for(let i=201; i<=210; i++) {
+      fresh50Units.push({
+        id: "Suite " + i,
+        type: "Executive Suite",
+        img: suiteImg,
+        status: "Clean"
+      });
+    }
+
+    let rooms50State = fresh50Units;
 
     function populateRoomDropdown() {
       const select = document.getElementById('gRoom');
@@ -617,18 +640,26 @@
       
       let cotGroup = document.createElement('optgroup');
       cotGroup.label = "🏡 Luxury Heritage Cottages (10 Units)";
-      let rmGroup = document.createElement('optgroup');
-      rmGroup.label = "🏢 Main Resort Deluxe Rooms (40 Units)";
+      let dlxGroup = document.createElement('optgroup');
+      dlxGroup.label = "🏢 Deluxe AC Rooms (20 Units)";
+      let dormGroup = document.createElement('optgroup');
+      dormGroup.label = "🛏️ Dormitory Accommodation (10 Units)";
+      let suiteGroup = document.createElement('optgroup');
+      suiteGroup.label = "👑 Executive Suites (10 Units)";
 
       rooms50State.forEach(r => {
         let opt = document.createElement('option');
         opt.value = r.id;
         opt.innerText = `${r.id} (${r.type}) - [${r.status}]`;
         if (r.id.includes("Cottage")) cotGroup.appendChild(opt);
-        else rmGroup.appendChild(opt);
+        else if (r.id.includes("Room")) dlxGroup.appendChild(opt);
+        else if (r.id.includes("Dormitory")) dormGroup.appendChild(opt);
+        else suiteGroup.appendChild(opt);
       });
       select.appendChild(cotGroup);
-      select.appendChild(rmGroup);
+      select.appendChild(dlxGroup);
+      select.appendChild(dormGroup);
+      select.appendChild(suiteGroup);
     }
 
     function renderRoomVisualMatrix() {
@@ -651,7 +682,6 @@
         `;
         grid.innerHTML += card;
       });
-      localStorage.setItem('sk_50_rooms_state_v6', JSON.stringify(rooms50State));
       populateRoomDropdown();
     }
 
@@ -660,7 +690,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v6')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v7')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -685,7 +715,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v6')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v7')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -701,8 +731,8 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v6', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v6', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_active_bookings_v7', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v7', JSON.stringify(auditHistory));
       render();
       renderAuditLedger();
     }
