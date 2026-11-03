@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shree Krishna Resort & Retreat - Full PMS Architecture</title>
+  <title>Shree Krishna Resort & Retreat - Complete Master PMS</title>
   <style>
     :root {
       --primary: #1b3a4b;
@@ -13,6 +13,7 @@
       --light: #f8f9fa;
       --success: #27ae60;
       --danger: #c0392b;
+      --warning: #f39c12;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,7 +22,6 @@
       background: #eef2f7;
       color: #333;
     }
-    /* Top Header */
     header {
       background: linear-gradient(135deg, #1b3a4b, #006466);
       color: #fff;
@@ -34,7 +34,7 @@
     header h1 { margin: 0; font-size: 22px; }
     .badge { background: var(--accent); color: #1b3a4b; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
 
-    /* Interactive Menu Bar */
+    /* Sticky Menu Navigation Bar */
     nav {
       background: #ffffff;
       display: flex;
@@ -64,7 +64,6 @@
       border-color: var(--secondary);
     }
 
-    /* Container & Tab Panels */
     .container { padding: 20px; max-width: 1300px; margin: auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -85,15 +84,40 @@
     .grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; }
     @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
+    /* Room Matrix Grid (Dirty / Clean Status) */
+    .room-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .room-box {
+      border: 1px solid #ced4da;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      background: #ffffff;
+    }
+    .room-box.clean { border-top: 4px solid var(--success); }
+    .room-box.dirty { border-top: 4px solid var(--danger); background: #fff5f5; }
+    .status-tag { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+    .tag-clean { background: #e8f8f0; color: var(--success); }
+    .tag-dirty { background: #fde8e8; color: var(--danger); }
+
     /* Gallery with Lawn */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
     .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
     .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
     .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
 
+    /* Sub-tabs for Food & Bar */
+    .sub-tabs { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
+    .sub-btn { background: #edf2f7; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; }
+    .sub-btn.active { background: var(--secondary); color: #fff; }
+
     .form-group { margin-bottom: 12px; }
     label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #495057; }
-    input, select, textarea {
+    input, select {
       width: 100%;
       padding: 9px;
       border: 1px solid #ced4da;
@@ -101,17 +125,12 @@
       box-sizing: border-box;
       font-size: 14px;
     }
-    .btn {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
+    .btn { padding: 9px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
     .btn-primary { background: var(--secondary); color: #fff; }
     .btn-success { background: var(--success); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
     th, td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
@@ -119,32 +138,33 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Header -->
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">Purulia Sadar | 40 Rooms, 10 Cottages, Dining, Bar, Lawn & Front Desk</small>
+      <small style="color: #cbd5e0;">Purulia Sadar | 40 Rooms, 10 Cottages, Dining, Bar, Lawn & Housekeeping</small>
     </div>
-    <span class="badge">Live PMS Engine</span>
+    <span class="badge">Master PMS Terminal</span>
   </header>
 
-  <!-- Navigation Menu Bar -->
+  <!-- Interactive Menu Bar -->
   <nav>
-    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Rooms</button>
+    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk & Folio</button>
+    <button class="nav-btn" onclick="openTab('housekeepingTab', this)">🧹 Room Status (Dirty/Clean)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Gallery</button>
-    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining Restaurant</button>
-    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar & Lounge</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast/Lunch/Dinner)</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky/Rum/Beer)</button>
     <button class="nav-btn" onclick="openTab('cFormTab', this)">📄 Foreign Guest C-Form</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Ledger</button>
   </nav>
 
   <div class="container">
 
-    <!-- 1. FRONT DESK & INVENTORY TAB -->
+    <!-- 1. FRONT DESK & IN-HOUSE GUEST TAB -->
     <div id="frontDeskTab" class="tab-content active">
       <div class="grid">
         <div class="card">
-          <h2>🛎️ Guest Check-In & Folio</h2>
+          <h2>🛎️ Guest Check-In & Billing</h2>
           <div class="form-group">
             <label>Guest Full Name</label>
             <input type="text" id="gName" placeholder="Enter guest name">
@@ -165,18 +185,16 @@
                 <option value="Cottage 06">Cottage 06 (Deluxe Lawn Facing)</option>
                 <option value="Cottage 07">Cottage 07 (Royal Suite)</option>
                 <option value="Cottage 08">Cottage 08 (Royal Suite)</option>
-                <option value="Cottage 09">Cottage 09 (Family Cottage)</option>
-                <option value="Cottage 10">Cottage 10 (Family Cottage)</option>
+                <option value="Cottage 09">Cottage 09 (Family Suite)</option>
+                <option value="Cottage 10">Cottage 10 (Family Suite)</option>
               </optgroup>
               <optgroup label="🏢 Main Resort Rooms (40 Units)">
                 <option value="Room 101">Room 101 (Standard AC)</option>
                 <option value="Room 102">Room 102 (Standard AC)</option>
                 <option value="Room 103">Room 103 (Standard AC)</option>
-                <option value="Room 104">Room 104 (Executive Room)</option>
-                <option value="Room 105">Room 105 (Executive Room)</option>
+                <option value="Room 104">Room 104 (Executive AC)</option>
                 <option value="Room 201">Room 201 (Deluxe Suite)</option>
                 <option value="Room 202">Room 202 (Deluxe Suite)</option>
-                <option value="Room 203">Room 203 (Deluxe Suite)</option>
               </optgroup>
             </select>
           </div>
@@ -191,9 +209,9 @@
           <div class="form-group">
             <label>Payment Settlement Mode</label>
             <select id="gMode">
-              <option value="UPI / Online QR">UPI / QR Code Scan</option>
+              <option value="UPI / Online QR">UPI / Dynamic QR</option>
               <option value="Cash in Hand">Cash Settlement</option>
-              <option value="Card Terminal">Card POS Swipe</option>
+              <option value="Card Terminal">Card POS Terminal</option>
             </select>
           </div>
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Check-In Guest</button>
@@ -222,25 +240,34 @@
       </div>
     </div>
 
-    <!-- 2. RESORT LAWN & FACILITY GALLERY TAB -->
+    <!-- 2. ROOM STATUS MATRIX (DIRTY / CLEAN) -->
+    <div id="housekeepingTab" class="tab-content">
+      <div class="card">
+        <h2>🧹 Housekeeping & Room Cleanliness Matrix</h2>
+        <p style="color: #666; font-size: 13px;">Manage ready rooms (Clean) and rooms vacated by guests (Dirty) requiring housekeeping audit.</p>
+        <div id="roomMatrixGrid" class="room-matrix"></div>
+      </div>
+    </div>
+
+    <!-- 3. RESORT LAWN & FACILITY GALLERY -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
         <h2>🌳 Resort Green Lawns, Cottages & Ambience</h2>
         <div class="gallery">
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lush Green Lawn">
+            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=600&q=80" alt="Resort Lawn">
             <p>🌿 Lush Green Banquet Lawn & Garden</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Luxury Cottage Exterior">
+            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Cottage Exterior">
             <p>🏡 10 Luxury AC Garden Cottages</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Resort Hotel Room">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Executive Room">
             <p>🏢 40 Executive & Deluxe Rooms</p>
           </div>
           <div class="gallery-card">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Resort Restaurant">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurant">
             <p>🍲 Multi-Cuisine Family Dining</p>
           </div>
           <div class="gallery-card">
@@ -251,54 +278,55 @@
       </div>
     </div>
 
-    <!-- 3. DINING RESTAURANT TAB -->
+    <!-- 4. DINING (BREAKFAST / LUNCH / DINNER) -->
     <div id="diningTab" class="tab-content">
       <div class="card">
-        <h2>🍲 Multi-Cuisine Dining Management</h2>
+        <h2>🍲 Dining Management (Category-wise)</h2>
+        <div class="sub-tabs">
+          <button class="sub-btn active" onclick="switchFoodCat('bf', this)">🍳 Breakfast Menu</button>
+          <button class="sub-btn" onclick="switchFoodCat('lunch', this)">🍛 Lunch Menu</button>
+          <button class="sub-btn" onclick="switchFoodCat('dinner', this)">🍲 Dinner Menu</button>
+        </div>
+
         <div style="max-width: 600px;">
           <div class="form-group">
             <label>Select Guest / Room</label>
             <select id="diningRoomSelect"></select>
           </div>
           <div class="form-group">
-            <label>Select Dining Order Item</label>
-            <select id="diningItemSelect">
-              <option value="Special Bengali Thali|350">Special Bengali Thali (₹350)</option>
-              <option value="Purulia Mutton Curry|420">Purulia Mutton Curry (₹420)</option>
-              <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280)</option>
-              <option value="Fresh Fish Thali (Katla)|320">Fresh Fish Thali (Katla) (₹320)</option>
-              <option value="Breakfast Buffet|180">Morning Breakfast Buffet (₹180)</option>
-            </select>
+            <label>Menu Item</label>
+            <select id="diningItemSelect"></select>
           </div>
           <button class="btn btn-primary" onclick="postDiningBill()">➕ Post to Guest Folio</button>
         </div>
       </div>
     </div>
 
-    <!-- 4. BAR & LOUNGE TAB -->
+    <!-- 5. BAR (WHISKY / RUM / BEER) -->
     <div id="barTab" class="tab-content">
       <div class="card">
-        <h2>🍸 Bar & Lounge Services</h2>
+        <h2>🍸 Bar & Lounge Services (Category-wise)</h2>
+        <div class="sub-tabs">
+          <button class="sub-btn active" onclick="switchBarCat('whisky', this)">🥃 Premium Whisky</button>
+          <button class="sub-btn" onclick="switchBarCat('rum', this)">🍹 Rum & Spirits</button>
+          <button class="sub-btn" onclick="switchBarCat('beer', this)">🍺 Chilled Beer & Mixers</button>
+        </div>
+
         <div style="max-width: 600px;">
           <div class="form-group">
             <label>Select Guest / Room</label>
             <select id="barRoomSelect"></select>
           </div>
           <div class="form-group">
-            <label>Select Spirit / Beverage</label>
-            <select id="barItemSelect">
-              <option value="Premium Blended Whisky (60ml)|260">Premium Whisky (60ml) (₹260)</option>
-              <option value="Chilled Premium Beer (650ml)|220">Chilled Beer (650ml) (₹220)</option>
-              <option value="Dark Rum with Cola|190">Dark Rum & Cola (₹190)</option>
-              <option value="Mocktail & Fresh Fruit Juice|120">Mocktail & Fresh Juice (₹120)</option>
-            </select>
+            <label>Beverage / Spirit Selection</label>
+            <select id="barItemSelect"></select>
           </div>
           <button class="btn btn-primary" onclick="postBarBill()">➕ Post to Bar Folio</button>
         </div>
       </div>
     </div>
 
-    <!-- 5. FOREIGN GUEST C-FORM TAB -->
+    <!-- 6. FOREIGN GUEST C-FORM -->
     <div id="cFormTab" class="tab-content">
       <div class="card">
         <h2>📄 Foreign Guest Registration (Form C Compliance)</h2>
@@ -332,7 +360,7 @@
       </div>
     </div>
 
-    <!-- 6. NIGHT AUDIT & EXCEL TAB -->
+    <!-- 7. NIGHT AUDIT & EXCEL -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
@@ -365,7 +393,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    // Tab Switching Functionality
+    // Tab Switching
     function openTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -373,6 +401,104 @@
       btn.classList.add('active');
     }
 
+    // Room Inventory Matrix (10 Cottages + 40 Rooms)
+    let roomsState = JSON.parse(localStorage.getItem('sk_room_status')) || [
+      { id: "Cottage 01", status: "Clean" }, { id: "Cottage 02", status: "Clean" },
+      { id: "Cottage 03", status: "Dirty" }, { id: "Cottage 04", status: "Clean" },
+      { id: "Cottage 05", status: "Clean" }, { id: "Cottage 06", status: "Clean" },
+      { id: "Cottage 07", status: "Clean" }, { id: "Cottage 08", status: "Dirty" },
+      { id: "Cottage 09", status: "Clean" }, { id: "Cottage 10", status: "Clean" },
+      { id: "Room 101", status: "Clean" }, { id: "Room 102", status: "Clean" },
+      { id: "Room 103", status: "Dirty" }, { id: "Room 104", status: "Clean" },
+      { id: "Room 201", status: "Clean" }, { id: "Room 202", status: "Clean" }
+    ];
+
+    function renderRoomMatrix() {
+      const grid = document.getElementById('roomMatrixGrid');
+      grid.innerHTML = '';
+      roomsState.forEach((r, idx) => {
+        let isClean = r.status === 'Clean';
+        let box = `
+          <div class="room-box ${isClean ? 'clean' : 'dirty'}">
+            <strong>${r.id}</strong><br/>
+            <span class="status-tag ${isClean ? 'tag-clean' : 'tag-dirty'}">${r.status}</span><br/>
+            <button class="btn btn-sm ${isClean ? 'btn-danger' : 'btn-success'}" onclick="toggleRoomStatus(${idx})">
+              ${isClean ? 'Mark Dirty' : 'Mark Clean'}
+            </button>
+          </div>
+        `;
+        grid.innerHTML += box;
+      });
+      localStorage.setItem('sk_room_status', JSON.stringify(roomsState));
+    }
+
+    function toggleRoomStatus(idx) {
+      roomsState[idx].status = roomsState[idx].status === 'Clean' ? 'Dirty' : 'Clean';
+      renderRoomMatrix();
+    }
+
+    // Food Menus (Breakfast, Lunch, Dinner)
+    const foodMenus = {
+      bf: [
+        { name: "Puri Sabji & Sweet", price: 120 },
+        { name: "Aloo Paratha with Curd & Pickle", price: 140 },
+        { name: "Continental Breakfast (Eggs & Toast)", price: 180 },
+        { name: "Masala Tea / Coffee with Cookies", price: 50 }
+      ],
+      lunch: [
+        { name: "Special Bengali Fish Thali (Katla)", price: 320 },
+        { name: "Purulia Desi Mutton Curry with Rice", price: 420 },
+        { name: "Shorshe Ilish Thali (Seasonal)", price: 550 },
+        { name: "Pure Veg Deluxe Thali", price: 240 }
+      ],
+      dinner: [
+        { name: "Chicken Kasha with Tandoori Roti", price: 280 },
+        { name: "Mutton Kasha & Rumali Roti", price: 390 },
+        { name: "Paneer Butter Masala with Naan", price: 250 },
+        { name: "Mixed Fried Rice & Chilli Chicken", price: 310 }
+      ]
+    };
+
+    function switchFoodCat(cat, btn) {
+      document.querySelectorAll('#diningTab .sub-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const select = document.getElementById('diningItemSelect');
+      select.innerHTML = '';
+      foodMenus[cat].forEach(item => {
+        select.innerHTML += `<option value="${item.name}|${item.price}">${item.name} (₹${item.price})</option>`;
+      });
+    }
+
+    // Bar Menus (Whisky, Rum, Beer)
+    const barMenus = {
+      whisky: [
+        { name: "Johnnie Walker Black Label (60ml)", price: 420 },
+        { name: "Blenders Pride Reserve (60ml)", price: 240 },
+        { name: "Royal Challenge Select (60ml)", price: 190 }
+      ],
+      rum: [
+        { name: "Old Monk Dark Rum (60ml)", price: 160 },
+        { name: "Bacardi White Rum & Cola", price: 220 },
+        { name: "Smirnoff Vodka with Tonic", price: 230 }
+      ],
+      beer: [
+        { name: "Kingfisher Premium (650ml)", price: 220 },
+        { name: "Tuborg Strong Chilled (650ml)", price: 230 },
+        { name: "Fresh Lime Soda & Mixers", price: 80 }
+      ]
+    };
+
+    function switchBarCat(cat, btn) {
+      document.querySelectorAll('#barTab .sub-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const select = document.getElementById('barItemSelect');
+      select.innerHTML = '';
+      barMenus[cat].forEach(item => {
+        select.innerHTML += `<option value="${item.name}|${item.price}">${item.name} (₹${item.price})</option>`;
+      });
+    }
+
+    // Active Bookings & Ledger State
     let bookings = JSON.parse(localStorage.getItem('shreeKrishnaMasterPMS')) || [
       { id: 101, name: "Subhasis Banerjee", room: "Cottage 04", phone: "9832104521", total: 6500, paid: 6500, mode: "UPI / Online QR" },
       { id: 102, name: "Debabrata Roy", room: "Room 102", phone: "9434112233", total: 3200, paid: 2000, mode: "Cash in Hand" }
@@ -465,9 +591,13 @@
     }
 
     function checkoutGuest(index) {
-      if (confirm('Confirm guest check-out and archive folio?')) {
+      if (confirm('Confirm guest check-out and mark room as Dirty for housekeeping?')) {
+        let roomName = bookings[index].room;
+        let found = roomsState.find(r => r.id === roomName);
+        if (found) found.status = 'Dirty';
         bookings.splice(index, 1);
         saveState();
+        renderRoomMatrix();
       }
     }
 
@@ -484,11 +614,16 @@
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Shree Krishna Ledger");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Shree Krishna Master Ledger");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Master_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
-    window.onload = render;
+    window.onload = function() {
+      render();
+      renderRoomMatrix();
+      switchFoodCat('bf', document.querySelector('#diningTab .sub-btn'));
+      switchBarCat('whisky', document.querySelector('#barTab .sub-btn'));
+    };
   </script>
 </body>
 </html>
