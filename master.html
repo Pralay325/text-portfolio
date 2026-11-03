@@ -103,6 +103,7 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
 
+    /* 50 Rooms Visual Cards Grid */
     .room-matrix-visual {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -176,9 +177,10 @@
     }
     .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
 
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-top: 15px; }
+    /* Gallery with Lawn & Pool */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 15px; }
     .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
-    .gallery-card img { width: 100%; height: 140px; object-fit: cover; }
+    .gallery-card img { width: 100%; height: 145px; object-fit: cover; }
     .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
 
     table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
@@ -203,7 +205,7 @@
     <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Photos & Dirty/Clean)</button>
     <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast / Lunch / Dinner)</button>
     <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky / Rum / Beer)</button>
-    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn & Photo Showcase</button>
+    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🌳 Resort Lawn, Pool & Photo Showcase</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
   </nav>
 
@@ -410,28 +412,37 @@
       </div>
     </div>
 
-    <!-- 5. LAWN & PHOTO SHOWCASE (UPDATED HIGH RESOLUTION BANQUET LAWN PHOTO) -->
+    <!-- 5. LAWN, POOL & PHOTO SHOWCASE (GREEN LAWN & SWIMMING POOL ADDED) -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
-        <h2>🌳 Resort Green Lawns, Cottages & Ambience Showcase</h2>
+        <h2>🌳 Resort Green Lawns, Swimming Pool & Ambience Showcase</h2>
         <div class="gallery">
+          <!-- Green Open Lawn -->
           <div class="gallery-card">
-            <!-- Verified Reliable High Quality Resort Lawn Photo -->
-            <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Resort Lawn Green Banquet Lawn and Garden">
-            <p>🌿 Lush Green Banquet Lawn & Garden</p>
+            <img src="https://images.unsplash.com/photo-1592417817098-8f3d6910985b?auto=format&fit=crop&w=600&q=80" alt="Lush Green Resort Lawn">
+            <p>🌿 Lush Green Open Lawn & Garden</p>
           </div>
+          <!-- Luxury Resort Swimming Pool -->
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Resort Swimming Pool">
+            <p>🏊 Luxury Outdoor Swimming Pool</p>
+          </div>
+          <!-- Cottages Exterior -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Deluxe Cottages">
             <p>🏡 10 Luxury AC Garden Cottages</p>
           </div>
+          <!-- Rooms -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Executive Deluxe Rooms">
             <p>🏢 40 Executive & Deluxe Rooms</p>
           </div>
+          <!-- Dining -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Multi-Cuisine Dining">
             <p>🍲 Multi-Cuisine Family Dining</p>
           </div>
+          <!-- Bar Lounge -->
           <div class="gallery-card">
             <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Beverage Lounge">
             <p>🍸 Spirits, Cocktails & Bar Lounge</p>
@@ -598,7 +609,7 @@
       });
     }
 
-    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v5')) || initial50Rooms;
+    let rooms50State = JSON.parse(localStorage.getItem('sk_50_rooms_state_v6')) || initial50Rooms;
 
     function populateRoomDropdown() {
       const select = document.getElementById('gRoom');
@@ -640,7 +651,7 @@
         `;
         grid.innerHTML += card;
       });
-      localStorage.setItem('sk_50_rooms_state_v5', JSON.stringify(rooms50State));
+      localStorage.setItem('sk_50_rooms_state_v6', JSON.stringify(rooms50State));
       populateRoomDropdown();
     }
 
@@ -649,7 +660,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v5')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v6')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -674,7 +685,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v5')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v6')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -690,8 +701,8 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v5', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v5', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_active_bookings_v6', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v6', JSON.stringify(auditHistory));
       render();
       renderAuditLedger();
     }
