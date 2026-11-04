@@ -216,8 +216,8 @@
 
     .menu-columns {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
       margin-top: 15px;
     }
     .menu-box {
@@ -261,8 +261,8 @@
   <nav>
     <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk Check-In</button>
     <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Status & KPI)</button>
-    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining (Breakfast / Lunch / Dinner)</button>
-    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Whisky / Rum / Beer)</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Snacks (5% GST)</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Direct Net - No GST)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🖼️ Resort Pool & Photo Showcase</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
   </nav>
@@ -448,10 +448,10 @@
       </div>
     </div>
 
-    <!-- 3. DINING -->
+    <!-- 3. DINING & EVENING SNACKS (WITH EVENING TEA & SNACKS ADDED) -->
     <div id="diningTab" class="tab-content">
       <div class="card">
-        <h2>🍲 Dining Management (Category-wise Ordering)</h2>
+        <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
         <div class="form-group" style="max-width: 450px;">
           <label>Select In-House Room / Guest Folio</label>
           <select id="diningRoomSelect"></select>
@@ -459,7 +459,7 @@
 
         <div class="menu-columns">
           <div class="menu-box">
-            <h4>🍳 Breakfast Menu (5% GST Applied)</h4>
+            <h4>🍳 Breakfast Menu</h4>
             <div class="form-group">
               <select id="bfItemSelect">
                 <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120 + 5% GST)</option>
@@ -473,7 +473,7 @@
           </div>
 
           <div class="menu-box">
-            <h4>🍛 Lunch Menu (5% GST Applied)</h4>
+            <h4>🍛 Lunch Menu</h4>
             <div class="form-group">
               <select id="lunchItemSelect">
                 <option value="Special Bengali Katla Fish Thali|320">Bengali Fish Thali - Katla (₹320 + 5% GST)</option>
@@ -485,8 +485,26 @@
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
           </div>
 
+          <!-- NEW: EVENING TEA & SNACKS MENU -->
+          <div class="menu-box" style="border: 2px solid var(--accent); background: #fffcf7;">
+            <h4 style="color: #9c5b16;">☕ Evening Snacks & Tea</h4>
+            <div class="form-group">
+              <select id="snacksItemSelect">
+                <option value="Crispy Chicken Pakora (8 Pcs)|180">Crispy Chicken Pakora 8 Pcs (₹180 + 5% GST)</option>
+                <option value="Bhetki Fish Fry with Mustard Kasundi (2 Pcs)|220">Kolkata Bhetki Fish Fry 2 Pcs (₹220 + 5% GST)</option>
+                <option value="Paneer Pakora with Green Chutney (6 Pcs)|140">Paneer Pakora 6 Pcs (₹140 + 5% GST)</option>
+                <option value="Assorted Veg Pakora Platter|100">Assorted Veg Pakora (₹100 + 5% GST)</option>
+                <option value="Crispy French Fries (Peri Peri)|90">Crispy French Fries (₹90 + 5% GST)</option>
+                <option value="Purulia Adda Special Jhal Muri & Chanachur|50">Adda Special Jhal Muri (₹50 + 5% GST)</option>
+                <option value="Special Masala Milk Tea (Pot for 2)|60">Special Masala Milk Tea - 2 Cups (₹60 + 5% GST)</option>
+                <option value="Brewed Hot Coffee (2 Cups)|80">Brewed Hot Coffee - 2 Cups (₹80 + 5% GST)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect')">➕ Post Snacks & Tea</button>
+          </div>
+
           <div class="menu-box">
-            <h4>🍲 Dinner Menu (5% GST Applied)</h4>
+            <h4>🍲 Dinner Menu</h4>
             <div class="form-group">
               <select id="dinnerItemSelect">
                 <option value="Chicken Kasha with Tandoori Roti|280">Chicken Kasha with Roti (₹280 + 5% GST)</option>
@@ -501,10 +519,10 @@
       </div>
     </div>
 
-    <!-- 4. BAR & LOUNGE -->
+    <!-- 4. BAR & LOUNGE (NO GST APPLIED) -->
     <div id="barTab" class="tab-content">
       <div class="card">
-        <h2>🍸 Bar & Lounge Services (Brand & Peg Breakdown)</h2>
+        <h2>🍸 Bar & Lounge Services (Direct Net Pricing - No GST)</h2>
         <div class="form-group" style="max-width: 450px;">
           <label>Select In-House Room / Guest Folio</label>
           <select id="barRoomSelect"></select>
@@ -515,10 +533,10 @@
             <h4>🥃 Premium Whisky (Pegs)</h4>
             <div class="form-group">
               <select id="whiskySelect">
-                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label (60ml) (₹420)</option>
-                <option value="Blenders Pride Reserve (60ml)|240">Blenders Pride Reserve (60ml) (₹240)</option>
-                <option value="Royal Challenge Select (60ml)|190">Royal Challenge (60ml) (₹190)</option>
-                <option value="Antiquity Blue Premium (60ml)|260">Antiquity Blue (60ml) (₹260)</option>
+                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label (60ml) (₹420 Net)</option>
+                <option value="Blenders Pride Reserve (60ml)|240">Blenders Pride Reserve (60ml) (₹240 Net)</option>
+                <option value="Royal Challenge Select (60ml)|190">Royal Challenge (60ml) (₹190 Net)</option>
+                <option value="Antiquity Blue Premium (60ml)|260">Antiquity Blue (60ml) (₹260 Net)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect')">➕ Post Whisky Bill</button>
@@ -528,10 +546,10 @@
             <h4>🍹 Rum & Spirits (Pegs)</h4>
             <div class="form-group">
               <select id="rumSelect">
-                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (60ml) (₹160)</option>
-                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (60ml) (₹220)</option>
-                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (60ml) (₹230)</option>
-                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments (60ml) (₹180)</option>
+                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (60ml) (₹160 Net)</option>
+                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (60ml) (₹220 Net)</option>
+                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (60ml) (₹230 Net)</option>
+                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments (60ml) (₹180 Net)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Rum/Spirit Bill</button>
@@ -541,10 +559,10 @@
             <h4>🍺 Chilled Beer & Mixers</h4>
             <div class="form-group">
               <select id="beerSelect">
-                <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220)</option>
-                <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230)</option>
-                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White (Pint) (₹260)</option>
-                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Mixers (₹90)</option>
+                <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220 Net)</option>
+                <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230 Net)</option>
+                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White (Pint) (₹260 Net)</option>
+                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Mixers (₹90 Net)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect')">➕ Post Beer Bill</button>
@@ -586,13 +604,13 @@
       </div>
     </div>
 
-    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB (ITEMIZED GST AUDIT) -->
+    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
           <div>
             <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
-            <small style="color: #666;">Automated Reconciliation of Room Tariffs, F&B Orders, Itemized GST & Settlements</small>
+            <small style="color: #666;">Automated Reconciliation of Room Base, Food Base, Itemized GST & Bar Sales (No GST)</small>
           </div>
           <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
         </div>
@@ -603,15 +621,15 @@
             <h4 id="auditRoomRev" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #006466; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Net Dining (F&B) Base</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Net Dining & Snacks</span>
             <h4 id="auditDiningRev" style="margin: 5px 0 0; color: #006466;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #8e44ad; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Bar Lounge Sales</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Bar Sales (Direct Net)</span>
             <h4 id="auditBarRev" style="margin: 5px 0 0; color: #8e44ad;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Total GST Collected</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Total GST (Room+Food)</span>
             <h4 id="auditGstRev" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
@@ -637,7 +655,7 @@
                 <th>Room GST 12% (₹)</th>
                 <th>Dining Base (₹)</th>
                 <th>Dining GST 5% (₹)</th>
-                <th>Bar (₹)</th>
+                <th>Bar Net (₹)</th>
                 <th>Total Settled (₹)</th>
                 <th>Payment Mode</th>
                 <th>Timestamp</th>
@@ -651,11 +669,11 @@
 
   </div>
 
-  <!-- CHECKOUT MODAL WITH COMPLETE ITEMIZED GST BREAKDOWN -->
+  <!-- CHECKOUT MODAL WITH COMPLETE TAX INVOICE -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & GST Tax Invoice Terminal</h3>
+        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & Tax Invoice Terminal</h3>
         <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
 
@@ -764,7 +782,7 @@
       const rate = selectedOption ? parseFloat(selectedOption.getAttribute('data-rate') || 2200) : 2200;
 
       const baseTariff = rate * nights;
-      const roomGst = baseTariff * 0.12; // 12% GST
+      const roomGst = baseTariff * 0.12;
       const totalRoomBill = baseTariff + roomGst;
 
       document.getElementById('gDailyRate').value = rate;
@@ -775,7 +793,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v15')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v18')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -979,8 +997,7 @@
       renderRoomVisualMatrix();
     }
 
-    // TAX DATA MODEL: Room (12% GST), Dining (5% GST), Bar (0% GST)
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v16')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v18')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -995,12 +1012,12 @@
         nights: 2,
         dailyRate: 4500,
         roomBase: 9000,
-        roomGst: 1080, // 12%
+        roomGst: 1080,
         diningBase: 1200,
-        diningGst: 60,  // 5%
+        diningGst: 60,
         barTotal: 660,
         totalGst: 1140,
-        total: 12000, // 9000+1080 + 1200+60 + 660
+        total: 12000,
         paid: 5000, 
         mode: "UPI (Ref: UPI88912301)",
         orders: [
@@ -1010,13 +1027,13 @@
           "Dining: Purulia Desi Mutton Curry with Rice - ₹420.00 (+5% GST) [01:30 PM]",
           "Dining: Chicken Kasha with Tandoori Roti - ₹280.00 (+5% GST) [09:45 PM]",
           "Dining Tax: ₹60.00 (5% GST = 2.5% CGST + 2.5% SGST)",
-          "Bar: Johnnie Walker Black Label (60ml) - ₹420.00 [08:30 PM]",
-          "Bar: Blenders Pride Reserve (60ml) - ₹240.00 [09:10 PM]"
+          "Bar (No GST): Johnnie Walker Black Label (60ml) - ₹420.00 [08:30 PM]",
+          "Bar (No GST): Blenders Pride Reserve (60ml) - ₹240.00 [09:10 PM]"
         ]
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v16')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v18')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -1036,9 +1053,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v16', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v16', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v15', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v18', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v18', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v18', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1093,8 +1110,8 @@
           <td><strong>₹${b.total.toFixed(2)}</strong></td>
           <td>
             <small style="color:var(--secondary);">
-              Room GST: ₹${(b.roomGst||0).toFixed(2)}<br>
-              Food GST: ₹${(b.diningGst||0).toFixed(2)}<br>
+              Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}<br>
+              Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}<br>
               <strong>Total GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
             </small>
           </td>
@@ -1176,13 +1193,13 @@
       updateCheckInGatewayDisplay();
     }
 
-    // FOOD ORDER WITH 5% GST (2.5% CGST + 2.5% SGST)
+    // FOOD ORDER (INCLUDES BREAKFAST, LUNCH, EVENING SNACKS & DINNER) WITH 5% GST
     function postFoodOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
       let [item, price] = document.getElementById(selectId).value.split('|');
       let baseVal = parseFloat(price);
-      let gstVal = baseVal * 0.05; // 5% GST
+      let gstVal = baseVal * 0.05;
       let totalItem = baseVal + gstVal;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -1192,13 +1209,13 @@
       bookings[idx].total += totalItem;
 
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Dining: ${item} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
+      bookings[idx].orders.push(`F&B: ${item} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
 
       alert(`${item} (Base: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
       saveState();
     }
 
-    // BAR ORDER (DIRECT VAT/BEVERAGE EXEMPT FROM NORMAL GST ENGINE)
+    // BAR ORDER (DIRECT NET PRICING - NO GST)
     function postBarOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
@@ -1210,15 +1227,15 @@
       bookings[idx].total += val;
 
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Bar: ${item} - ₹${val.toFixed(2)} [${time}]`);
+      bookings[idx].orders.push(`Bar: ${item} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
 
-      alert(`Bar Service ${item} (₹${val.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
+      alert(`Bar Service ${item} (₹${val.toFixed(2)} Net) posted to ${bookings[idx].room} at ${time}.`);
       saveState();
     }
 
     let activeCheckoutIndex = null;
 
-    // CHECKOUT MODAL WITH COMPREHENSIVE TAX INVOICE BREAKDOWN
+    // CHECKOUT MODAL (GST ONLY ON ROOM & FOOD; BAR DIRECT NET)
     function openCheckoutModal(index) {
       activeCheckoutIndex = index;
       let b = bookings[index];
@@ -1242,7 +1259,6 @@
           ${orderListHtml}
         </ul>
 
-        <!-- DETAILED TAX INVOICE BREAKDOWN -->
         <div style="margin-top:12px; background:#fdfdfd; border:1px solid #ced4da; border-radius:6px; padding:10px; font-size:12px;">
           <table style="width:100%; border:none; margin:0;">
             <tr style="border-bottom:1px solid #eee;">
@@ -1254,31 +1270,31 @@
               <td style="text-align:right;">+ ₹${(b.roomGst||0).toFixed(2)}</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td>Net Dining (F&B) Base Charges:</td>
+              <td>Net Dining & Snacks Base:</td>
               <td style="text-align:right;"><strong>₹${(b.diningBase||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #eee; color:#555;">
-              <td>&nbsp; ↳ Dining GST 5% (CGST 2.5%: ₹${foodCgst.toFixed(2)} | SGST 2.5%: ₹${foodSgst.toFixed(2)}):</td>
+              <td>&nbsp; ↳ Food GST 5% (CGST 2.5%: ₹${foodCgst.toFixed(2)} | SGST 2.5%: ₹${foodSgst.toFixed(2)}):</td>
               <td style="text-align:right;">+ ₹${(b.diningGst||0).toFixed(2)}</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td>Bar & Beverage Lounge Total:</td>
+              <td>Bar & Beverage Lounge (Direct Net - No GST):</td>
               <td style="text-align:right;"><strong>₹${(b.barTotal||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #ccc; background:#f4f7f6; font-weight:bold;">
-              <td style="padding:5px 0;">Total Combined GST Tax (12% Room + 5% Food):</td>
+              <td style="padding:5px 0;">Total GST Tax (Room 12% + Food 5%):</td>
               <td style="text-align:right; color:var(--secondary); padding:5px 0;">₹${(b.totalGst||0).toFixed(2)}</td>
             </tr>
             <tr style="font-size:14px; font-weight:bold;">
-              <td style="padding:6px 0;">Gross Tax Invoice Total (Incl. Taxes):</td>
+              <td style="padding:6px 0;">Final Grand Total:</td>
               <td style="text-align:right; color:var(--primary); padding:6px 0;">₹${b.total.toFixed(2)}</td>
             </tr>
           </table>
         </div>
 
         <div style="margin-top:8px; background:#fff5f5; border:1px solid #ffccc7; padding:10px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
-          <div>Advance Deposit Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
-          <div style="font-size:15px; color:var(--danger);">Net Balance Due: <strong>₹${due.toFixed(2)}</strong></div>
+          <div>Advance Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
+          <div style="font-size:15px; color:var(--danger);">Net Due: <strong>₹${due.toFixed(2)}</strong></div>
         </div>
       `;
       document.getElementById('checkoutBillDetails').innerHTML = html;
@@ -1306,12 +1322,10 @@
             <label>Card Number (16 Digits)</label>
             <input type="text" id="cardNo" placeholder="4xxx xxxx xxxx 1234" maxlength="19">
             <div style="display:flex; gap:10px; margin-top:8px;">
-              <div style="flex:1;">
-                <label>Expiry (MM/YY)</label>
+              <div style="flex:1;"><label>Expiry (MM/YY)</label>
                 <input type="text" id="cardExp" placeholder="12/28" maxlength="5">
               </div>
-              <div style="flex:1;">
-                <label>CVV (3 Digits)</label>
+              <div style="flex:1;"><label>CVV (3 Digits)</label>
                 <input type="password" id="cardCvv" placeholder="•••" maxlength="3">
               </div>
             </div>
@@ -1402,7 +1416,7 @@
         timestamp: nowTime
       });
 
-      alert(`Tax Invoice & Check-out authorized for ${b.name} (${b.room}).\nGross Settled: ₹${b.total.toFixed(2)} (Incl. ₹${(b.totalGst||0).toFixed(2)} GST).\nRoom marked DIRTY.`);
+      alert(`Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nRoom marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
@@ -1472,9 +1486,9 @@
         "Stay Period": a.stayPeriod,
         "Room Base (INR)": a.roomBase,
         "Room GST 12% (INR)": a.roomGst,
-        "Dining Base (INR)": a.diningBase,
+        "Dining & Snacks Base (INR)": a.diningBase,
         "Dining GST 5% (INR)": a.diningGst,
-        "Bar Sales (INR)": a.barTotal,
+        "Bar Net Sales (INR)": a.barTotal,
         "Total GST Collected (INR)": a.totalGst,
         "Grand Total Settled (INR)": a.totalSettled,
         "Payment Mode & Txn": a.gateway,
@@ -1482,8 +1496,8 @@
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Master GST Audit");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_GST_Tax_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Master Audit");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Revenue_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
