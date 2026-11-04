@@ -1,12 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#1b3a4b">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Shree Krishna Resort & Retreat - Enterprise PMS & Settlement Engine</title>
   <style>
     :root {
@@ -18,7 +15,7 @@
       --success: #27ae60;
       --danger: #c0392b;
       --warning: #e67e22;
-      --info: #2980b9;
+      --info: #0288d1;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -85,7 +82,7 @@
       border-bottom: 2px solid #e9ecef;
       padding-bottom: 10px;
     }
-    .grid { display: grid; grid-template-columns: 1.05fr 1.55fr; gap: 20px; }
+    .grid { display: grid; grid-template-columns: 1.15fr 1.45fr; gap: 20px; }
     @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
 
     .summary-boxes {
@@ -117,13 +114,13 @@
     }
     input[readonly] { background-color: #e9ecef; font-weight: bold; color: var(--primary); }
 
-    .btn { padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+    .btn { padding: 9px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
     .btn-primary { background: var(--secondary); color: #fff; }
     .btn-success { background: var(--success); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-warning { background: var(--warning); color: #fff; }
-    .btn-info { background: var(--info); color: #fff; }
-    .btn-sm { padding: 5px 8px; font-size: 11px; margin-right: 4px; }
+    .btn-info { background: #0288d1; color: #fff; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; margin-right: 4px; display: inline-block; }
 
     .folio-table-container {
       max-height: 540px;
@@ -264,7 +261,7 @@
     <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk Check-In</button>
     <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Status & KPI)</button>
     <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Snacks (5% GST)</button>
-    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Direct Net - No GST)</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar Lounge (Direct Net - No GST)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🖼️ Resort Pool & Photo Showcase</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
   </nav>
@@ -338,19 +335,42 @@
             </div>
           </div>
 
+          <!-- PHYSICAL ROOM (FOR HOUSEKEEPING) -->
           <div class="form-group">
-            <label>Allocation (Cottages ₹4500 | Suites ₹3500 | Deluxe ₹2200 | Dormitory ₹850)</label>
-            <select id="gRoom" onchange="calculateRoomTariff(true)"></select>
+            <label style="color: var(--primary);"><strong>1. Physical Room Allocation (Where Guest Actually Stays):</strong></label>
+            <select id="gRoom" onchange="onPhysicalRoomChange()"></select>
           </div>
 
-          <!-- EDITABLE DAILY RATE & AUTO GST (12%) -->
-          <div class="form-row">
-            <div class="form-group">
-              <label>Daily Room Rate (₹/Nt) ✍️ <em>Editable</em></label>
-              <input type="number" id="gDailyRate" oninput="calculateRoomTariff(false)" title="You can manually override this rate if required">
+          <!-- CORPORATE BILLED AS (FOR INVOICING) -->
+          <div class="form-group" style="background: #eef7f9; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary);">
+            <label style="color: var(--secondary);"><strong>2. Billed As Category (For Official Corporate Invoice):</strong></label>
+            <select id="gBilledAs" onchange="onBilledAsChange()">
+              <option value="SAME">Standard: Same as Physical Allocation</option>
+              <option value="Executive Suite|3500">Executive Suite Tariff (₹3500/nt)</option>
+              <option value="Heritage AC Cottage|4500">Heritage AC Cottage Tariff (₹4500/nt)</option>
+              <option value="Deluxe AC Room|2200">Deluxe AC Room Tariff (₹2200/nt)</option>
+              <option value="Corporate Executive Package|3200">Corporate Executive Stay Package (₹3200/nt)</option>
+            </select>
+          </div>
+
+          <!-- GST INCLUSIVE VS EXCLUSIVE TOGGLE -->
+          <div class="form-row" style="background: #fff8e7; padding: 10px; border-radius: 6px; border: 1px solid #ffeeba;">
+            <div class="form-group" style="margin: 0;">
+              <label style="color: #856404;"><strong>Room GST Billing Type:</strong></label>
+              <select id="gGstType" onchange="calculateRoomTariff(false)">
+                <option value="EXCLUSIVE">Exclusive (+12% GST Added on Base)</option>
+                <option value="INCLUSIVE">Inclusive (12% GST Embedded in Tariff)</option>
+              </select>
             </div>
+            <div class="form-group" style="margin: 0;">
+              <label>Daily Room Rate (₹/Nt) ✍️ <em>Editable</em></label>
+              <input type="number" id="gDailyRate" oninput="calculateRoomTariff(false)" title="You can manually override this rate">
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top: 12px;">
             <div class="form-group">
-              <label>Base Tariff (₹)</label>
+              <label>Net Base Tariff (₹)</label>
               <input type="number" id="gBaseTariff" readonly>
             </div>
             <div class="form-group">
@@ -361,7 +381,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Total Room Bill (Incl. GST) (₹)</label>
+              <label>Total Room Bill (₹)</label>
               <input type="number" id="gTotal" readonly>
             </div>
             <div class="form-group">
@@ -385,7 +405,7 @@
           <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
         </div>
 
-        <!-- 50 ROOM ACTIVE FOLIO TABLE WITH SPLIT FOLIO BUTTON -->
+        <!-- 50 ROOM ACTIVE FOLIO TABLE -->
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 10px;">
             <h2 style="margin: 0; border: none; padding: 0;">📋 Active In-House Guest Folios (50 Rooms)</h2>
@@ -398,13 +418,13 @@
                 <tr>
                   <th>Ref ID</th>
                   <th>Guest / Allocation</th>
-                  <th>Stay Period</th>
-                  <th>Orders & Timestamps</th>
-                  <th>Gross Bill</th>
-                  <th>GST Breakdown</th>
+                  <th>Stay</th>
+                  <th>Orders History</th>
+                  <th>Total</th>
+                  <th>GST</th>
                   <th>Advance</th>
                   <th>Due</th>
-                  <th>Action</th>
+                  <th style="min-width: 155px; text-align: center;">Operations</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -447,7 +467,7 @@
       </div>
     </div>
 
-    <!-- 3. EXPANDED DINING & SNACKS TAB -->
+    <!-- 3. EXPANDED DINING & SNACKS TAB (WITH CHICKEN SATAY, LOLLIPOP, PANEER STICK) -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
@@ -471,9 +491,8 @@
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect')">➕ Post Breakfast Bill</button>
           </div>
 
-          <!-- EXTENDED LUNCH MENU -->
           <div class="menu-box">
-            <h4>🍛 Lunch Menu (Traditional & Special)</h4>
+            <h4>🍛 Lunch Menu (Traditional Bengali & Indian)</h4>
             <div class="form-group">
               <select id="lunchItemSelect">
                 <option value="Special Bengali Katla Fish Thali|320">Bengali Katla Fish Thali (₹320 + 5% GST)</option>
@@ -490,15 +509,14 @@
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
           </div>
 
-          <!-- EVENING TEA & SNACKS MENU -->
           <div class="menu-box" style="border: 2px solid var(--accent); background: #fffcf7;">
             <h4 style="color: #9c5b16;">☕ Evening Snacks & Tea</h4>
             <div class="form-group">
               <select id="snacksItemSelect">
+                <option value="Crispy Chicken Lollipop (6 Pcs)|220">Crispy Chicken Lollipop 6 Pcs (₹220 + 5% GST)</option>
+                <option value="Paneer Stick Kabab (6 Pcs)|190">Paneer Stick Kabab 6 Pcs (₹190 + 5% GST)</option>
                 <option value="Crispy Chicken Pakora (8 Pcs)|180">Crispy Chicken Pakora 8 Pcs (₹180 + 5% GST)</option>
                 <option value="Bhetki Fish Fry with Mustard Kasundi (2 Pcs)|220">Kolkata Bhetki Fish Fry 2 Pcs (₹220 + 5% GST)</option>
-                <option value="Paneer Pakora with Green Chutney (6 Pcs)|140">Paneer Pakora 6 Pcs (₹140 + 5% GST)</option>
-                <option value="Assorted Veg Pakora Platter|100">Assorted Veg Pakora (₹100 + 5% GST)</option>
                 <option value="Crispy French Fries (Peri Peri)|90">Crispy French Fries (₹90 + 5% GST)</option>
                 <option value="Purulia Adda Special Jhal Muri & Chanachur|50">Adda Special Jhal Muri (₹50 + 5% GST)</option>
                 <option value="Special Masala Milk Tea (Pot for 2)|60">Special Masala Milk Tea - 2 Cups (₹60 + 5% GST)</option>
@@ -508,19 +526,21 @@
             <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect')">➕ Post Snacks & Tea</button>
           </div>
 
-          <!-- EXTENDED DINNER MENU -->
+          <!-- DINNER MENU WITH SATAY, TANDOORI ROTI & NAAN -->
           <div class="menu-box">
-            <h4>🍲 Dinner Menu (Curries & Breads)</h4>
+            <h4>🍲 Dinner Menu (Curries, Breads & Specials)</h4>
             <div class="form-group">
               <select id="dinnerItemSelect">
-                <option value="Chicken Kasha with Tandoori Roti (4 Pcs)|280">Chicken Kasha & Tandoori Roti (₹280 + 5% GST)</option>
-                <option value="Purulia Mutton Kasha with Rumali Roti (3 Pcs)|390">Mutton Kasha & Rumali Roti (₹390 + 5% GST)</option>
-                <option value="Kadai Chicken with Butter Naan (2 Pcs)|310">Kadai Chicken & Butter Naan (₹310 + 5% GST)</option>
-                <option value="Paneer Butter Masala with Garlic Naan|270">Paneer Butter Masala & Naan (₹270 + 5% GST)</option>
-                <option value="Dal Makhani with Jeera Rice|220">Dal Makhani & Jeera Rice (₹220 + 5% GST)</option>
+                <option value="Chicken Satay Skewers with Peanut Dip (6 Pcs)|260">🍢 Chicken Satay Skewers (₹260 + 5% GST)</option>
+                <option value="Crispy Chicken Lollipop with Hot Garlic Dip (6 Pcs)|220">🍗 Crispy Chicken Lollipop (₹220 + 5% GST)</option>
+                <option value="Paneer Stick Kabab with Mint Dip (6 Pcs)|190">🍢 Paneer Stick Kabab (₹190 + 5% GST)</option>
+                <option value="Butter Naan (1 Pc)|50">🫓 Butter Naan (₹50 + 5% GST)</option>
+                <option value="Tandoori Roti (1 Pc)|25">🫓 Tandoori Roti (₹25 + 5% GST)</option>
+                <option value="Chicken Kasha (4 Pcs)|240">Chicken Kasha Special (₹240 + 5% GST)</option>
+                <option value="Purulia Mutton Kasha (4 Pcs)|340">Purulia Mutton Kasha (₹340 + 5% GST)</option>
+                <option value="Paneer Butter Masala (Full)|220">Paneer Butter Masala (₹220 + 5% GST)</option>
+                <option value="Dal Makhani (Full)|180">Dal Makhani Punjabi (₹180 + 5% GST)</option>
                 <option value="Mixed Fried Rice with Chilli Chicken|330">Mixed Fried Rice & Chilli Chicken (₹330 + 5% GST)</option>
-                <option value="Veg Fried Rice with Chilli Paneer|290">Veg Fried Rice & Chilli Paneer (₹290 + 5% GST)</option>
-                <option value="Dim Kosha (2 Pcs) with Lachha Paratha (2 Pcs)|190">Egg Kosha & Lachha Paratha (₹190 + 5% GST)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect')">➕ Post Dinner Bill</button>
@@ -529,10 +549,10 @@
       </div>
     </div>
 
-    <!-- 4. BAR & LOUNGE (NO GST APPLIED) -->
+    <!-- 4. EXPANDED BAR, WHISKY, WINE & BEER (DIRECT NET - NO GST) -->
     <div id="barTab" class="tab-content">
       <div class="card">
-        <h2>🍸 Bar & Lounge Services (Direct Net Pricing - No GST)</h2>
+        <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under Excise Law)</h2>
         <div class="form-group" style="max-width: 450px;">
           <label>Select In-House Room / Guest Folio</label>
           <select id="barRoomSelect"></select>
@@ -540,39 +560,61 @@
 
         <div class="menu-columns">
           <div class="menu-box">
-            <h4>🥃 Premium Whisky (Pegs)</h4>
+            <h4>🥃 Premium Scotch & Whisky (60ml Pegs)</h4>
             <div class="form-group">
               <select id="whiskySelect">
-                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label (60ml) (₹420 Net)</option>
-                <option value="Blenders Pride Reserve (60ml)|240">Blenders Pride Reserve (60ml) (₹240 Net)</option>
-                <option value="Royal Challenge Select (60ml)|190">Royal Challenge (60ml) (₹190 Net)</option>
-                <option value="Antiquity Blue Premium (60ml)|260">Antiquity Blue (60ml) (₹260 Net)</option>
+                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label 12 Yrs (₹420 Net)</option>
+                <option value="Johnnie Walker Red Label (60ml)|320">JW Red Label Blended (₹320 Net)</option>
+                <option value="Ballantines Finest Blended Scotch (60ml)|310">Ballantine's Finest (₹310 Net)</option>
+                <option value="100 Pipers 12 Years De-Luxe (60ml)|290">100 Pipers 12 Yrs (₹290 Net)</option>
+                <option value="Blenders Pride Reserve Collection (60ml)|240">Blenders Pride Reserve (₹240 Net)</option>
+                <option value="Signature Rare Aged Whisky (60ml)|220">Signature Rare Aged (₹220 Net)</option>
+                <option value="Royal Challenge Select (60ml)|190">Royal Challenge Premium (₹190 Net)</option>
+                <option value="Royal Stag Deluxe Special (60ml)|170">Royal Stag Deluxe (₹170 Net)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect')">➕ Post Whisky Bill</button>
           </div>
 
-          <div class="menu-box">
-            <h4>🍹 Rum & Spirits (Pegs)</h4>
+          <div class="menu-box" style="border: 2px solid #8e44ad; background: #faf5fc;">
+            <h4 style="color: #6a1b9a;">🍷 Fine Wine & Champagne</h4>
             <div class="form-group">
-              <select id="rumSelect">
-                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (60ml) (₹160 Net)</option>
-                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (60ml) (₹220 Net)</option>
-                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (60ml) (₹230 Net)</option>
-                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments (60ml) (₹180 Net)</option>
+              <select id="wineSelect">
+                <option value="Sula Shiraz Cabernet Red Wine (Glass)|360">Sula Shiraz Cabernet Red (Glass) (₹360 Net)</option>
+                <option value="Sula Sauvignon Blanc White Wine (Glass)|340">Sula Sauvignon Blanc White (Glass) (₹340 Net)</option>
+                <option value="Jacob's Creek Classic Shiraz (Glass)|420">Jacob's Creek Classic Shiraz (Glass) (₹420 Net)</option>
+                <option value="Sula Dindori Reserve Viognier (Bottle 750ml)|1950">Sula Dindori Reserve (Bottle) (₹1950 Net)</option>
+                <option value="Four Seasons Classic Chenin Blanc (Bottle 750ml)|1450">Four Seasons Chenin Blanc (Bottle) (₹1450 Net)</option>
               </select>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Rum/Spirit Bill</button>
+            <button class="btn btn-primary" style="width: 100%; background: #6a1b9a;" onclick="postBarOrder('wineSelect')">➕ Post Wine Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍹 Rum, Vodka & Gin (60ml Pegs)</h4>
+            <div class="form-group">
+              <select id="rumSelect">
+                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (₹160 Net)</option>
+                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (₹220 Net)</option>
+                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (₹230 Net)</option>
+                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments Green Apple (₹180 Net)</option>
+                <option value="Bombay Sapphire London Dry Gin (60ml)|340">Bombay Sapphire Gin (₹340 Net)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Spirit Bill</button>
           </div>
 
           <div class="menu-box">
             <h4>🍺 Chilled Beer & Mixers</h4>
             <div class="form-group">
               <select id="beerSelect">
+                <option value="Budweiser Magnum Super Premium (650ml)|280">Budweiser Magnum Super (650ml) (₹280 Net)</option>
+                <option value="Carlsberg Elephant Super Strong (650ml)|260">Carlsberg Elephant Strong (650ml) (₹260 Net)</option>
+                <option value="Corona Extra Premium Chilled (330ml)|330">Corona Extra Pint (330ml) (₹330 Net)</option>
                 <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220 Net)</option>
                 <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230 Net)</option>
-                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White (Pint) (₹260 Net)</option>
-                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Mixers (₹90 Net)</option>
+                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White Craft Pint (₹260 Net)</option>
+                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Schweppes Tonic (₹90 Net)</option>
               </select>
             </div>
             <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect')">➕ Post Beer Bill</button>
@@ -660,7 +702,8 @@
                 <th>Audit No</th>
                 <th>Ref ID</th>
                 <th>Guest Name</th>
-                <th>Room</th>
+                <th>Room (Physical)</th>
+                <th>Billed As (Category)</th>
                 <th>Room Base (₹)</th>
                 <th>Room GST 12% (₹)</th>
                 <th>Dining Base (₹)</th>
@@ -784,11 +827,33 @@
       document.getElementById('gCheckOutDate').value = tomorrow.toISOString().split('T')[0];
     }
 
-    // ROOM TARIFF & MANUAL OVERRIDE LOGIC
-    function calculateRoomTariff(isRoomSelectionChange = false) {
+    function onPhysicalRoomChange() {
+      const billedAsSelect = document.getElementById('gBilledAs');
+      if (billedAsSelect.value === 'SAME') {
+        const roomSelect = document.getElementById('gRoom');
+        const opt = roomSelect.options[roomSelect.selectedIndex];
+        const rate = opt ? parseFloat(opt.getAttribute('data-rate') || 2200) : 2200;
+        document.getElementById('gDailyRate').value = rate;
+      }
+      calculateRoomTariff(false);
+    }
+
+    function onBilledAsChange() {
+      const val = document.getElementById('gBilledAs').value;
+      if (val === 'SAME') {
+        onPhysicalRoomChange();
+      } else {
+        const [catName, catRate] = val.split('|');
+        document.getElementById('gDailyRate').value = parseFloat(catRate);
+        calculateRoomTariff(false);
+      }
+    }
+
+    // ROOM TARIFF ENGINE (INCLUSIVE VS EXCLUSIVE WITH AUTO 12% TAX)
+    function calculateRoomTariff(isAutoReset = false) {
       const inDateVal = document.getElementById('gCheckInDate').value;
       const outDateVal = document.getElementById('gCheckOutDate').value;
-      const roomSelect = document.getElementById('gRoom');
+      const gstType = document.getElementById('gGstType').value;
 
       let nights = 1;
       if (inDateVal && outDateVal) {
@@ -799,18 +864,23 @@
       }
       document.getElementById('gTotalNights').value = nights;
 
-      let rate;
-      if (isRoomSelectionChange) {
-        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-        rate = selectedOption ? parseFloat(selectedOption.getAttribute('data-rate') || 2200) : 2200;
-        document.getElementById('gDailyRate').value = rate;
-      } else {
-        rate = parseFloat(document.getElementById('gDailyRate').value || 0);
-      }
+      let enteredRate = parseFloat(document.getElementById('gDailyRate').value || 0);
+      let baseTariff = 0;
+      let roomGst = 0;
+      let totalRoomBill = 0;
 
-      const baseTariff = rate * nights;
-      const roomGst = baseTariff * 0.12;
-      const totalRoomBill = baseTariff + roomGst;
+      if (gstType === 'INCLUSIVE') {
+        // enteredRate includes 12% GST
+        let totalVal = enteredRate * nights;
+        baseTariff = totalVal / 1.12;
+        roomGst = totalVal - baseTariff;
+        totalRoomBill = totalVal;
+      } else {
+        // enteredRate is Base, 12% GST added on top
+        baseTariff = enteredRate * nights;
+        roomGst = baseTariff * 0.12;
+        totalRoomBill = baseTariff + roomGst;
+      }
 
       document.getElementById('gBaseTariff').value = baseTariff.toFixed(2);
       document.getElementById('gRoomGst').value = roomGst.toFixed(2);
@@ -819,7 +889,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v19')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v23')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -920,6 +990,7 @@
         let opt = document.createElement('option');
         opt.value = r.id;
         opt.setAttribute('data-rate', r.rate);
+        opt.setAttribute('data-type', r.type);
         opt.innerText = `${r.id} (${r.type}) - ₹${r.rate}/nt [${r.status}]`;
         if (r.id.includes("Cottage")) cotGroup.appendChild(opt);
         else if (r.id.includes("Room")) dlxGroup.appendChild(opt);
@@ -931,7 +1002,7 @@
       select.appendChild(dormGroup);
       select.appendChild(suiteGroup);
 
-      calculateRoomTariff(true);
+      onPhysicalRoomChange();
     }
 
     function updateInventoryMetrics() {
@@ -992,11 +1063,13 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v19')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v23')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
-        room: "Cottage 04", 
+        room: "Cottage 04",
+        billedAs: "Heritage AC Cottage",
+        gstMode: "EXCLUSIVE",
         adults: 2, 
         children: 1, 
         phone: "9832104521", 
@@ -1016,7 +1089,7 @@
         paid: 5000, 
         mode: "UPI (Ref: UPI88912301)",
         orders: [
-          "Room Base Tariff: ₹9000.00 [2 Nights @ ₹4500.00]",
+          "Room Base Tariff: ₹9000.00 [Billed As: Heritage AC Cottage | 2 Nights @ ₹4500.00]",
           "Room Tax: ₹1080.00 (12% GST = 6% CGST + 6% SGST)",
           "Dining: Special Bengali Katla Fish Thali - ₹320.00 (+5% GST) [01:15 PM]",
           "Dining: Purulia Desi Mutton Curry with Rice - ₹420.00 (+5% GST) [01:30 PM]",
@@ -1028,29 +1101,30 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v19')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v23')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
         name: "Debabrata Roy",
         room: "Room 102",
+        billedAs: "Executive Suite",
         stayPeriod: "2026-11-01 to 2026-11-02 (1 Night)",
-        roomBase: 2200,
-        roomGst: 264,
+        roomBase: 3125,
+        roomGst: 375,
         diningBase: 640,
         diningGst: 32,
         barTotal: 440,
-        totalGst: 296,
-        totalSettled: 3576,
+        totalGst: 407,
+        totalSettled: 4612,
         gateway: "UPI QR (Ref: UPI889123001)",
         timestamp: "03 Nov, 10:45 AM"
       }
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v19', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v19', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v19', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v23', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v23', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v23', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1078,6 +1152,7 @@
       let filtered = bookings.filter(b => 
         b.name.toLowerCase().includes(query) || 
         b.room.toLowerCase().includes(query) || 
+        (b.billedAs && b.billedAs.toLowerCase().includes(query)) ||
         b.refId.toLowerCase().includes(query)
       );
 
@@ -1094,7 +1169,12 @@
 
         let row = `<tr>
           <td><strong>${b.refId}</strong></td>
-          <td><strong>${b.name}</strong><br><small>${b.room} (${b.adults}A, ${b.children}C)<br>📞 ${b.phone}</small></td>
+          <td>
+            <strong>${b.name}</strong><br>
+            <small><strong>Physical:</strong> ${b.room}</small><br>
+            <small style="color:var(--secondary);"><strong>Billed As:</strong> ${b.billedAs || b.room}</small><br>
+            <small>📞 ${b.phone}</small>
+          </td>
           <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights}N)</small></td>
           <td>
             <details>
@@ -1105,18 +1185,18 @@
           <td><strong>₹${b.total.toFixed(2)}</strong></td>
           <td>
             <small style="color:var(--secondary);">
-              Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}<br>
-              Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}<br>
-              <strong>Total GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
+              Room 12%: ₹${(b.roomGst||0).toFixed(2)}<br>
+              Food 5%: ₹${(b.diningGst||0).toFixed(2)}<br>
+              <strong>GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
             </small>
           </td>
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
-          <td style="white-space: nowrap;">
-            <button onclick="openSplitModal(${originalIndex})" class="btn btn-sm btn-info" title="Split into Room & F&B Folios">
-              ✂️ Split
+          <td style="text-align: center; white-space: nowrap;">
+            <button onclick="openSplitModal(${originalIndex})" class="btn btn-sm btn-info" title="Split into Room & F&B/Bar Folios">
+              ✂️ Split Folio
             </button>
-            <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-sm btn-danger">
+            <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-sm btn-danger" title="Process Final Settlement">
               🛎️ Check-Out
             </button>
           </td>
@@ -1137,6 +1217,11 @@
       let adults = parseInt(document.getElementById('gAdults').value || 1);
       let children = parseInt(document.getElementById('gChildren').value || 0);
       let room = document.getElementById('gRoom').value;
+      
+      let billedAsVal = document.getElementById('gBilledAs').value;
+      let billedAs = billedAsVal === 'SAME' ? (room + " Tariff") : billedAsVal.split('|')[0];
+      let gstMode = document.getElementById('gGstType').value;
+
       let dailyRate = parseFloat(document.getElementById('gDailyRate').value || 0);
       let roomBase = parseFloat(document.getElementById('gBaseTariff').value || 0);
       let roomGst = parseFloat(document.getElementById('gRoomGst').value || 0);
@@ -1165,13 +1250,13 @@
 
       let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let initialOrder = [
-        `Room Base Tariff: ₹${roomBase.toFixed(2)} [${nights} Night(s) @ ₹${dailyRate}/nt]`,
+        `Room Tariff: ₹${roomBase.toFixed(2)} [${billedAs} | ${nights}N @ ₹${dailyRate}/nt (${gstMode})]`,
         `Room Tax: ₹${roomGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST) [${nowTime}]`
       ];
 
       bookings.push({ 
         refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
-        dailyRate: dailyRate, adults, children, room, 
+        dailyRate: dailyRate, adults, children, room, billedAs: billedAs, gstMode: gstMode,
         roomBase: roomBase, roomGst: roomGst,
         diningBase: 0, diningGst: 0, barTotal: 0,
         totalGst: roomGst,
@@ -1201,7 +1286,7 @@
 
       let content = `
         <div style="background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:12px; font-size:13px;">
-          <strong>Guest:</strong> ${b.name} | <strong>Allocation:</strong> ${b.room} (${b.refId})<br>
+          <strong>Guest:</strong> ${b.name} | <strong>Allocation:</strong> ${b.room} | <strong>Billed As:</strong> ${b.billedAs || b.room}<br>
           <small>Current Total: <strong>₹${b.total.toFixed(2)}</strong> (Advance: ₹${b.paid.toFixed(2)})</small>
         </div>
         <p style="font-size:13px; color:#555;">Split this reservation into two separate legal folios for corporate/separate billing:</p>
@@ -1209,6 +1294,7 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
           <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
             <h5 style="margin:0 0 6px; color:var(--primary);">Folio A: Accommodation (Room)</h5>
+            <small>Category: ${b.billedAs || b.room}</small><br>
             <small>Net Base: ₹${(b.roomBase||0).toFixed(2)}</small><br>
             <small>Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}</small><br>
             <strong>Total Room: ₹${roomGross.toFixed(2)}</strong>
@@ -1250,7 +1336,6 @@
       let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
       let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
 
-      // Mutate Folio A (Room only)
       let folioA = {
         ...b,
         refId: b.refId + "-A",
@@ -1263,7 +1348,6 @@
         orders: roomOrders
       };
 
-      // Create Folio B (F&B and Bar only)
       let remainingAdvance = Math.max(0, b.paid - roomGross);
       let folioB = {
         ...b,
@@ -1287,7 +1371,6 @@
       saveState();
     }
 
-    // FOOD ORDER (INCLUDES BREAKFAST, LUNCH, EVENING SNACKS & DINNER) WITH 5% GST
     function postFoodOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
@@ -1309,7 +1392,6 @@
       saveState();
     }
 
-    // BAR ORDER (DIRECT NET PRICING - NO GST)
     function postBarOrder(selectId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
@@ -1329,7 +1411,6 @@
 
     let activeCheckoutIndex = null;
 
-    // CHECKOUT MODAL
     function openCheckoutModal(index) {
       activeCheckoutIndex = index;
       let b = bookings[index];
@@ -1343,7 +1424,8 @@
 
       let html = `
         <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
-          <strong>Guest:</strong> ${b.name} (📞 ${b.phone}) | <strong>Allocation:</strong> ${b.room} | <strong>Ref:</strong> ${b.refId}<br>
+          <strong>Guest:</strong> ${b.name} (📞 ${b.phone}) | <strong>Physical Room:</strong> ${b.room}<br>
+          <strong style="color:var(--secondary);">Corporate Billed As:</strong> ${b.billedAs || b.room} | <strong>Ref:</strong> ${b.refId}<br>
           <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small><br>
           <small><strong>ID on File:</strong> ${b.idType || 'Proof'} - ${b.idNumber || 'Recorded'}</small>
         </div>
@@ -1356,7 +1438,7 @@
         <div style="margin-top:12px; background:#fdfdfd; border:1px solid #ced4da; border-radius:6px; padding:10px; font-size:12px;">
           <table style="width:100%; border:none; margin:0;">
             <tr style="border-bottom:1px solid #eee;">
-              <td>Net Room Base Charges:</td>
+              <td>Net Room Base Charges (${b.billedAs || b.room}):</td>
               <td style="text-align:right;"><strong>₹${(b.roomBase||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #eee; color:#555;">
@@ -1372,7 +1454,7 @@
               <td style="text-align:right;">+ ₹${(b.diningGst||0).toFixed(2)}</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td>Bar & Beverage Lounge (Direct Net - No GST):</td>
+              <td>Bar Lounge Sales (Direct Net - Non-GST):</td>
               <td style="text-align:right;"><strong>₹${(b.barTotal||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #ccc; background:#f4f7f6; font-weight:bold;">
@@ -1498,6 +1580,7 @@
         refId: b.refId,
         name: b.name,
         room: b.room,
+        billedAs: b.billedAs || b.room,
         stayPeriod: `${b.checkInDate} to ${b.checkOutDate} (${b.nights} Nights)`,
         roomBase: b.roomBase || 0,
         roomGst: b.roomGst || 0,
@@ -1510,7 +1593,7 @@
         timestamp: nowTime
       });
 
-      alert(`Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nRoom marked DIRTY.`);
+      alert(`Checkout completed for ${b.name} (${b.room} | Billed As: ${b.billedAs || b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nRoom marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
@@ -1547,7 +1630,7 @@
       tableBody.innerHTML = '';
 
       if (auditHistory.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
         return;
       }
 
@@ -1557,6 +1640,7 @@
           <td>${a.refId}</td>
           <td><strong>${a.name}</strong></td>
           <td>${a.room}</td>
+          <td style="color:var(--secondary); font-weight:bold;">${a.billedAs || a.room}</td>
           <td>₹${(a.roomBase||0).toFixed(2)}</td>
           <td style="color:var(--secondary);">₹${(a.roomGst||0).toFixed(2)}</td>
           <td>₹${(a.diningBase||0).toFixed(2)}</td>
@@ -1576,7 +1660,8 @@
         "Audit ID": a.auditNo,
         "Ref ID": a.refId,
         "Guest Name": a.name,
-        "Allocated Unit": a.room,
+        "Physical Room": a.room,
+        "Billed As Category": a.billedAs || a.room,
         "Stay Period": a.stayPeriod,
         "Room Base (INR)": a.roomBase,
         "Room GST 12% (INR)": a.roomGst,
