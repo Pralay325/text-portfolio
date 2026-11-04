@@ -1,1 +1,1606 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1b3a4b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Shree Krishna Resort & Retreat - Enterprise PMS & Settlement Engine</title>
+  <style>
+    :root {
+      --primary: #1b3a4b;
+      --secondary: #006466;
+      --accent: #d4a373;
+      --dark: #212529;
+      --light: #f8f9fa;
+      --success: #27ae60;
+      --danger: #c0392b;
+      --warning: #e67e22;
+      --info: #2980b9;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f7;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #1b3a4b, #006466);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    .badge { background: var(--accent); color: #1b3a4b; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+
+    nav {
+      background: #ffffff;
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #dde2e5;
+      padding: 8px 16px;
+      gap: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav button {
+      background: #f1f4f8;
+      border: 1px solid #ced4da;
+      padding: 9px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--primary);
+      transition: all 0.2s;
+    }
+    nav button:hover, nav button.active {
+      background: var(--secondary);
+      color: #ffffff;
+      border-color: var(--secondary);
+    }
+
+    .container { padding: 20px; max-width: 1400px; margin: auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background: #ffffff;
+      padding: 22px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .card h2, .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 10px;
+    }
+    .grid { display: grid; grid-template-columns: 1.05fr 1.55fr; gap: 20px; }
+    @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
+
+    .summary-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .summary-card {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 6px;
+      border-left: 5px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .summary-card span { font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase; }
+    .summary-card h3 { margin: 6px 0 0; font-size: 24px; border: none; padding: 0; }
+
+    .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .form-group { margin-bottom: 12px; flex: 1; }
+    label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #495057; }
+    input, select {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    input[readonly] { background-color: #e9ecef; font-weight: bold; color: var(--primary); }
+
+    .btn { padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+    .btn-primary { background: var(--secondary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-warning { background: var(--warning); color: #fff; }
+    .btn-info { background: var(--info); color: #fff; }
+    .btn-sm { padding: 5px 8px; font-size: 11px; margin-right: 4px; }
+
+    .folio-table-container {
+      max-height: 540px;
+      overflow-y: auto;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+    }
+    .folio-table-container thead th {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa;
+      z-index: 10;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 11px;
+      outline: none;
+      background: #f1f4f8;
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    details[open] summary {
+      margin-bottom: 4px;
+      background: #e2e8f0;
+    }
+
+    .room-matrix-visual {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+      margin-top: 15px;
+    }
+    .room-card-unit {
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+    }
+    .room-card-unit img {
+      width: 100%;
+      height: 115px;
+      object-fit: cover;
+    }
+    .room-card-body {
+      padding: 10px;
+      text-align: center;
+      flex-grow: 1;
+    }
+    .room-card-unit.clean { border-top: 5px solid var(--success); }
+    .room-card-unit.dirty { border-top: 5px solid var(--danger); background: #fff8f8; }
+    .room-card-unit.occupied { border-top: 5px solid var(--warning); background: #fffcf5; }
+    .status-pill {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 4px 0 8px;
+    }
+    .pill-clean { background: #e8f8f0; color: var(--success); }
+    .pill-dirty { background: #fde8e8; color: var(--danger); }
+    .pill-occupied { background: #fef5e7; color: var(--warning); }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #ffffff;
+      width: 90%;
+      max-width: 680px;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .menu-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 15px;
+    }
+    .menu-box {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 16px;
+      background: #fdfdfd;
+    }
+    .menu-box h4 { margin: 0 0 12px; color: var(--secondary); border-bottom: 1px solid #ced4da; padding-bottom: 6px; }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 15px; }
+    .gallery-card { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); background: #ffffff; text-align: center; }
+    .gallery-card img { width: 100%; height: 145px; object-fit: cover; }
+    .gallery-card p { margin: 8px 0; font-weight: bold; font-size: 13px; color: var(--primary); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
+    th { background: #f8f9fa; color: var(--primary); }
+
+    footer {
+      background: var(--primary);
+      color: #cbd5e0;
+      text-align: center;
+      padding: 18px 10px;
+      margin-top: 35px;
+      border-top: 3px solid var(--accent);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>🌸 Shree Krishna Resort & Retreat</h1>
+      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar & Folio Split Engine</small>
+    </div>
+    <span class="badge">Enterprise Terminal</span>
+  </header>
+
+  <nav>
+    <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk Check-In</button>
+    <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Status & KPI)</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Snacks (5% GST)</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar (Direct Net - No GST)</button>
+    <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🖼️ Resort Pool & Photo Showcase</button>
+    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
+  </nav>
+
+  <div class="container">
+
+    <!-- 1. FRONT DESK TAB -->
+    <div id="frontDeskTab" class="tab-content active">
+      <div class="grid">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px;">
+            <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In & KYC</h2>
+            <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C (Foreign Guest)</button>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reference ID</label>
+              <input type="text" id="gRefId" readonly>
+            </div>
+            <div class="form-group">
+              <label>Contact Phone (Auto-fill for returning guests)</label>
+              <input type="text" id="gPhone" placeholder="Enter 10-digit mobile" oninput="lookupExistingGuest(this.value)">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Guest Full Name</label>
+              <input type="text" id="gName" placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label>Adults</label>
+              <input type="number" id="gAdults" value="2" min="1">
+            </div>
+            <div class="form-group">
+              <label>Children</label>
+              <input type="number" id="gChildren" value="0" min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Check-In Date</label>
+              <input type="date" id="gCheckInDate" onchange="calculateRoomTariff(false)">
+            </div>
+            <div class="form-group">
+              <label>Estimated Check-Out Date</label>
+              <input type="date" id="gCheckOutDate" onchange="calculateRoomTariff(false)">
+            </div>
+            <div class="form-group" style="max-width: 90px;">
+              <label>Total Nights</label>
+              <input type="text" id="gTotalNights" value="1" readonly style="text-align:center;">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Government ID Proof</label>
+              <select id="gIdType">
+                <option value="Aadhaar Card">Aadhaar Card</option>
+                <option value="Voter ID Card">Voter ID Card (EPIC)</option>
+                <option value="PAN Card">PAN Card</option>
+                <option value="Driving License">Driving License</option>
+                <option value="Passport">Passport</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ID Document Number</label>
+              <input type="text" id="gIdNumber" placeholder="Enter official ID number">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Allocation (Cottages ₹4500 | Suites ₹3500 | Deluxe ₹2200 | Dormitory ₹850)</label>
+            <select id="gRoom" onchange="calculateRoomTariff(true)"></select>
+          </div>
+
+          <!-- EDITABLE DAILY RATE & AUTO GST (12%) -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Daily Room Rate (₹/Nt) ✍️ <em>Editable</em></label>
+              <input type="number" id="gDailyRate" oninput="calculateRoomTariff(false)" title="You can manually override this rate if required">
+            </div>
+            <div class="form-group">
+              <label>Base Tariff (₹)</label>
+              <input type="number" id="gBaseTariff" readonly>
+            </div>
+            <div class="form-group">
+              <label>Room GST 12% (₹)</label>
+              <input type="number" id="gRoomGst" readonly>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Room Bill (Incl. GST) (₹)</label>
+              <input type="number" id="gTotal" readonly>
+            </div>
+            <div class="form-group">
+              <label>Advance Deposit (₹)</label>
+              <input type="number" id="gPaid" placeholder="0.00" oninput="updateCheckInGatewayDisplay()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Advance Payment Mode</label>
+            <select id="gMode" onchange="updateCheckInGatewayDisplay()">
+              <option value="UPI">📱 UPI (Dynamic QR Code Scanner)</option>
+              <option value="CARD">💳 Credit / Debit Card Terminal</option>
+              <option value="WALLET">📲 Digital Wallet (PhonePe / Paytm / GPay)</option>
+              <option value="CASH">💵 Cash Settlement</option>
+            </select>
+          </div>
+
+          <div id="checkInGatewayBox" style="background: #fdfdfd; border: 1px dashed #006466; padding: 12px; border-radius: 6px; margin-bottom: 15px;"></div>
+
+          <button class="btn btn-primary" onclick="addBooking()" style="width: 100%;">➕ Confirm Check-In & Open Folio</button>
+        </div>
+
+        <!-- 50 ROOM ACTIVE FOLIO TABLE WITH SPLIT FOLIO BUTTON -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 10px;">
+            <h2 style="margin: 0; border: none; padding: 0;">📋 Active In-House Guest Folios (50 Rooms)</h2>
+            <input type="text" id="folioSearchInput" placeholder="🔍 Search Room / Guest..." oninput="filterFolioTable()" style="max-width: 200px; padding: 5px 8px; font-size: 12px;">
+          </div>
+          
+          <div class="folio-table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ref ID</th>
+                  <th>Guest / Allocation</th>
+                  <th>Stay Period</th>
+                  <th>Orders & Timestamps</th>
+                  <th>Gross Bill</th>
+                  <th>GST Breakdown</th>
+                  <th>Advance</th>
+                  <th>Due</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="folioList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 50 ROOM MATRIX WITH KPI -->
+    <div id="roomInventoryTab" class="tab-content">
+      <div class="card">
+        <h2>🧹 50 Units Inventory & Live Housekeeping Metrics</h2>
+        
+        <div class="summary-boxes">
+          <div class="summary-card" style="border-left-color: var(--primary);">
+            <span>Total Units</span>
+            <h3 id="statTotal" style="color: var(--primary);">50</h3>
+          </div>
+          <div class="summary-card" style="border-left-color: var(--warning);">
+            <span>Occupied (In-House)</span>
+            <h3 id="statOccupied" style="color: var(--warning);">0</h3>
+          </div>
+          <div class="summary-card" style="border-left-color: var(--success);">
+            <span>Vacant & Clean</span>
+            <h3 id="statClean" style="color: var(--success);">0</h3>
+          </div>
+          <div class="summary-card" style="border-left-color: var(--danger);">
+            <span>Dirty (Housekeeping)</span>
+            <h3 id="statDirty" style="color: var(--danger);">0</h3>
+          </div>
+          <div class="summary-card" style="border-left-color: var(--info);">
+            <span>Check-Out Done</span>
+            <h3 id="statCheckoutDone" style="color: var(--info);">0</h3>
+          </div>
+        </div>
+
+        <p style="color: #666; font-size: 13px;">Checking out a guest marks the room as <strong>Dirty</strong>. Housekeeping marks it <strong>Clean</strong> once prepared.</p>
+        <div id="roomVisualMatrixGrid" class="room-matrix-visual"></div>
+      </div>
+    </div>
+
+    <!-- 3. EXPANDED DINING & SNACKS TAB -->
+    <div id="diningTab" class="tab-content">
+      <div class="card">
+        <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
+        <div class="form-group" style="max-width: 450px;">
+          <label>Select In-House Room / Guest Folio</label>
+          <select id="diningRoomSelect"></select>
+        </div>
+
+        <div class="menu-columns">
+          <div class="menu-box">
+            <h4>🍳 Breakfast Menu</h4>
+            <div class="form-group">
+              <select id="bfItemSelect">
+                <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120 + 5% GST)</option>
+                <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140 + 5% GST)</option>
+                <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110 + 5% GST)</option>
+                <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180 + 5% GST)</option>
+                <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50 + 5% GST)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect')">➕ Post Breakfast Bill</button>
+          </div>
+
+          <!-- EXTENDED LUNCH MENU -->
+          <div class="menu-box">
+            <h4>🍛 Lunch Menu (Traditional & Special)</h4>
+            <div class="form-group">
+              <select id="lunchItemSelect">
+                <option value="Special Bengali Katla Fish Thali|320">Bengali Katla Fish Thali (₹320 + 5% GST)</option>
+                <option value="Purulia Desi Mutton Curry with Rice|420">Purulia Desi Mutton Curry & Rice (₹420 + 5% GST)</option>
+                <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550 + 5% GST)</option>
+                <option value="Bengali Rui Macher Jhol with Rice|260">Rui Macher Patla Jhol & Rice (₹260 + 5% GST)</option>
+                <option value="Chicken Kalia with Basmati Rice|310">Chicken Kalia & Rice (₹310 + 5% GST)</option>
+                <option value="Pure Veg Deluxe Bengali Thali (Shukto/Dhokar Dalna)|240">Pure Veg Deluxe Thali (₹240 + 5% GST)</option>
+                <option value="Aloo Posto & Biulir Dal Thali|210">Aloo Posto & Biulir Dal Thali (₹210 + 5% GST)</option>
+                <option value="Basanti Polao with Kasha Chicken|360">Basanti Polao & Kasha Chicken (₹360 + 5% GST)</option>
+                <option value="Chanar Dalna Special Thali|250">Chanar Dalna Veg Thali (₹250 + 5% GST)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
+          </div>
+
+          <!-- EVENING TEA & SNACKS MENU -->
+          <div class="menu-box" style="border: 2px solid var(--accent); background: #fffcf7;">
+            <h4 style="color: #9c5b16;">☕ Evening Snacks & Tea</h4>
+            <div class="form-group">
+              <select id="snacksItemSelect">
+                <option value="Crispy Chicken Pakora (8 Pcs)|180">Crispy Chicken Pakora 8 Pcs (₹180 + 5% GST)</option>
+                <option value="Bhetki Fish Fry with Mustard Kasundi (2 Pcs)|220">Kolkata Bhetki Fish Fry 2 Pcs (₹220 + 5% GST)</option>
+                <option value="Paneer Pakora with Green Chutney (6 Pcs)|140">Paneer Pakora 6 Pcs (₹140 + 5% GST)</option>
+                <option value="Assorted Veg Pakora Platter|100">Assorted Veg Pakora (₹100 + 5% GST)</option>
+                <option value="Crispy French Fries (Peri Peri)|90">Crispy French Fries (₹90 + 5% GST)</option>
+                <option value="Purulia Adda Special Jhal Muri & Chanachur|50">Adda Special Jhal Muri (₹50 + 5% GST)</option>
+                <option value="Special Masala Milk Tea (Pot for 2)|60">Special Masala Milk Tea - 2 Cups (₹60 + 5% GST)</option>
+                <option value="Brewed Hot Coffee (2 Cups)|80">Brewed Hot Coffee - 2 Cups (₹80 + 5% GST)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect')">➕ Post Snacks & Tea</button>
+          </div>
+
+          <!-- EXTENDED DINNER MENU -->
+          <div class="menu-box">
+            <h4>🍲 Dinner Menu (Curries & Breads)</h4>
+            <div class="form-group">
+              <select id="dinnerItemSelect">
+                <option value="Chicken Kasha with Tandoori Roti (4 Pcs)|280">Chicken Kasha & Tandoori Roti (₹280 + 5% GST)</option>
+                <option value="Purulia Mutton Kasha with Rumali Roti (3 Pcs)|390">Mutton Kasha & Rumali Roti (₹390 + 5% GST)</option>
+                <option value="Kadai Chicken with Butter Naan (2 Pcs)|310">Kadai Chicken & Butter Naan (₹310 + 5% GST)</option>
+                <option value="Paneer Butter Masala with Garlic Naan|270">Paneer Butter Masala & Naan (₹270 + 5% GST)</option>
+                <option value="Dal Makhani with Jeera Rice|220">Dal Makhani & Jeera Rice (₹220 + 5% GST)</option>
+                <option value="Mixed Fried Rice with Chilli Chicken|330">Mixed Fried Rice & Chilli Chicken (₹330 + 5% GST)</option>
+                <option value="Veg Fried Rice with Chilli Paneer|290">Veg Fried Rice & Chilli Paneer (₹290 + 5% GST)</option>
+                <option value="Dim Kosha (2 Pcs) with Lachha Paratha (2 Pcs)|190">Egg Kosha & Lachha Paratha (₹190 + 5% GST)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect')">➕ Post Dinner Bill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. BAR & LOUNGE (NO GST APPLIED) -->
+    <div id="barTab" class="tab-content">
+      <div class="card">
+        <h2>🍸 Bar & Lounge Services (Direct Net Pricing - No GST)</h2>
+        <div class="form-group" style="max-width: 450px;">
+          <label>Select In-House Room / Guest Folio</label>
+          <select id="barRoomSelect"></select>
+        </div>
+
+        <div class="menu-columns">
+          <div class="menu-box">
+            <h4>🥃 Premium Whisky (Pegs)</h4>
+            <div class="form-group">
+              <select id="whiskySelect">
+                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label (60ml) (₹420 Net)</option>
+                <option value="Blenders Pride Reserve (60ml)|240">Blenders Pride Reserve (60ml) (₹240 Net)</option>
+                <option value="Royal Challenge Select (60ml)|190">Royal Challenge (60ml) (₹190 Net)</option>
+                <option value="Antiquity Blue Premium (60ml)|260">Antiquity Blue (60ml) (₹260 Net)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect')">➕ Post Whisky Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍹 Rum & Spirits (Pegs)</h4>
+            <div class="form-group">
+              <select id="rumSelect">
+                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (60ml) (₹160 Net)</option>
+                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (60ml) (₹220 Net)</option>
+                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (60ml) (₹230 Net)</option>
+                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments (60ml) (₹180 Net)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Rum/Spirit Bill</button>
+          </div>
+
+          <div class="menu-box">
+            <h4>🍺 Chilled Beer & Mixers</h4>
+            <div class="form-group">
+              <select id="beerSelect">
+                <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220 Net)</option>
+                <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230 Net)</option>
+                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White (Pint) (₹260 Net)</option>
+                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Mixers (₹90 Net)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect')">➕ Post Beer Bill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. POOL & PHOTO SHOWCASE -->
+    <div id="lawnGalleryTab" class="tab-content">
+      <div class="card">
+        <h2>🖼️ Resort Swimming Pool & Ambience Showcase</h2>
+        <div class="gallery">
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Resort Swimming Pool">
+            <p>🏊 Luxury Outdoor Swimming Pool</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80" alt="Deluxe Cottages">
+            <p>🏡 10 Luxury Heritage Cottages</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Deluxe Rooms">
+            <p>🏢 20 Deluxe & 10 Dormitory Rooms</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=600&q=80" alt="Executive Suites">
+            <p>👑 10 Executive Suites</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Multi-Cuisine Dining">
+            <p>🍲 Multi-Cuisine Family Dining</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80" alt="Bar & Beverage Lounge">
+            <p>🍸 Spirits, Cocktails & Bar Lounge</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB -->
+    <div id="auditTab" class="tab-content">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+          <div>
+            <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
+            <small style="color: #666;">Automated Reconciliation of Room Base, Food Base, Itemized GST & Bar Sales (No GST)</small>
+          </div>
+          <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-top: 15px;">
+          <div style="background: #f8f9fa; border-left: 4px solid #1b3a4b; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Net Room Base</span>
+            <h4 id="auditRoomRev" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #006466; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Net Dining & Snacks</span>
+            <h4 id="auditDiningRev" style="margin: 5px 0 0; color: #006466;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #8e44ad; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Bar Sales (Direct Net)</span>
+            <h4 id="auditBarRev" style="margin: 5px 0 0; color: #8e44ad;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Total GST (Room+Food)</span>
+            <h4 id="auditGstRev" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">Total Inflow Settled</span>
+            <h4 id="auditTotalSettled" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
+          </div>
+          <div style="background: #f8f9fa; border-left: 4px solid #e74c3c; padding: 12px; border-radius: 4px;">
+            <span style="font-size: 12px; color: #7f8c8d;">In-House Folio Dues</span>
+            <h4 id="auditPendingBalance" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
+          </div>
+        </div>
+
+        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Tax Audit Trail</h4>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Audit No</th>
+                <th>Ref ID</th>
+                <th>Guest Name</th>
+                <th>Room</th>
+                <th>Room Base (₹)</th>
+                <th>Room GST 12% (₹)</th>
+                <th>Dining Base (₹)</th>
+                <th>Dining GST 5% (₹)</th>
+                <th>Bar Net (₹)</th>
+                <th>Total Settled (₹)</th>
+                <th>Payment Mode</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="auditHistoryTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHECKOUT MODAL WITH COMPLETE TAX INVOICE -->
+  <div id="checkoutModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--danger);">🛎️ Final Settlement & Tax Invoice Terminal</h3>
+        <button onclick="closeCheckoutModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+
+      <div id="checkoutBillDetails"></div>
+
+      <div style="margin-top: 15px; border-top: 1px solid #dee2e6; padding-top: 12px;">
+        <label><strong>Select Balance Settlement Gateway:</strong></label>
+        <select id="checkoutGatewaySelect" onchange="renderCheckoutGatewayFields(this.value)">
+          <option value="UPI">📱 UPI (Dynamic QR Code Scanner)</option>
+          <option value="CARD">💳 Credit / Debit Card Terminal</option>
+          <option value="WALLET">📲 Digital Wallet (PhonePe / Paytm / GPay)</option>
+          <option value="CASH">💵 Cash Settlement</option>
+        </select>
+
+        <div id="gatewayFieldsContainer" style="margin-top: 12px; background: #fdfdfd; border: 1px solid #ced4da; padding: 14px; border-radius: 6px;"></div>
+
+        <button class="btn btn-danger" style="width: 100%; margin-top: 15px; font-size: 15px;" onclick="confirmFinalCheckout()">
+          ✅ Authorize Settlement & Complete Check-Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPLIT FOLIO MODAL -->
+  <div id="splitModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--info); padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--info);">✂️ Split Guest Folio (Room vs F&B / Bar)</h3>
+        <button onclick="closeSplitModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+      <div id="splitModalContent"></div>
+    </div>
+  </div>
+
+  <!-- FORM C MODAL -->
+  <div id="cFormModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">
+        <h3 style="margin: 0; color: var(--primary);">📄 Foreign Guest Registration (Form C Compliance)</h3>
+        <button onclick="closeCFormModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input type="text" id="cfName" placeholder="As per passport"></div>
+        <div class="form-group"><label>Nationality</label><input type="text" id="cfNation" placeholder="Country"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Passport Number</label><input type="text" id="cfPassport" placeholder="Passport No"></div>
+        <div class="form-group"><label>Visa Validity</label><input type="text" id="cfVisa" placeholder="Visa No / Valid Until"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Arrived From (City / Country)</label><input type="text" id="cfFrom" placeholder="Port of arrival / Previous city"></div>
+        <div class="form-group"><label>Next Destination</label><input type="text" id="cfTo" placeholder="Next traveling city / country"></div>
+      </div>
+      <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="saveFormCDetails()">💾 Save & Attach Form C</button>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      © 2026 <strong>Shree Krishna Resort & Retreat</strong>. All Rights Reserved.
+    </div>
+    <div style="margin-top: 5px; font-size: 11px; color: #a0aec0;">
+      Enterprise PMS, F&B Billing & Night Audit Management Terminal
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    function openTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function openCFormModal() { document.getElementById('cFormModal').classList.add('open'); }
+    function closeCFormModal() { document.getElementById('cFormModal').classList.remove('open'); }
+    function saveFormCDetails() {
+      let p = document.getElementById('cfPassport').value;
+      let from = document.getElementById('cfFrom').value;
+      let to = document.getElementById('cfTo').value;
+      if (!p) { alert('Please enter passport number.'); return; }
+      alert(`Form C attached successfully.\nRoute: ${from || 'N/A'} ➔ ${to || 'N/A'}`);
+      closeCFormModal();
+    }
+
+    function generateRefId() {
+      let count = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
+      document.getElementById('gRefId').value = 'SKR-' + count;
+    }
+
+    function initializeDates() {
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      document.getElementById('gCheckInDate').value = today.toISOString().split('T')[0];
+      document.getElementById('gCheckOutDate').value = tomorrow.toISOString().split('T')[0];
+    }
+
+    // ROOM TARIFF & MANUAL OVERRIDE LOGIC
+    function calculateRoomTariff(isRoomSelectionChange = false) {
+      const inDateVal = document.getElementById('gCheckInDate').value;
+      const outDateVal = document.getElementById('gCheckOutDate').value;
+      const roomSelect = document.getElementById('gRoom');
+
+      let nights = 1;
+      if (inDateVal && outDateVal) {
+        const d1 = new Date(inDateVal);
+        const d2 = new Date(outDateVal);
+        const diffTime = d2 - d1;
+        nights = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+      }
+      document.getElementById('gTotalNights').value = nights;
+
+      let rate;
+      if (isRoomSelectionChange) {
+        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+        rate = selectedOption ? parseFloat(selectedOption.getAttribute('data-rate') || 2200) : 2200;
+        document.getElementById('gDailyRate').value = rate;
+      } else {
+        rate = parseFloat(document.getElementById('gDailyRate').value || 0);
+      }
+
+      const baseTariff = rate * nights;
+      const roomGst = baseTariff * 0.12;
+      const totalRoomBill = baseTariff + roomGst;
+
+      document.getElementById('gBaseTariff').value = baseTariff.toFixed(2);
+      document.getElementById('gRoomGst').value = roomGst.toFixed(2);
+      document.getElementById('gTotal').value = totalRoomBill.toFixed(2);
+
+      updateCheckInGatewayDisplay();
+    }
+
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v19')) || {
+      "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
+      "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
+    };
+
+    function lookupExistingGuest(phone) {
+      let trimmed = phone.trim();
+      if (guestDirectory[trimmed]) {
+        let g = guestDirectory[trimmed];
+        document.getElementById('gName').value = g.name;
+        document.getElementById('gIdType').value = g.idType;
+        document.getElementById('gIdNumber').value = g.idNumber;
+      }
+    }
+
+    function updateCheckInGatewayDisplay() {
+      const mode = document.getElementById('gMode').value;
+      const box = document.getElementById('checkInGatewayBox');
+      const advance = parseFloat(document.getElementById('gPaid').value || 0);
+
+      if (mode === 'UPI') {
+        box.innerHTML = `
+          <div style="text-align:center;">
+            <p style="margin:0 0 6px; font-weight:bold; color:var(--secondary);">Scan to Deposit Advance (₹${advance.toFixed(2)})</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=125x125&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${advance}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:3px; border-radius:5px;">
+            <p style="font-size:11px; color:#555; margin:3px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <input type="text" id="chkUpiRef" placeholder="Enter UPI UTR / Transaction ID" style="margin-top:5px; font-size:12px; padding:6px;">
+          </div>
+        `;
+      } else if (mode === 'CARD') {
+        box.innerHTML = `
+          <div style="font-size:12px;">
+            <label>Card Number (16 Digits)</label>
+            <input type="text" id="chkCardNo" placeholder="4xxx xxxx xxxx 1234" maxlength="19" style="padding:6px;">
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <div style="flex:1;"><label>Expiry</label><input type="text" id="chkCardExp" placeholder="MM/YY" maxlength="5" style="padding:6px;"></div>
+              <div style="flex:1;"><label>CVV</label><input type="password" id="chkCardCvv" placeholder="•••" maxlength="3" style="padding:6px;"></div>
+            </div>
+          </div>
+        `;
+      } else if (mode === 'WALLET') {
+        box.innerHTML = `
+          <div style="font-size:12px;">
+            <label>Digital Wallet Service</label>
+            <select id="chkWalletType" style="margin-bottom:6px; padding:6px;">
+              <option value="PhonePe">PhonePe Merchant</option>
+              <option value="Paytm">Paytm Business</option>
+              <option value="GooglePay">Google Pay</option>
+            </select>
+            <label>Wallet Reference / Txn ID</label>
+            <input type="text" id="chkWalletRef" placeholder="Txn ID" style="padding:6px;">
+          </div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div style="font-size:12px; color:#333;">
+            <strong>💵 Cash Desk:</strong> Advance payment ₹${advance.toFixed(2)} received in cash drawer.
+          </div>
+        `;
+      }
+    }
+
+    const cottageImg = "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=400&q=80";
+    const deluxeImg = "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80";
+    const dormImg = "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80";
+    const suiteImg = "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=400&q=80";
+
+    let fresh50Units = [];
+
+    for(let i=1; i<=10; i++) {
+      fresh50Units.push({ id: "Cottage " + (i < 10 ? '0' + i : i), type: "Heritage AC Cottage", rate: 4500, img: cottageImg, status: (i === 3 || i === 8) ? "Dirty" : "Clean" });
+    }
+    for(let i=101; i<=120; i++) {
+      fresh50Units.push({ id: "Room " + i, type: "Deluxe AC Room", rate: 2200, img: deluxeImg, status: (i === 104 || i === 115) ? "Dirty" : "Clean" });
+    }
+    for(let i=1; i<=10; i++) {
+      fresh50Units.push({ id: "Dormitory D-" + (i < 10 ? '0' + i : i), type: "Shared / Group Dormitory", rate: 850, img: dormImg, status: "Clean" });
+    }
+    for(let i=201; i<=210; i++) {
+      fresh50Units.push({ id: "Suite " + i, type: "Executive Suite", rate: 3500, img: suiteImg, status: "Clean" });
+    }
+
+    let rooms50State = fresh50Units;
+
+    function populateRoomDropdown() {
+      const select = document.getElementById('gRoom');
+      select.innerHTML = '';
+      
+      let cotGroup = document.createElement('optgroup');
+      cotGroup.label = "🏡 Luxury Heritage Cottages (₹4500/night)";
+      let dlxGroup = document.createElement('optgroup');
+      dlxGroup.label = "🏢 Deluxe AC Rooms (₹2200/night)";
+      let dormGroup = document.createElement('optgroup');
+      dormGroup.label = "🛏️ Dormitory Accommodation (₹850/night)";
+      let suiteGroup = document.createElement('optgroup');
+      suiteGroup.label = "👑 Executive Suites (₹3500/night)";
+
+      rooms50State.forEach(r => {
+        let opt = document.createElement('option');
+        opt.value = r.id;
+        opt.setAttribute('data-rate', r.rate);
+        opt.innerText = `${r.id} (${r.type}) - ₹${r.rate}/nt [${r.status}]`;
+        if (r.id.includes("Cottage")) cotGroup.appendChild(opt);
+        else if (r.id.includes("Room")) dlxGroup.appendChild(opt);
+        else if (r.id.includes("Dormitory")) dormGroup.appendChild(opt);
+        else suiteGroup.appendChild(opt);
+      });
+      select.appendChild(cotGroup);
+      select.appendChild(dlxGroup);
+      select.appendChild(dormGroup);
+      select.appendChild(suiteGroup);
+
+      calculateRoomTariff(true);
+    }
+
+    function updateInventoryMetrics() {
+      let occupiedCount = bookings.length;
+      let dirtyCount = 0;
+      let cleanCount = 0;
+
+      let occupiedRoomIds = bookings.map(b => b.room);
+
+      rooms50State.forEach(r => {
+        if (!occupiedRoomIds.includes(r.id)) {
+          if (r.status === 'Dirty') dirtyCount++;
+          else cleanCount++;
+        }
+      });
+
+      document.getElementById('statTotal').innerText = rooms50State.length;
+      document.getElementById('statOccupied').innerText = occupiedCount;
+      document.getElementById('statClean').innerText = cleanCount;
+      document.getElementById('statDirty').innerText = dirtyCount;
+      document.getElementById('statCheckoutDone').innerText = auditHistory.length;
+    }
+
+    function renderRoomVisualMatrix() {
+      const grid = document.getElementById('roomVisualMatrixGrid');
+      grid.innerHTML = '';
+
+      let occupiedRoomIds = bookings.map(b => b.room);
+
+      rooms50State.forEach((r, idx) => {
+        let isOccupied = occupiedRoomIds.includes(r.id);
+        let displayStatus = isOccupied ? 'Occupied' : r.status;
+        let cardClass = isOccupied ? 'occupied' : (r.status === 'Clean' ? 'clean' : 'dirty');
+        let pillClass = isOccupied ? 'pill-occupied' : (r.status === 'Clean' ? 'pill-clean' : 'pill-dirty');
+
+        let card = `
+          <div class="room-card-unit ${cardClass}">
+            <img src="${r.img}" alt="${r.id}">
+            <div class="room-card-body">
+              <strong>${r.id}</strong><br>
+              <small style="color:#666;">${r.type} (₹${r.rate}/nt)</small><br>
+              <span class="status-pill ${pillClass}">${displayStatus}</span><br>
+              <button class="btn btn-sm ${r.status === 'Clean' ? 'btn-danger' : 'btn-success'}" onclick="toggleRoomVisualStatus(${idx})">
+                ${r.status === 'Clean' ? 'Mark Dirty' : 'Mark Clean'}
+              </button>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
+
+      updateInventoryMetrics();
+      populateRoomDropdown();
+    }
+
+    function toggleRoomVisualStatus(idx) {
+      rooms50State[idx].status = rooms50State[idx].status === 'Clean' ? 'Dirty' : 'Clean';
+      renderRoomVisualMatrix();
+    }
+
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v19')) || [
+      { 
+        refId: "SKR-1001", 
+        name: "Subhasis Banerjee", 
+        room: "Cottage 04", 
+        adults: 2, 
+        children: 1, 
+        phone: "9832104521", 
+        idType: "Voter ID Card",
+        idNumber: "WB/02/123/456789",
+        checkInDate: "2026-11-03",
+        checkOutDate: "2026-11-05",
+        nights: 2,
+        dailyRate: 4500,
+        roomBase: 9000,
+        roomGst: 1080,
+        diningBase: 1200,
+        diningGst: 60,
+        barTotal: 660,
+        totalGst: 1140,
+        total: 12000,
+        paid: 5000, 
+        mode: "UPI (Ref: UPI88912301)",
+        orders: [
+          "Room Base Tariff: ₹9000.00 [2 Nights @ ₹4500.00]",
+          "Room Tax: ₹1080.00 (12% GST = 6% CGST + 6% SGST)",
+          "Dining: Special Bengali Katla Fish Thali - ₹320.00 (+5% GST) [01:15 PM]",
+          "Dining: Purulia Desi Mutton Curry with Rice - ₹420.00 (+5% GST) [01:30 PM]",
+          "Dining: Chicken Kasha with Tandoori Roti - ₹280.00 (+5% GST) [09:45 PM]",
+          "Dining Tax: ₹60.00 (5% GST = 2.5% CGST + 2.5% SGST)",
+          "Bar (No GST): Johnnie Walker Black Label (60ml) - ₹420.00 [08:30 PM]",
+          "Bar (No GST): Blenders Pride Reserve (60ml) - ₹240.00 [09:10 PM]"
+        ]
+      }
+    ];
+
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v19')) || [
+      {
+        auditNo: "AUD-901",
+        refId: "SKR-0998",
+        name: "Debabrata Roy",
+        room: "Room 102",
+        stayPeriod: "2026-11-01 to 2026-11-02 (1 Night)",
+        roomBase: 2200,
+        roomGst: 264,
+        diningBase: 640,
+        diningGst: 32,
+        barTotal: 440,
+        totalGst: 296,
+        totalSettled: 3576,
+        gateway: "UPI QR (Ref: UPI889123001)",
+        timestamp: "03 Nov, 10:45 AM"
+      }
+    ];
+
+    function saveState() {
+      localStorage.setItem('sk_active_bookings_v19', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v19', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v19', JSON.stringify(guestDirectory));
+      render();
+      renderAuditLedger();
+      updateInventoryMetrics();
+    }
+
+    function render() {
+      filterFolioTable();
+      const dSelect = document.getElementById('diningRoomSelect');
+      const bSelect = document.getElementById('barRoomSelect');
+      dSelect.innerHTML = '';
+      bSelect.innerHTML = '';
+
+      bookings.forEach((b, index) => {
+        let opt = `<option value="${index}">${b.refId} | ${b.room} - ${b.name}</option>`;
+        dSelect.innerHTML += opt;
+        bSelect.innerHTML += opt;
+      });
+    }
+
+    function filterFolioTable() {
+      const query = (document.getElementById('folioSearchInput') ? document.getElementById('folioSearchInput').value : '').toLowerCase();
+      const tbody = document.getElementById('folioList');
+      tbody.innerHTML = '';
+
+      let filtered = bookings.filter(b => 
+        b.name.toLowerCase().includes(query) || 
+        b.room.toLowerCase().includes(query) || 
+        b.refId.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888; padding:15px;">No matching in-house guest records found.</td></tr>';
+        return;
+      }
+
+      filtered.forEach((b) => {
+        let originalIndex = bookings.indexOf(b);
+        let due = Math.max(0, b.total - b.paid);
+        let orderCount = (b.orders || []).length;
+        let orderListHtml = (b.orders || []).map(o => `<li style="font-size:11px; margin-bottom:2px;">${o}</li>`).join('');
+
+        let row = `<tr>
+          <td><strong>${b.refId}</strong></td>
+          <td><strong>${b.name}</strong><br><small>${b.room} (${b.adults}A, ${b.children}C)<br>📞 ${b.phone}</small></td>
+          <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights}N)</small></td>
+          <td>
+            <details>
+              <summary>📋 ${orderCount} Items (View)</summary>
+              <ul style="padding-left:14px; margin:4px 0 0;">${orderListHtml}</ul>
+            </details>
+          </td>
+          <td><strong>₹${b.total.toFixed(2)}</strong></td>
+          <td>
+            <small style="color:var(--secondary);">
+              Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}<br>
+              Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}<br>
+              <strong>Total GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
+            </small>
+          </td>
+          <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
+          <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
+          <td style="white-space: nowrap;">
+            <button onclick="openSplitModal(${originalIndex})" class="btn btn-sm btn-info" title="Split into Room & F&B Folios">
+              ✂️ Split
+            </button>
+            <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-sm btn-danger">
+              🛎️ Check-Out
+            </button>
+          </td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function addBooking() {
+      let refId = document.getElementById('gRefId').value;
+      let name = document.getElementById('gName').value.trim();
+      let phone = document.getElementById('gPhone').value.trim();
+      let idType = document.getElementById('gIdType').value;
+      let idNumber = document.getElementById('gIdNumber').value.trim();
+      let inDate = document.getElementById('gCheckInDate').value;
+      let outDate = document.getElementById('gCheckOutDate').value;
+      let nights = parseInt(document.getElementById('gTotalNights').value || 1);
+      let adults = parseInt(document.getElementById('gAdults').value || 1);
+      let children = parseInt(document.getElementById('gChildren').value || 0);
+      let room = document.getElementById('gRoom').value;
+      let dailyRate = parseFloat(document.getElementById('gDailyRate').value || 0);
+      let roomBase = parseFloat(document.getElementById('gBaseTariff').value || 0);
+      let roomGst = parseFloat(document.getElementById('gRoomGst').value || 0);
+      let totalTariff = parseFloat(document.getElementById('gTotal').value || 0);
+      let paid = parseFloat(document.getElementById('gPaid').value || 0);
+      let mode = document.getElementById('gMode').value;
+
+      if (!name) { alert('Please enter guest full name.'); return; }
+      if (!phone) { alert('Please enter guest contact phone.'); return; }
+
+      guestDirectory[phone] = { name: name, idType: idType, idNumber: idNumber };
+
+      let paymentDetails = mode;
+      if (mode === 'UPI') {
+        let u = document.getElementById('chkUpiRef') ? document.getElementById('chkUpiRef').value : '';
+        paymentDetails = `UPI (UTR: ${u || 'Verified'})`;
+      } else if (mode === 'CARD') {
+        let c = document.getElementById('chkCardNo') ? document.getElementById('chkCardNo').value : '';
+        paymentDetails = `Card POS (Ends ${c.slice(-4) || 'Terminal'})`;
+      } else if (mode === 'WALLET') {
+        let w = document.getElementById('chkWalletType') ? document.getElementById('chkWalletType').value : 'Wallet';
+        paymentDetails = `${w} Wallet`;
+      } else {
+        paymentDetails = "Cash in Hand";
+      }
+
+      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let initialOrder = [
+        `Room Base Tariff: ₹${roomBase.toFixed(2)} [${nights} Night(s) @ ₹${dailyRate}/nt]`,
+        `Room Tax: ₹${roomGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST) [${nowTime}]`
+      ];
+
+      bookings.push({ 
+        refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
+        dailyRate: dailyRate, adults, children, room, 
+        roomBase: roomBase, roomGst: roomGst,
+        diningBase: 0, diningGst: 0, barTotal: 0,
+        totalGst: roomGst,
+        total: totalTariff, paid: paid, mode: paymentDetails, orders: initialOrder 
+      });
+
+      let cur = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
+      localStorage.setItem('sk_ref_counter', (cur + 1).toString());
+
+      document.getElementById('gName').value = '';
+      document.getElementById('gPhone').value = '';
+      document.getElementById('gIdNumber').value = '';
+      document.getElementById('gPaid').value = '';
+      generateRefId();
+      saveState();
+      renderRoomVisualMatrix();
+      updateCheckInGatewayDisplay();
+    }
+
+    // FOLIO SPLIT MODAL LOGIC
+    let activeSplitIndex = null;
+    function openSplitModal(index) {
+      activeSplitIndex = index;
+      let b = bookings[index];
+      let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
+      let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
+
+      let content = `
+        <div style="background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:12px; font-size:13px;">
+          <strong>Guest:</strong> ${b.name} | <strong>Allocation:</strong> ${b.room} (${b.refId})<br>
+          <small>Current Total: <strong>₹${b.total.toFixed(2)}</strong> (Advance: ₹${b.paid.toFixed(2)})</small>
+        </div>
+        <p style="font-size:13px; color:#555;">Split this reservation into two separate legal folios for corporate/separate billing:</p>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
+          <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
+            <h5 style="margin:0 0 6px; color:var(--primary);">Folio A: Accommodation (Room)</h5>
+            <small>Net Base: ₹${(b.roomBase||0).toFixed(2)}</small><br>
+            <small>Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}</small><br>
+            <strong>Total Room: ₹${roomGross.toFixed(2)}</strong>
+          </div>
+          <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
+            <h5 style="margin:0 0 6px; color:var(--secondary);">Folio B: F&B & Bar Lounge</h5>
+            <small>Dining Base: ₹${(b.diningBase||0).toFixed(2)}</small><br>
+            <small>Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}</small><br>
+            <small>Bar (Net): ₹${(b.barTotal||0).toFixed(2)}</small><br>
+            <strong>Total F&B: ₹${fnbGross.toFixed(2)}</strong>
+          </div>
+        </div>
+
+        <button class="btn btn-info" style="width:100%;" onclick="confirmSplitFolio()">
+          ✂️ Confirm & Execute Folio Split
+        </button>
+      `;
+      document.getElementById('splitModalContent').innerHTML = content;
+      document.getElementById('splitModal').classList.add('open');
+    }
+
+    function closeSplitModal() {
+      document.getElementById('splitModal').classList.remove('open');
+      activeSplitIndex = null;
+    }
+
+    function confirmSplitFolio() {
+      if (activeSplitIndex === null) return;
+      let b = bookings[activeSplitIndex];
+
+      if ((b.diningBase + b.barTotal) <= 0) {
+        alert('This folio has no Food or Bar orders to split. Add F&B items first before splitting.');
+        return;
+      }
+
+      let roomOrders = (b.orders || []).filter(o => o.startsWith("Room"));
+      let fnbOrders = (b.orders || []).filter(o => !o.startsWith("Room"));
+
+      let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
+      let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
+
+      // Mutate Folio A (Room only)
+      let folioA = {
+        ...b,
+        refId: b.refId + "-A",
+        diningBase: 0,
+        diningGst: 0,
+        barTotal: 0,
+        totalGst: b.roomGst,
+        total: roomGross,
+        paid: Math.min(b.paid, roomGross),
+        orders: roomOrders
+      };
+
+      // Create Folio B (F&B and Bar only)
+      let remainingAdvance = Math.max(0, b.paid - roomGross);
+      let folioB = {
+        ...b,
+        refId: b.refId + "-B",
+        roomBase: 0,
+        roomGst: 0,
+        dailyRate: 0,
+        nights: 0,
+        diningBase: b.diningBase,
+        diningGst: b.diningGst,
+        barTotal: b.barTotal,
+        totalGst: b.diningGst,
+        total: fnbGross,
+        paid: remainingAdvance,
+        orders: fnbOrders
+      };
+
+      bookings.splice(activeSplitIndex, 1, folioA, folioB);
+      alert(`Folio successfully split into ${folioA.refId} (Room) and ${folioB.refId} (F&B/Bar).`);
+      closeSplitModal();
+      saveState();
+    }
+
+    // FOOD ORDER (INCLUDES BREAKFAST, LUNCH, EVENING SNACKS & DINNER) WITH 5% GST
+    function postFoodOrder(selectId) {
+      if (bookings.length === 0) return;
+      let idx = document.getElementById('diningRoomSelect').value;
+      let [item, price] = document.getElementById(selectId).value.split('|');
+      let baseVal = parseFloat(price);
+      let gstVal = baseVal * 0.05;
+      let totalItem = baseVal + gstVal;
+      let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      bookings[idx].diningBase = (bookings[idx].diningBase || 0) + baseVal;
+      bookings[idx].diningGst = (bookings[idx].diningGst || 0) + gstVal;
+      bookings[idx].totalGst = (bookings[idx].totalGst || 0) + gstVal;
+      bookings[idx].total += totalItem;
+
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`F&B: ${item} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
+
+      alert(`${item} (Base: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
+      saveState();
+    }
+
+    // BAR ORDER (DIRECT NET PRICING - NO GST)
+    function postBarOrder(selectId) {
+      if (bookings.length === 0) return;
+      let idx = document.getElementById('barRoomSelect').value;
+      let [item, price] = document.getElementById(selectId).value.split('|');
+      let val = parseFloat(price);
+      let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      bookings[idx].barTotal = (bookings[idx].barTotal || 0) + val;
+      bookings[idx].total += val;
+
+      if (!bookings[idx].orders) bookings[idx].orders = [];
+      bookings[idx].orders.push(`Bar: ${item} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
+
+      alert(`Bar Service ${item} (₹${val.toFixed(2)} Net) posted to ${bookings[idx].room} at ${time}.`);
+      saveState();
+    }
+
+    let activeCheckoutIndex = null;
+
+    // CHECKOUT MODAL
+    function openCheckoutModal(index) {
+      activeCheckoutIndex = index;
+      let b = bookings[index];
+      let due = Math.max(0, b.total - b.paid);
+      let orderListHtml = (b.orders || []).map(o => `<li>${o}</li>`).join('');
+
+      let roomCgst = (b.roomGst || 0) / 2;
+      let roomSgst = (b.roomGst || 0) / 2;
+      let foodCgst = (b.diningGst || 0) / 2;
+      let foodSgst = (b.diningGst || 0) / 2;
+
+      let html = `
+        <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
+          <strong>Guest:</strong> ${b.name} (📞 ${b.phone}) | <strong>Allocation:</strong> ${b.room} | <strong>Ref:</strong> ${b.refId}<br>
+          <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small><br>
+          <small><strong>ID on File:</strong> ${b.idType || 'Proof'} - ${b.idNumber || 'Recorded'}</small>
+        </div>
+
+        <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Bill & Timestamps:</h5>
+        <ul style="background:#fff; border:1px solid #ced4da; padding:8px 22px; border-radius:4px; max-height:110px; overflow-y:auto; font-size:12px; margin:0;">
+          ${orderListHtml}
+        </ul>
+
+        <div style="margin-top:12px; background:#fdfdfd; border:1px solid #ced4da; border-radius:6px; padding:10px; font-size:12px;">
+          <table style="width:100%; border:none; margin:0;">
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Net Room Base Charges:</td>
+              <td style="text-align:right;"><strong>₹${(b.roomBase||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee; color:#555;">
+              <td>&nbsp; ↳ Room GST 12% (CGST 6%: ₹${roomCgst.toFixed(2)} | SGST 6%: ₹${roomSgst.toFixed(2)}):</td>
+              <td style="text-align:right;">+ ₹${(b.roomGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Net Dining & Snacks Base:</td>
+              <td style="text-align:right;"><strong>₹${(b.diningBase||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee; color:#555;">
+              <td>&nbsp; ↳ Food GST 5% (CGST 2.5%: ₹${foodCgst.toFixed(2)} | SGST 2.5%: ₹${foodSgst.toFixed(2)}):</td>
+              <td style="text-align:right;">+ ₹${(b.diningGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #eee;">
+              <td>Bar & Beverage Lounge (Direct Net - No GST):</td>
+              <td style="text-align:right;"><strong>₹${(b.barTotal||0).toFixed(2)}</strong></td>
+            </tr>
+            <tr style="border-bottom:1px solid #ccc; background:#f4f7f6; font-weight:bold;">
+              <td style="padding:5px 0;">Total GST Tax (Room 12% + Food 5%):</td>
+              <td style="text-align:right; color:var(--secondary); padding:5px 0;">₹${(b.totalGst||0).toFixed(2)}</td>
+            </tr>
+            <tr style="font-size:14px; font-weight:bold;">
+              <td style="padding:6px 0;">Final Grand Total:</td>
+              <td style="text-align:right; color:var(--primary); padding:6px 0;">₹${b.total.toFixed(2)}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-top:8px; background:#fff5f5; border:1px solid #ffccc7; padding:10px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
+          <div>Advance Paid: <strong style="color:green;">₹${b.paid.toFixed(2)}</strong></div>
+          <div style="font-size:15px; color:var(--danger);">Net Due: <strong>₹${due.toFixed(2)}</strong></div>
+        </div>
+      `;
+      document.getElementById('checkoutBillDetails').innerHTML = html;
+      renderCheckoutGatewayFields("UPI");
+      document.getElementById('checkoutModal').classList.add('open');
+    }
+
+    function renderCheckoutGatewayFields(mode) {
+      const container = document.getElementById('gatewayFieldsContainer');
+      let b = bookings[activeCheckoutIndex];
+      let due = b ? Math.max(0, b.total - b.paid) : 0;
+
+      if (mode === 'UPI') {
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="margin:0 0 8px; font-weight:bold; color:var(--secondary);">Scan Dynamic QR to Pay ₹${due.toFixed(2)}</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${due}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:4px; border-radius:6px;">
+            <p style="font-size:12px; color:#555; margin:4px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <input type="text" id="upiTxnRef" placeholder="Enter UPI UTR / Transaction ID (12 digits)" style="margin-top:6px; font-size:13px;">
+          </div>
+        `;
+      } else if (mode === 'CARD') {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Card Number (16 Digits)</label>
+            <input type="text" id="cardNo" placeholder="4xxx xxxx xxxx 1234" maxlength="19">
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <div style="flex:1;"><label>Expiry (MM/YY)</label>
+                <input type="text" id="cardExp" placeholder="12/28" maxlength="5">
+              </div>
+              <div style="flex:1;"><label>CVV (3 Digits)</label>
+                <input type="password" id="cardCvv" placeholder="•••" maxlength="3">
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <label>Cardholder Full Name</label>
+              <input type="text" id="cardHolder" placeholder="Name on card">
+            </div>
+          </div>
+        `;
+      } else if (mode === 'WALLET') {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Select Digital Wallet</label>
+            <select id="walletType" style="margin-bottom:8px;">
+              <option value="PhonePe">PhonePe Business</option>
+              <option value="Paytm">Paytm Wallet</option>
+              <option value="GooglePay">Google Pay (Business)</option>
+            </select>
+            <label>Registered Mobile Number</label>
+            <input type="text" id="walletMobile" placeholder="Enter guest mobile number" value="${b ? b.phone : ''}">
+            <label style="margin-top:8px;">Wallet Transaction ID</label>
+            <input type="text" id="walletTxnId" placeholder="e.g. TXN-89324021">
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div style="font-size:13px;">
+            <label>Cash Amount Received from Guest (₹)</label>
+            <input type="number" id="cashReceived" value="${due}" oninput="calcCashChange(this.value, ${due})">
+            <p id="cashChangeText" style="margin:8px 0 0; color:green; font-weight:bold;">Change to Return: ₹0.00</p>
+          </div>
+        `;
+      }
+    }
+
+    function calcCashChange(rec, due) {
+      let r = parseFloat(rec || 0);
+      let diff = r - due;
+      document.getElementById('cashChangeText').innerText = diff >= 0 ? `Change to Return: ₹${diff.toFixed(2)}` : `Shortage: ₹${Math.abs(diff).toFixed(2)}`;
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.remove('open');
+      activeCheckoutIndex = null;
+    }
+
+    function confirmFinalCheckout() {
+      if (activeCheckoutIndex === null) return;
+      let b = bookings[activeCheckoutIndex];
+      let mode = document.getElementById('checkoutGatewaySelect').value;
+      let txnDetails = "";
+
+      if (mode === 'UPI') {
+        let utr = document.getElementById('upiTxnRef').value.trim() || "UPI-" + Math.floor(100000000000 + Math.random() * 900000000000);
+        txnDetails = `UPI (UTR: ${utr})`;
+      } else if (mode === 'CARD') {
+        let cardNo = document.getElementById('cardNo').value.trim();
+        let last4 = cardNo ? cardNo.slice(-4) : "8821";
+        txnDetails = `Card POS (Ends **${last4})`;
+      } else if (mode === 'WALLET') {
+        let wType = document.getElementById('walletType').value;
+        let wTxn = document.getElementById('walletTxnId').value.trim() || "WLT" + Date.now();
+        txnDetails = `${wType} (${wTxn})`;
+      } else {
+        txnDetails = "Cash Drawer Settlement";
+      }
+
+      let targetRoom = rooms50State.find(r => r.id === b.room);
+      if (targetRoom) targetRoom.status = "Dirty";
+
+      let auditCount = auditHistory.length + 901;
+      let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+      auditHistory.unshift({
+        auditNo: "AUD-" + auditCount,
+        refId: b.refId,
+        name: b.name,
+        room: b.room,
+        stayPeriod: `${b.checkInDate} to ${b.checkOutDate} (${b.nights} Nights)`,
+        roomBase: b.roomBase || 0,
+        roomGst: b.roomGst || 0,
+        diningBase: b.diningBase || 0,
+        diningGst: b.diningGst || 0,
+        barTotal: b.barTotal || 0,
+        totalGst: b.totalGst || 0,
+        totalSettled: b.total,
+        gateway: txnDetails,
+        timestamp: nowTime
+      });
+
+      alert(`Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nRoom marked DIRTY.`);
+
+      bookings.splice(activeCheckoutIndex, 1);
+      closeCheckoutModal();
+      saveState();
+      renderRoomVisualMatrix();
+    }
+
+    function renderAuditLedger() {
+      let roomBase = 0, roomGst = 0, diningBase = 0, diningGst = 0, barRev = 0, totalSettled = 0, pending = 0;
+
+      auditHistory.forEach(a => {
+        roomBase += (a.roomBase || 0);
+        roomGst += (a.roomGst || 0);
+        diningBase += (a.diningBase || 0);
+        diningGst += (a.diningGst || 0);
+        barRev += (a.barTotal || 0);
+        totalSettled += (a.totalSettled || 0);
+      });
+
+      let totalGstCollected = roomGst + diningGst;
+
+      bookings.forEach(b => {
+        pending += Math.max(0, b.total - b.paid);
+      });
+
+      document.getElementById('auditRoomRev').innerText = '₹' + roomBase.toFixed(2);
+      document.getElementById('auditDiningRev').innerText = '₹' + diningBase.toFixed(2);
+      document.getElementById('auditBarRev').innerText = '₹' + barRev.toFixed(2);
+      document.getElementById('auditGstRev').innerText = '₹' + totalGstCollected.toFixed(2);
+      document.getElementById('auditTotalSettled').innerText = '₹' + totalSettled.toFixed(2);
+      document.getElementById('auditPendingBalance').innerText = '₹' + pending.toFixed(2);
+
+      const tableBody = document.getElementById('auditHistoryTableBody');
+      tableBody.innerHTML = '';
+
+      if (auditHistory.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
+        return;
+      }
+
+      auditHistory.forEach(a => {
+        let row = `<tr>
+          <td><strong>${a.auditNo}</strong></td>
+          <td>${a.refId}</td>
+          <td><strong>${a.name}</strong></td>
+          <td>${a.room}</td>
+          <td>₹${(a.roomBase||0).toFixed(2)}</td>
+          <td style="color:var(--secondary);">₹${(a.roomGst||0).toFixed(2)}</td>
+          <td>₹${(a.diningBase||0).toFixed(2)}</td>
+          <td style="color:var(--secondary);">₹${(a.diningGst||0).toFixed(2)}</td>
+          <td>₹${(a.barTotal||0).toFixed(2)}</td>
+          <td style="color:#27ae60; font-weight:bold;">₹${(a.totalSettled||0).toFixed(2)}</td>
+          <td><small>${a.gateway}</small></td>
+          <td><small>${a.timestamp}</small></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function exportToExcel() {
+      if (auditHistory.length === 0) { alert('No completed audit records to export.'); return; }
+      let exportData = auditHistory.map(a => ({
+        "Audit ID": a.auditNo,
+        "Ref ID": a.refId,
+        "Guest Name": a.name,
+        "Allocated Unit": a.room,
+        "Stay Period": a.stayPeriod,
+        "Room Base (INR)": a.roomBase,
+        "Room GST 12% (INR)": a.roomGst,
+        "Dining & Snacks Base (INR)": a.diningBase,
+        "Dining GST 5% (INR)": a.diningGst,
+        "Bar Net Sales (INR)": a.barTotal,
+        "Total GST Collected (INR)": a.totalGst,
+        "Grand Total Settled (INR)": a.totalSettled,
+        "Payment Mode & Txn": a.gateway,
+        "Timestamp": a.timestamp
+      }));
+      let ws = XLSX.utils.json_to_sheet(exportData);
+      let wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Master Audit");
+      XLSX.writeFile(wb, "Shree_Krishna_Resort_Revenue_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+    }
+
+    window.onload = function() {
+      generateRefId();
+      initializeDates();
+      renderRoomVisualMatrix();
+      render();
+      renderAuditLedger();
+    };
+  </script>
+</body>
+</html>
