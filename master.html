@@ -485,7 +485,7 @@
       </div>
     </div>
 
-    <!-- 3. DINING & SNACKS TAB -->
+    <!-- 3. DINING & SNACKS TAB (WITH QUANTITY SUPPORT) -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
@@ -497,76 +497,104 @@
         <div class="menu-columns">
           <div class="menu-box">
             <h4>🍳 Breakfast Menu</h4>
-            <div class="form-group">
-              <select id="bfItemSelect">
-                <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120 + 5% GST)</option>
-                <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140 + 5% GST)</option>
-                <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110 + 5% GST)</option>
-                <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180 + 5% GST)</option>
-                <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50 + 5% GST)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Item</label>
+                <select id="bfItemSelect">
+                  <option value="Puri Sabji & Sweet|120">Puri Sabji & Sweet (₹120 + 5% GST)</option>
+                  <option value="Aloo Paratha with Curd & Pickle|140">Aloo Paratha with Curd (₹140 + 5% GST)</option>
+                  <option value="Bread Butter Omelette|110">Bread Butter Omelette (₹110 + 5% GST)</option>
+                  <option value="Continental Breakfast Buffet|180">Continental Buffet (₹180 + 5% GST)</option>
+                  <option value="Masala Tea / Hot Coffee|50">Masala Tea / Coffee (₹50 + 5% GST)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="bfQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect')">➕ Post Breakfast Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('bfItemSelect', 'bfQty')">➕ Post Breakfast Bill</button>
           </div>
 
           <div class="menu-box">
-            <h4>🍛 Lunch Menu (Traditional Bengali & Indian)</h4>
-            <div class="form-group">
-              <select id="lunchItemSelect">
-                <option value="Special Bengali Katla Fish Thali|320">Bengali Katla Fish Thali (₹320 + 5% GST)</option>
-                <option value="Purulia Desi Mutton Curry with Rice|420">Purulia Desi Mutton Curry & Rice (₹420 + 5% GST)</option>
-                <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550 + 5% GST)</option>
-                <option value="Bengali Rui Macher Jhol with Rice|260">Rui Macher Patla Jhol & Rice (₹260 + 5% GST)</option>
-                <option value="Chicken Kalia with Basmati Rice|310">Chicken Kalia & Rice (₹310 + 5% GST)</option>
-                <option value="Pure Veg Deluxe Bengali Thali (Shukto/Dhokar Dalna)|240">Pure Veg Deluxe Thali (₹240 + 5% GST)</option>
-                <option value="Aloo Posto & Biulir Dal Thali|210">Aloo Posto & Biulir Dal Thali (₹210 + 5% GST)</option>
-                <option value="Basanti Polao with Kasha Chicken|360">Basanti Polao & Kasha Chicken (₹360 + 5% GST)</option>
-                <option value="Chanar Dalna Special Thali|250">Chanar Dalna Veg Thali (₹250 + 5% GST)</option>
-              </select>
+            <h4>🍛 Lunch Menu (Bengali & Indian)</h4>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Item</label>
+                <select id="lunchItemSelect">
+                  <option value="Special Bengali Katla Fish Thali|320">Bengali Katla Fish Thali (₹320 + 5% GST)</option>
+                  <option value="Purulia Desi Mutton Curry with Rice|420">Purulia Desi Mutton Curry & Rice (₹420 + 5% GST)</option>
+                  <option value="Shorshe Ilish Thali (Seasonal)|550">Shorshe Ilish Thali (₹550 + 5% GST)</option>
+                  <option value="Bengali Rui Macher Jhol with Rice|260">Rui Macher Patla Jhol & Rice (₹260 + 5% GST)</option>
+                  <option value="Chicken Kalia with Basmati Rice|310">Chicken Kalia & Rice (₹310 + 5% GST)</option>
+                  <option value="Pure Veg Deluxe Bengali Thali (Shukto/Dhokar Dalna)|240">Pure Veg Deluxe Thali (₹240 + 5% GST)</option>
+                  <option value="Aloo Posto & Biulir Dal Thali|210">Aloo Posto & Biulir Dal Thali (₹210 + 5% GST)</option>
+                  <option value="Basanti Polao with Kasha Chicken|360">Basanti Polao & Kasha Chicken (₹360 + 5% GST)</option>
+                  <option value="Chanar Dalna Special Thali|250">Chanar Dalna Veg Thali (₹250 + 5% GST)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="lunchQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect')">➕ Post Lunch Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('lunchItemSelect', 'lunchQty')">➕ Post Lunch Bill</button>
           </div>
 
           <div class="menu-box" style="border: 2px solid var(--accent); background: #fffcf7;">
             <h4 style="color: #9c5b16;">☕ Evening Snacks & Tea</h4>
-            <div class="form-group">
-              <select id="snacksItemSelect">
-                <option value="Crispy Chicken Lollipop (6 Pcs)|220">Crispy Chicken Lollipop 6 Pcs (₹220 + 5% GST)</option>
-                <option value="Paneer Stick Kabab (6 Pcs)|190">Paneer Stick Kabab 6 Pcs (₹190 + 5% GST)</option>
-                <option value="Crispy Chicken Pakora (8 Pcs)|180">Crispy Chicken Pakora 8 Pcs (₹180 + 5% GST)</option>
-                <option value="Bhetki Fish Fry with Mustard Kasundi (2 Pcs)|220">Kolkata Bhetki Fish Fry 2 Pcs (₹220 + 5% GST)</option>
-                <option value="Crispy French Fries (Peri Peri)|90">Crispy French Fries (₹90 + 5% GST)</option>
-                <option value="Purulia Adda Special Jhal Muri & Chanachur|50">Adda Special Jhal Muri (₹50 + 5% GST)</option>
-                <option value="Special Masala Milk Tea (Pot for 2)|60">Special Masala Milk Tea - 2 Cups (₹60 + 5% GST)</option>
-                <option value="Brewed Hot Coffee (2 Cups)|80">Brewed Hot Coffee - 2 Cups (₹80 + 5% GST)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Item</label>
+                <select id="snacksItemSelect">
+                  <option value="Crispy Chicken Lollipop (6 Pcs)|220">Crispy Chicken Lollipop 6 Pcs (₹220 + 5% GST)</option>
+                  <option value="Paneer Stick Kabab (6 Pcs)|190">Paneer Stick Kabab 6 Pcs (₹190 + 5% GST)</option>
+                  <option value="Crispy Chicken Pakora (8 Pcs)|180">Crispy Chicken Pakora 8 Pcs (₹180 + 5% GST)</option>
+                  <option value="Bhetki Fish Fry with Mustard Kasundi (2 Pcs)|220">Kolkata Bhetki Fish Fry 2 Pcs (₹220 + 5% GST)</option>
+                  <option value="Crispy French Fries (Peri Peri)|90">Crispy French Fries (₹90 + 5% GST)</option>
+                  <option value="Purulia Adda Special Jhal Muri & Chanachur|50">Adda Special Jhal Muri (₹50 + 5% GST)</option>
+                  <option value="Special Masala Milk Tea (Pot for 2)|60">Special Masala Milk Tea - 2 Cups (₹60 + 5% GST)</option>
+                  <option value="Brewed Hot Coffee (2 Cups)|80">Brewed Hot Coffee - 2 Cups (₹80 + 5% GST)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="snacksQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect')">➕ Post Snacks & Tea</button>
+            <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect', 'snacksQty')">➕ Post Snacks & Tea</button>
           </div>
 
           <div class="menu-box">
             <h4>🍲 Dinner Menu (Curries, Breads & Specials)</h4>
-            <div class="form-group">
-              <select id="dinnerItemSelect">
-                <option value="Chicken Satay Skewers with Peanut Dip (6 Pcs)|260">🍢 Chicken Satay Skewers (₹260 + 5% GST)</option>
-                <option value="Crispy Chicken Lollipop with Hot Garlic Dip (6 Pcs)|220">🍗 Crispy Chicken Lollipop (₹220 + 5% GST)</option>
-                <option value="Paneer Stick Kabab with Mint Dip (6 Pcs)|190">🍢 Paneer Stick Kabab (₹190 + 5% GST)</option>
-                <option value="Butter Naan (1 Pc)|50">🫓 Butter Naan (₹50 + 5% GST)</option>
-                <option value="Tandoori Roti (1 Pc)|25">🫓 Tandoori Roti (₹25 + 5% GST)</option>
-                <option value="Chicken Kasha (4 Pcs)|240">Chicken Kasha Special (₹240 + 5% GST)</option>
-                <option value="Purulia Mutton Kasha (4 Pcs)|340">Purulia Mutton Kasha (₹340 + 5% GST)</option>
-                <option value="Paneer Butter Masala (Full)|220">Paneer Butter Masala (₹220 + 5% GST)</option>
-                <option value="Dal Makhani (Full)|180">Dal Makhani Punjabi (₹180 + 5% GST)</option>
-                <option value="Mixed Fried Rice with Chilli Chicken|330">Mixed Fried Rice & Chilli Chicken (₹330 + 5% GST)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Item</label>
+                <select id="dinnerItemSelect">
+                  <option value="Chicken Satay Skewers with Peanut Dip (6 Pcs)|260">🍢 Chicken Satay Skewers (₹260 + 5% GST)</option>
+                  <option value="Crispy Chicken Lollipop with Hot Garlic Dip (6 Pcs)|220">🍗 Crispy Chicken Lollipop (₹220 + 5% GST)</option>
+                  <option value="Paneer Stick Kabab with Mint Dip (6 Pcs)|190">🍢 Paneer Stick Kabab (₹190 + 5% GST)</option>
+                  <option value="Butter Naan (1 Pc)|50">🫓 Butter Naan (₹50 + 5% GST)</option>
+                  <option value="Tandoori Roti (1 Pc)|25">🫓 Tandoori Roti (₹25 + 5% GST)</option>
+                  <option value="Chicken Kasha (4 Pcs)|240">Chicken Kasha Special (₹240 + 5% GST)</option>
+                  <option value="Purulia Mutton Kasha (4 Pcs)|340">Purulia Mutton Kasha (₹340 + 5% GST)</option>
+                  <option value="Paneer Butter Masala (Full)|220">Paneer Butter Masala (₹220 + 5% GST)</option>
+                  <option value="Dal Makhani (Full)|180">Dal Makhani Punjabi (₹180 + 5% GST)</option>
+                  <option value="Mixed Fried Rice with Chilli Chicken|330">Mixed Fried Rice & Chilli Chicken (₹330 + 5% GST)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="dinnerQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect')">➕ Post Dinner Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postFoodOrder('dinnerItemSelect', 'dinnerQty')">➕ Post Dinner Bill</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4. BAR TAB -->
+    <!-- 4. BAR TAB (WITH QUANTITY SUPPORT) -->
     <div id="barTab" class="tab-content">
       <div class="card">
         <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under Excise Law)</h2>
@@ -578,63 +606,91 @@
         <div class="menu-columns">
           <div class="menu-box">
             <h4>🥃 Premium Scotch & Whisky (60ml Pegs)</h4>
-            <div class="form-group">
-              <select id="whiskySelect">
-                <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label 12 Yrs (₹420 Net)</option>
-                <option value="Johnnie Walker Red Label (60ml)|320">JW Red Label Blended (₹320 Net)</option>
-                <option value="Ballantines Finest Blended Scotch (60ml)|310">Ballantine's Finest (₹310 Net)</option>
-                <option value="100 Pipers 12 Years De-Luxe (60ml)|290">100 Pipers 12 Yrs (₹290 Net)</option>
-                <option value="Blenders Pride Reserve Collection (60ml)|240">Blenders Pride Reserve (₹240 Net)</option>
-                <option value="Signature Rare Aged Whisky (60ml)|220">Signature Rare Aged (₹220 Net)</option>
-                <option value="Royal Challenge Select (60ml)|190">Royal Challenge Premium (₹190 Net)</option>
-                <option value="Royal Stag Deluxe Special (60ml)|170">Royal Stag Deluxe (₹170 Net)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Drink</label>
+                <select id="whiskySelect">
+                  <option value="Johnnie Walker Black Label (60ml)|420">JW Black Label 12 Yrs (₹420 Net)</option>
+                  <option value="Johnnie Walker Red Label (60ml)|320">JW Red Label Blended (₹320 Net)</option>
+                  <option value="Ballantines Finest Blended Scotch (60ml)|310">Ballantine's Finest (₹310 Net)</option>
+                  <option value="100 Pipers 12 Years De-Luxe (60ml)|290">100 Pipers 12 Yrs (₹290 Net)</option>
+                  <option value="Blenders Pride Reserve Collection (60ml)|240">Blenders Pride Reserve (₹240 Net)</option>
+                  <option value="Signature Rare Aged Whisky (60ml)|220">Signature Rare Aged (₹220 Net)</option>
+                  <option value="Royal Challenge Select (60ml)|190">Royal Challenge Premium (₹190 Net)</option>
+                  <option value="Royal Stag Deluxe Special (60ml)|170">Royal Stag Deluxe (₹170 Net)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="whiskyQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect')">➕ Post Whisky Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('whiskySelect', 'whiskyQty')">➕ Post Whisky Bill</button>
           </div>
 
           <div class="menu-box" style="border: 2px solid #8e44ad; background: #faf5fc;">
             <h4 style="color: #6a1b9a;">🍷 Fine Wine & Champagne</h4>
-            <div class="form-group">
-              <select id="wineSelect">
-                <option value="Sula Shiraz Cabernet Red Wine (Glass)|360">Sula Shiraz Cabernet Red (Glass) (₹360 Net)</option>
-                <option value="Sula Sauvignon Blanc White Wine (Glass)|340">Sula Sauvignon Blanc White (Glass) (₹340 Net)</option>
-                <option value="Jacob's Creek Classic Shiraz (Glass)|420">Jacob's Creek Classic Shiraz (Glass) (₹420 Net)</option>
-                <option value="Sula Dindori Reserve Viognier (Bottle 750ml)|1950">Sula Dindori Reserve (Bottle) (₹1950 Net)</option>
-                <option value="Four Seasons Classic Chenin Blanc (Bottle 750ml)|1450">Four Seasons Chenin Blanc (Bottle) (₹1450 Net)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Wine</label>
+                <select id="wineSelect">
+                  <option value="Sula Shiraz Cabernet Red Wine (Glass)|360">Sula Shiraz Cabernet Red (Glass) (₹360 Net)</option>
+                  <option value="Sula Sauvignon Blanc White Wine (Glass)|340">Sula Sauvignon Blanc White (Glass) (₹340 Net)</option>
+                  <option value="Jacob's Creek Classic Shiraz (Glass)|420">Jacob's Creek Classic Shiraz (Glass) (₹420 Net)</option>
+                  <option value="Sula Dindori Reserve Viognier (Bottle 750ml)|1950">Sula Dindori Reserve (Bottle) (₹1950 Net)</option>
+                  <option value="Four Seasons Classic Chenin Blanc (Bottle 750ml)|1450">Four Seasons Chenin Blanc (Bottle) (₹1450 Net)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="wineQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%; background: #6a1b9a;" onclick="postBarOrder('wineSelect')">➕ Post Wine Bill</button>
+            <button class="btn btn-primary" style="width: 100%; background: #6a1b9a;" onclick="postBarOrder('wineSelect', 'wineQty')">➕ Post Wine Bill</button>
           </div>
 
           <div class="menu-box">
             <h4>🍹 Rum, Vodka & Gin (60ml Pegs)</h4>
-            <div class="form-group">
-              <select id="rumSelect">
-                <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (₹160 Net)</option>
-                <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (₹220 Net)</option>
-                <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (₹230 Net)</option>
-                <option value="Magic Moments Green Apple (60ml)|180">Magic Moments Green Apple (₹180 Net)</option>
-                <option value="Bombay Sapphire London Dry Gin (60ml)|340">Bombay Sapphire Gin (₹340 Net)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Spirit</label>
+                <select id="rumSelect">
+                  <option value="Old Monk Dark Rum (60ml)|160">Old Monk Dark Rum (₹160 Net)</option>
+                  <option value="Bacardi Superior White Rum (60ml)|220">Bacardi White Rum (₹220 Net)</option>
+                  <option value="Smirnoff Triple Distilled Vodka (60ml)|230">Smirnoff Vodka (₹230 Net)</option>
+                  <option value="Magic Moments Green Apple (60ml)|180">Magic Moments Green Apple (₹180 Net)</option>
+                  <option value="Bombay Sapphire London Dry Gin (60ml)|340">Bombay Sapphire Gin (₹340 Net)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="rumQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect')">➕ Post Spirit Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('rumSelect', 'rumQty')">➕ Post Spirit Bill</button>
           </div>
 
           <div class="menu-box">
             <h4>🍺 Chilled Beer & Mixers</h4>
-            <div class="form-group">
-              <select id="beerSelect">
-                <option value="Budweiser Magnum Super Premium (650ml)|280">Budweiser Magnum Super (650ml) (₹280 Net)</option>
-                <option value="Carlsberg Elephant Super Strong (650ml)|260">Carlsberg Elephant Strong (650ml) (₹260 Net)</option>
-                <option value="Corona Extra Premium Chilled (330ml)|330">Corona Extra Pint (330ml) (₹330 Net)</option>
-                <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220 Net)</option>
-                <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230 Net)</option>
-                <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White Craft Pint (₹260 Net)</option>
-                <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Schweppes Tonic (₹90 Net)</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group" style="flex: 3;">
+                <label>Beer/Mixer</label>
+                <select id="beerSelect">
+                  <option value="Budweiser Magnum Super Premium (650ml)|280">Budweiser Magnum Super (650ml) (₹280 Net)</option>
+                  <option value="Carlsberg Elephant Super Strong (650ml)|260">Carlsberg Elephant Strong (650ml) (₹260 Net)</option>
+                  <option value="Corona Extra Premium Chilled (330ml)|330">Corona Extra Pint (330ml) (₹330 Net)</option>
+                  <option value="Kingfisher Premium Lager (650ml)|220">Kingfisher Premium (650ml) (₹220 Net)</option>
+                  <option value="Tuborg Strong Chilled (650ml)|230">Tuborg Strong (650ml) (₹230 Net)</option>
+                  <option value="Bira 91 White Craft Beer (330ml)|260">Bira 91 White Craft Pint (₹260 Net)</option>
+                  <option value="Fresh Lime Soda & Tonic Water|90">Fresh Lime Soda / Schweppes Tonic (₹90 Net)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1; max-width: 80px;">
+                <label>Qty</label>
+                <input type="number" id="beerQty" value="1" min="1">
+              </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect')">➕ Post Beer Bill</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="postBarOrder('beerSelect', 'beerQty')">➕ Post Beer Bill</button>
           </div>
         </div>
       </div>
@@ -911,7 +967,7 @@
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL WITH COMPLETE TAX INVOICE -->
+  <!-- CHECKOUT MODAL -->
   <div id="checkoutModal" class="modal-overlay">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--danger); padding-bottom: 8px; margin-bottom: 12px;">
@@ -1079,7 +1135,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v26')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v27')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -1278,7 +1334,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v26')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v27')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -1318,7 +1374,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v26')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v27')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -1339,9 +1395,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v26', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v26', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v26', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v27', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v27', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v27', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1916,11 +1972,16 @@
       saveState();
     }
 
-    function postFoodOrder(selectId) {
+    // ================= F&B & BAR WITH QUANTITY SUPPORT =================
+    function postFoodOrder(selectId, qtyId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('diningRoomSelect').value;
-      let [item, price] = document.getElementById(selectId).value.split('|');
-      let baseVal = parseFloat(price);
+      let [item, unitPrice] = document.getElementById(selectId).value.split('|');
+      let qty = parseInt(document.getElementById(qtyId).value || 1);
+      if (qty < 1) qty = 1;
+
+      let singleBase = parseFloat(unitPrice);
+      let baseVal = singleBase * qty;
       let gstVal = baseVal * 0.05;
       let totalItem = baseVal + gstVal;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1931,26 +1992,29 @@
       bookings[idx].total += totalItem;
 
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`F&B: ${item} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
+      bookings[idx].orders.push(`F&B: ${item} x ${qty} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
 
-      alert(`${item} (Base: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)}) posted to ${bookings[idx].room} at ${time}.`);
+      alert(`${item} (Qty: ${qty}) Posted!\nBase: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)} = Total ₹${totalItem.toFixed(2)} added to folio.`);
       saveState();
     }
 
-    function postBarOrder(selectId) {
+    function postBarOrder(selectId, qtyId) {
       if (bookings.length === 0) return;
       let idx = document.getElementById('barRoomSelect').value;
-      let [item, price] = document.getElementById(selectId).value.split('|');
-      let val = parseFloat(price);
+      let [item, unitPrice] = document.getElementById(selectId).value.split('|');
+      let qty = parseInt(document.getElementById(qtyId).value || 1);
+      if (qty < 1) qty = 1;
+
+      let val = parseFloat(unitPrice) * qty;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       bookings[idx].barTotal = (bookings[idx].barTotal || 0) + val;
       bookings[idx].total += val;
 
       if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Bar: ${item} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
+      bookings[idx].orders.push(`Bar: ${item} x ${qty} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
 
-      alert(`Bar Service ${item} (₹${val.toFixed(2)} Net) posted to ${bookings[idx].room} at ${time}.`);
+      alert(`Bar Service: ${item} (Qty: ${qty}) - ₹${val.toFixed(2)} Net posted to folio at ${time}.`);
       saveState();
     }
 
