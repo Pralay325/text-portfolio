@@ -266,7 +266,7 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar, Group Engine & Partial Release</small>
+      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar, Group Engine & Direct Room Release</small>
     </div>
     <span class="badge">Enterprise Terminal</span>
   </header>
@@ -286,10 +286,11 @@
     <div id="frontDeskTab" class="tab-content active">
       <div class="grid">
         <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
             <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In & KYC</h2>
-            <div>
-              <button class="btn btn-purple btn-sm" onclick="openGroupModal()">👥 Bulk / Group Check-In</button>
+            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <button class="btn btn-purple btn-sm" onclick="openGroupModal()">👥 Bulk Check-In</button>
+              <button class="btn btn-info btn-sm" onclick="openHeaderReleaseModal()">🔓 Release Group Rooms</button>
               <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C</button>
             </div>
           </div>
@@ -352,13 +353,13 @@
             </div>
           </div>
 
-          <!-- PHYSICAL ROOM (FOR HOUSEKEEPING) -->
+          <!-- PHYSICAL ROOM -->
           <div class="form-group">
             <label style="color: var(--primary);"><strong>1. Physical Room Allocation (Where Guest Actually Stays):</strong></label>
             <select id="gRoom" onchange="onPhysicalRoomChange()"></select>
           </div>
 
-          <!-- CORPORATE BILLED AS (FOR INVOICING) -->
+          <!-- CORPORATE BILLED AS -->
           <div class="form-group" style="background: #eef7f9; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary);">
             <label style="color: var(--secondary);"><strong>2. Billed As Category (For Official Corporate Invoice):</strong></label>
             <select id="gBilledAs" onchange="onBilledAsChange()">
@@ -484,7 +485,7 @@
       </div>
     </div>
 
-    <!-- 3. EXPANDED DINING & SNACKS TAB -->
+    <!-- 3. DINING & SNACKS TAB -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
@@ -565,7 +566,7 @@
       </div>
     </div>
 
-    <!-- 4. EXPANDED BAR, WHISKY, WINE & BEER (DIRECT NET - NO GST) -->
+    <!-- 4. BAR TAB -->
     <div id="barTab" class="tab-content">
       <div class="card">
         <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under Excise Law)</h2>
@@ -639,7 +640,7 @@
       </div>
     </div>
 
-    <!-- 5. POOL & PHOTO SHOWCASE -->
+    <!-- 5. POOL & SHOWCASE -->
     <div id="lawnGalleryTab" class="tab-content">
       <div class="card">
         <h2>🖼️ Resort Swimming Pool & Ambience Showcase</h2>
@@ -672,7 +673,7 @@
       </div>
     </div>
 
-    <!-- 6. COMPREHENSIVE NIGHT AUDIT & EOD LEDGER TAB -->
+    <!-- 6. AUDIT TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
@@ -738,7 +739,7 @@
 
   </div>
 
-  <!-- GROUP BULK CHECK-IN MODAL WITH BARGAINING ENGINE -->
+  <!-- GROUP BULK CHECK-IN MODAL -->
   <div id="groupModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 720px;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--purple); padding-bottom: 8px; margin-bottom: 12px;">
@@ -843,24 +844,29 @@
     </div>
   </div>
 
-  <!-- PARTIAL ROOM RELEASE MODAL (আংশিক গ্রুপ রিলিজ) -->
+  <!-- DIRECT HEADER PARTIAL ROOM RELEASE MODAL -->
   <div id="releaseModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 600px;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--info); padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--info);">🔓 Partial Group Room Release (আংশিক চেক-আউট)</h3>
+        <h3 style="margin: 0; color: var(--info);">🔓 Release Group Rooms (আংশিক রুম খালি করুন)</h3>
         <button onclick="closeReleaseModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label><strong>১. সিলেক্ট করুন কোন গ্রুপের রুম খালি করতে চান:</strong></label>
+        <select id="releaseGroupDropdown" onchange="onReleaseGroupSelect(this.value)"></select>
       </div>
 
       <div id="releaseGroupInfo" style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px;"></div>
 
-      <p style="font-size: 13px; color: #444; margin-bottom: 8px;">
-        যে যে রুমের অতিথি আগে চলে যাচ্ছেন, সেগুলোর পাশে টিক দিন:
+      <p style="font-size: 13px; color: #444; margin-bottom: 6px;">
+        <strong>২. যে যে রুমের অতিথি আগে চলে যাচ্ছেন, সেগুলোতে টিক দিন:</strong>
       </p>
 
       <div id="releaseRoomsCheckboxList" style="max-height: 180px; overflow-y: auto; border: 1px solid #ced4da; padding: 10px; border-radius: 6px; background: #fff; margin-bottom: 12px;"></div>
 
       <div style="background: #fff8e7; padding: 8px 12px; border-radius: 4px; font-size: 12px; margin-bottom: 12px;">
-        <strong>Notice:</strong> নির্বাচিত রুমগুলো ৫০ রুমের ম্যাট্রিক্সে তৎক্ষণাৎ <strong>Dirty (Needs Housekeeping)</strong> হিসেবে চিহ্নিত হবে এবং গ্রুপ থেকে মুক্ত হয়ে যাবে। বাকি রুমগুলো যথারীতি গ্রুপের অধীনে থাকবে।
+        <strong>Notice:</strong> নির্বাচিত রুমগুলো ৫০ রুমের ম্যাট্রিক্সে তৎক্ষণাৎ <strong>Dirty (Needs Housekeeping)</strong> হিসেবে চিহ্নিত হবে এবং হাউসকিপিং শুরু হতে পারবে। বাকি রুমগুলো যথারীতি গ্রুপের অধীনে থাকবে।
       </div>
 
       <button class="btn btn-info" style="width: 100%; font-size: 14px;" onclick="confirmPartialRelease()">
@@ -1073,7 +1079,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v25')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v26')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -1272,7 +1278,7 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v25')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v26')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
@@ -1312,7 +1318,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v25')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v26')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -1333,9 +1339,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v25', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v25', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v25', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v26', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v26', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v26', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1633,15 +1639,49 @@
       renderRoomVisualMatrix();
     }
 
-    // ================= PARTIAL GROUP ROOM RELEASE ENGINE =================
+    // ================= DIRECT HEADER PARTIAL RELEASE ENGINE =================
     let activeReleaseIndex = null;
-    function openReleaseModal(index) {
-      activeReleaseIndex = index;
-      let b = bookings[index];
-      if (!b.isGroup || !b.roomsAllocated || b.roomsAllocated.length === 0) {
-        alert('No allocated group rooms found to release.');
+
+    function openHeaderReleaseModal() {
+      let groupBookings = bookings.filter(b => b.isGroup && b.roomsAllocated && b.roomsAllocated.length > 0);
+      if (groupBookings.length === 0) {
+        alert('Currently there are NO active group reservations with occupied rooms to release.');
         return;
       }
+
+      let grpDropdown = document.getElementById('releaseGroupDropdown');
+      grpDropdown.innerHTML = '';
+      groupBookings.forEach(g => {
+        let originalIdx = bookings.indexOf(g);
+        let opt = document.createElement('option');
+        opt.value = originalIdx;
+        opt.innerText = `${g.refId} | ${g.name} (${g.roomsAllocated.length} Rooms Active)`;
+        grpDropdown.appendChild(opt);
+      });
+
+      onReleaseGroupSelect(grpDropdown.value);
+      document.getElementById('releaseModal').classList.add('open');
+    }
+
+    function openReleaseModal(index) {
+      activeReleaseIndex = index;
+      let grpDropdown = document.getElementById('releaseGroupDropdown');
+      grpDropdown.innerHTML = '';
+      let b = bookings[index];
+      let opt = document.createElement('option');
+      opt.value = index;
+      opt.innerText = `${b.refId} | ${b.name} (${b.roomsAllocated.length} Rooms Active)`;
+      grpDropdown.appendChild(opt);
+
+      onReleaseGroupSelect(index);
+      document.getElementById('releaseModal').classList.add('open');
+    }
+
+    function onReleaseGroupSelect(indexStr) {
+      let index = parseInt(indexStr);
+      activeReleaseIndex = index;
+      let b = bookings[index];
+      if (!b) return;
 
       document.getElementById('releaseGroupInfo').innerHTML = `
         <strong>Group:</strong> ${b.name} (${b.refId})<br>
@@ -1663,8 +1703,6 @@
         `;
         container.appendChild(label);
       });
-
-      document.getElementById('releaseModal').classList.add('open');
     }
 
     function closeReleaseModal() {
@@ -1683,13 +1721,11 @@
 
       let roomsToRelease = Array.from(checkedBoxes).map(cb => cb.value);
 
-      // Mark released rooms as Dirty in 50 room matrix
       roomsToRelease.forEach(rmId => {
         let rObj = rooms50State.find(r => r.id === rmId);
         if (rObj) rObj.status = "Dirty";
       });
 
-      // Remove from allocated rooms
       b.roomsAllocated = b.roomsAllocated.filter(rmId => !roomsToRelease.includes(rmId));
       b.room = b.roomsAllocated.join(', ');
 
@@ -1749,9 +1785,7 @@
       }
     }
 
-    function calcShiftTotals() {
-      // live calculation placeholder
-    }
+    function calcShiftTotals() {}
 
     function confirmRoomShift() {
       if (activeShiftIndex === null) return;
