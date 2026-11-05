@@ -436,7 +436,7 @@
                 <tr>
                   <th>Ref ID</th>
                   <th>Guest / Allocation</th>
-                  <th>Stay & Check-In Time</th>
+                  <th>Stay & Timings</th>
                   <th>Orders History</th>
                   <th>Total</th>
                   <th>GST</th>
@@ -831,7 +831,7 @@
           <input type="date" id="grpInDate" onchange="calcGroupRates()">
         </div>
         <div class="form-group">
-          <label>Check-Out Date</label>
+          <label>Estimated Check-Out Date</label>
           <input type="date" id="grpOutDate" onchange="calcGroupRates()">
         </div>
       </div>
@@ -1408,7 +1408,7 @@
           <td>
             <small>
               <strong>In:</strong> ${b.checkInDate}<span style="color:var(--secondary); font-weight:bold;">${inTimeDisplay}</span><br>
-              <strong>Out:</strong> ${b.checkOutDate}<br>
+              <strong>Out:</strong> ${b.checkOutDate} <span style="color:#666; font-weight:bold;">(11:00 AM)</span><br>
               (${b.nights} Night${b.nights > 1 ? 's' : ''})
             </small>
           </td>
