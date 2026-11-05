@@ -436,7 +436,7 @@
                 <tr>
                   <th>Ref ID</th>
                   <th>Guest / Allocation</th>
-                  <th>Stay</th>
+                  <th>Stay & Check-In Time</th>
                   <th>Orders History</th>
                   <th>Total</th>
                   <th>GST</th>
@@ -1135,7 +1135,6 @@
       updateCheckInGatewayDisplay();
     }
 
-    // CLEAN GUEST DIRECTORY (NO DUMMIES)
     let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_clean')) || {};
 
     function lookupExistingGuest(phone) {
@@ -1332,7 +1331,6 @@
       renderRoomVisualMatrix();
     }
 
-    // 100% CLEAN INITIAL ARRAYS (NO DUMMY BOOKINGS OR AUDIT)
     let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_clean')) || [];
     let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_clean')) || [];
 
@@ -1398,6 +1396,8 @@
                              <small style="color:var(--secondary);"><strong>Billed As:</strong> ${b.billedAs || b.room}</small>`;
         }
 
+        let inTimeDisplay = b.checkInTime ? ` (${b.checkInTime})` : '';
+
         let row = `<tr>
           <td><strong>${b.refId}</strong></td>
           <td>
@@ -1405,7 +1405,13 @@
             ${roomDisplayHtml}<br>
             <small>📞 ${b.phone}</small>
           </td>
-          <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights}N)</small></td>
+          <td>
+            <small>
+              <strong>In:</strong> ${b.checkInDate}<span style="color:var(--secondary); font-weight:bold;">${inTimeDisplay}</span><br>
+              <strong>Out:</strong> ${b.checkOutDate}<br>
+              (${b.nights} Night${b.nights > 1 ? 's' : ''})
+            </small>
+          </td>
           <td>
             <details>
               <summary>📋 ${orderCount} Items (View)</summary>
@@ -1487,14 +1493,14 @@
         paymentDetails = "Cash in Hand";
       }
 
-      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let checkInTimeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let initialOrder = [
         `Room Tariff: ₹${roomBase.toFixed(2)} [${billedAs} | ${nights}N @ ₹${dailyRate}/nt (${gstMode})]`,
-        `Room Tax: ₹${roomGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST) [${nowTime}]`
+        `Room Tax: ₹${roomGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST) [${checkInTimeStr}]`
       ];
 
       bookings.push({ 
-        refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
+        refId, name, phone, idType, idNumber, checkInDate: inDate, checkInTime: checkInTimeStr, checkOutDate: outDate, nights: nights,
         dailyRate: dailyRate, adults, children, room: room, roomsAllocated: [room], isGroup: false,
         billedAs: billedAs, gstMode: gstMode,
         roomBase: roomBase, roomGst: roomGst,
@@ -1605,10 +1611,10 @@
       let grpRefId = "GRP-" + refCount;
       localStorage.setItem('sk_ref_counter', (refCount + 1).toString());
 
-      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let checkInTimeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       let orders = [
         `Group Master Allocation: ${allocatedRoomIds.length} Rooms [${allocatedRoomIds.join(', ')}]`,
-        `Deal Base Tariff: ₹${netBase.toFixed(2)} (${gstType}) [${nowTime}]`,
+        `Deal Base Tariff: ₹${netBase.toFixed(2)} (${gstType}) [${checkInTimeStr}]`,
         `Room Tax: ₹${taxGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST)`
       ];
 
@@ -1622,6 +1628,7 @@
         billedAs: "Central Corporate / Event Group Package",
         gstMode: gstType,
         checkInDate: inDate,
+        checkInTime: checkInTimeStr,
         checkOutDate: outDate,
         nights: Math.max(1, Math.ceil((new Date(outDate) - new Date(inDate)) / (1000 * 60 * 60 * 24))),
         dailyRate: (netBase / allocatedRoomIds.length).toFixed(2),
