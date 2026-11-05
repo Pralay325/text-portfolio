@@ -16,6 +16,7 @@
       --danger: #c0392b;
       --warning: #e67e22;
       --info: #0288d1;
+      --purple: #6a1b9a;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -120,10 +121,11 @@
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-info { background: #0288d1; color: #fff; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; margin-right: 4px; display: inline-block; }
+    .btn-purple { background: var(--purple); color: #fff; }
+    .btn-sm { padding: 5px 8px; font-size: 11px; margin-right: 3px; display: inline-block; margin-bottom: 3px; }
 
     .folio-table-container {
-      max-height: 540px;
+      max-height: 560px;
       overflow-y: auto;
       border: 1px solid #dee2e6;
       border-radius: 6px;
@@ -236,6 +238,18 @@
     th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
     th { background: #f8f9fa; color: var(--primary); }
 
+    .group-badge {
+      background: #ede7f6;
+      color: var(--purple);
+      border: 1px solid #d1c4e9;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 3px;
+    }
+
     footer {
       background: var(--primary);
       color: #cbd5e0;
@@ -252,7 +266,7 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar & Folio Split Engine</small>
+      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar, Group Engine & Room Shifting</small>
     </div>
     <span class="badge">Enterprise Terminal</span>
   </header>
@@ -274,7 +288,10 @@
         <div class="card">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px;">
             <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In & KYC</h2>
-            <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C (Foreign Guest)</button>
+            <div>
+              <button class="btn btn-purple btn-sm" onclick="openGroupModal()">👥 Bulk / Group Check-In</button>
+              <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C</button>
+            </div>
           </div>
           
           <div class="form-row">
@@ -424,7 +441,7 @@
                   <th>GST</th>
                   <th>Advance</th>
                   <th>Due</th>
-                  <th style="min-width: 155px; text-align: center;">Operations</th>
+                  <th style="min-width: 175px; text-align: center;">Operations</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -467,7 +484,7 @@
       </div>
     </div>
 
-    <!-- 3. EXPANDED DINING & SNACKS TAB (WITH CHICKEN SATAY, LOLLIPOP, PANEER STICK) -->
+    <!-- 3. EXPANDED DINING & SNACKS TAB -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
@@ -526,7 +543,6 @@
             <button class="btn btn-primary" style="width: 100%; background: #9c5b16;" onclick="postFoodOrder('snacksItemSelect')">➕ Post Snacks & Tea</button>
           </div>
 
-          <!-- DINNER MENU WITH SATAY, TANDOORI ROTI & NAAN -->
           <div class="menu-box">
             <h4>🍲 Dinner Menu (Curries, Breads & Specials)</h4>
             <div class="form-group">
@@ -701,9 +717,9 @@
               <tr>
                 <th>Audit No</th>
                 <th>Ref ID</th>
-                <th>Guest Name</th>
-                <th>Room (Physical)</th>
-                <th>Billed As (Category)</th>
+                <th>Guest / Group Name</th>
+                <th>Room Allocation</th>
+                <th>Billed As</th>
                 <th>Room Base (₹)</th>
                 <th>Room GST 12% (₹)</th>
                 <th>Dining Base (₹)</th>
@@ -720,6 +736,147 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- GROUP BULK CHECK-IN MODAL WITH BARGAINING ENGINE -->
+  <div id="groupModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 720px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--purple); padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--purple);">👥 Central Master Group Reservation & Bargaining Terminal</h3>
+        <button onclick="closeGroupModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Group Event / Company Name</label>
+          <input type="text" id="grpEventName" placeholder="e.g. TCS Conference / Mukherjee Wedding">
+        </div>
+        <div class="form-group">
+          <label>Leader / Organiser Full Name</label>
+          <input type="text" id="grpLeaderName" placeholder="Main Contact Person">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Leader Phone</label>
+          <input type="text" id="grpLeaderPhone" placeholder="10-digit mobile">
+        </div>
+        <div class="form-group">
+          <label>Total Pax in Group</label>
+          <input type="number" id="grpPax" value="15" min="1">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Check-In Date</label>
+          <input type="date" id="grpInDate" onchange="calcGroupRates()">
+        </div>
+        <div class="form-group">
+          <label>Check-Out Date</label>
+          <input type="date" id="grpOutDate" onchange="calcGroupRates()">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Select Available Rooms for Group (Hold Ctrl / Command to select multiple):</label>
+        <select id="grpRoomsSelect" multiple size="5" style="height: 120px;" onchange="calcGroupRates()"></select>
+        <small style="color: #666;">Hold <b>Ctrl</b> (or Cmd on Mac) while clicking to select multiple rooms.</small>
+      </div>
+
+      <div class="form-row" style="background: #fdf7fc; border: 1px solid #e1bee7; padding: 10px; border-radius: 6px;">
+        <div class="form-group" style="margin: 0;">
+          <label>Rate Negotiation Model:</label>
+          <select id="grpPricingModel" onchange="calcGroupRates()">
+            <option value="STANDARD">Rack Rates Sum</option>
+            <option value="NEGOTIATED">Bargained Lump-sum Package (এককালীন দরদাম)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin: 0;">
+          <label>Bargained Total Room Deal (₹):</label>
+          <input type="number" id="grpLumpSum" placeholder="Enter agreed total deal" oninput="calcGroupRates()" disabled>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top: 10px;">
+        <div class="form-group">
+          <label>Group Tax Type:</label>
+          <select id="grpGstType" onchange="calcGroupRates()">
+            <option value="EXCLUSIVE">Exclusive (+12% GST Added)</option>
+            <option value="INCLUSIVE">Inclusive (12% GST Embedded in Deal)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Calculated Net Base (₹):</label>
+          <input type="number" id="grpCalcBase" readonly>
+        </div>
+        <div class="form-group">
+          <label>Room GST 12% (₹):</label>
+          <input type="number" id="grpCalcGst" readonly>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Grand Total Group Deal (₹):</label>
+          <input type="number" id="grpCalcTotal" readonly style="color: green; font-weight: bold; font-size: 16px;">
+        </div>
+        <div class="form-group">
+          <label>Group Advance Received (₹):</label>
+          <input type="number" id="grpAdvance" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Advance Payment Mode:</label>
+          <select id="grpPayMode">
+            <option value="UPI">📱 UPI QR Payment</option>
+            <option value="CARD">💳 Corporate Card POS</option>
+            <option value="CASH">💵 Cash Advance</option>
+            <option value="NEFT">🏦 Bank NEFT / RTGS</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-purple" style="width: 100%; font-size: 15px; margin-top: 10px;" onclick="confirmGroupBooking()">
+        👥 Confirm Bulk Group Allocation & Open Master Folio
+      </button>
+    </div>
+  </div>
+
+  <!-- ROOM SHIFTING MODAL -->
+  <div id="shiftModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 580px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--warning); padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--warning);">🔄 Inter-Room Transfer Engine (রুম শিফটিং)</h3>
+        <button onclick="closeShiftModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+
+      <div id="shiftGuestDetails" style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 13px;"></div>
+
+      <div class="form-group">
+        <label>Select New Destination Room (Clean & Ready):</label>
+        <select id="shiftNewRoomSelect" onchange="onShiftRoomSelect()"></select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nights in New Room:</label>
+          <input type="number" id="shiftNewNights" value="1" min="1" oninput="calcShiftTotals()">
+        </div>
+        <div class="form-group">
+          <label>Agreed Rate (₹/Nt) ✍️:</label>
+          <input type="number" id="shiftNewRate" oninput="calcShiftTotals()">
+        </div>
+      </div>
+
+      <div class="form-group" style="background: #fff8e7; padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+        <strong>Notice:</strong> Confirming shift will mark the previous room as <strong>Dirty (Needs Housekeeping)</strong> and append the new room's tariff to this active folio seamlessly.
+      </div>
+
+      <button class="btn btn-warning" style="width: 100%; margin-top: 10px; font-size: 14px;" onclick="confirmRoomShift()">
+        🔄 Authorize Room Shift & Update Folio
+      </button>
+    </div>
   </div>
 
   <!-- CHECKOUT MODAL WITH COMPLETE TAX INVOICE -->
@@ -823,8 +980,14 @@
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);
 
-      document.getElementById('gCheckInDate').value = today.toISOString().split('T')[0];
-      document.getElementById('gCheckOutDate').value = tomorrow.toISOString().split('T')[0];
+      const d1 = today.toISOString().split('T')[0];
+      const d2 = tomorrow.toISOString().split('T')[0];
+
+      document.getElementById('gCheckInDate').value = d1;
+      document.getElementById('gCheckOutDate').value = d2;
+
+      document.getElementById('grpInDate').value = d1;
+      document.getElementById('grpOutDate').value = d2;
     }
 
     function onPhysicalRoomChange() {
@@ -849,7 +1012,6 @@
       }
     }
 
-    // ROOM TARIFF ENGINE (INCLUSIVE VS EXCLUSIVE WITH AUTO 12% TAX)
     function calculateRoomTariff(isAutoReset = false) {
       const inDateVal = document.getElementById('gCheckInDate').value;
       const outDateVal = document.getElementById('gCheckOutDate').value;
@@ -865,18 +1027,14 @@
       document.getElementById('gTotalNights').value = nights;
 
       let enteredRate = parseFloat(document.getElementById('gDailyRate').value || 0);
-      let baseTariff = 0;
-      let roomGst = 0;
-      let totalRoomBill = 0;
+      let baseTariff = 0, roomGst = 0, totalRoomBill = 0;
 
       if (gstType === 'INCLUSIVE') {
-        // enteredRate includes 12% GST
         let totalVal = enteredRate * nights;
         baseTariff = totalVal / 1.12;
         roomGst = totalVal - baseTariff;
         totalRoomBill = totalVal;
       } else {
-        // enteredRate is Base, 12% GST added on top
         baseTariff = enteredRate * nights;
         roomGst = baseTariff * 0.12;
         totalRoomBill = baseTariff + roomGst;
@@ -889,7 +1047,7 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v23')) || {
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v24')) || {
       "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
       "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
     };
@@ -973,10 +1131,26 @@
 
     let rooms50State = fresh50Units;
 
+    function getCurrentlyOccupiedRoomIds() {
+      let list = [];
+      bookings.forEach(b => {
+        if (b.roomsAllocated && Array.isArray(b.roomsAllocated)) {
+          list = list.concat(b.roomsAllocated);
+        } else if (b.room) {
+          list.push(b.room);
+        }
+      });
+      return list;
+    }
+
     function populateRoomDropdown() {
       const select = document.getElementById('gRoom');
+      const grpSelect = document.getElementById('grpRoomsSelect');
       select.innerHTML = '';
+      grpSelect.innerHTML = '';
       
+      let occupied = getCurrentlyOccupiedRoomIds();
+
       let cotGroup = document.createElement('optgroup');
       cotGroup.label = "🏡 Luxury Heritage Cottages (₹4500/night)";
       let dlxGroup = document.createElement('optgroup');
@@ -987,16 +1161,28 @@
       suiteGroup.label = "👑 Executive Suites (₹3500/night)";
 
       rooms50State.forEach(r => {
+        let isOcc = occupied.includes(r.id);
         let opt = document.createElement('option');
         opt.value = r.id;
         opt.setAttribute('data-rate', r.rate);
         opt.setAttribute('data-type', r.type);
-        opt.innerText = `${r.id} (${r.type}) - ₹${r.rate}/nt [${r.status}]`;
+        opt.innerText = `${r.id} (${r.type}) - ₹${r.rate}/nt [${isOcc ? 'Occupied' : r.status}]`;
+        if (isOcc) opt.disabled = true;
+
         if (r.id.includes("Cottage")) cotGroup.appendChild(opt);
         else if (r.id.includes("Room")) dlxGroup.appendChild(opt);
         else if (r.id.includes("Dormitory")) dormGroup.appendChild(opt);
         else suiteGroup.appendChild(opt);
+
+        // Populate for Group Multi-select (only Clean & Vacant)
+        if (!isOcc && r.status === 'Clean') {
+          let gOpt = document.createElement('option');
+          gOpt.value = `${r.id}|${r.rate}`;
+          gOpt.innerText = `${r.id} - ${r.type} (₹${r.rate}/nt)`;
+          grpSelect.appendChild(gOpt);
+        }
       });
+
       select.appendChild(cotGroup);
       select.appendChild(dlxGroup);
       select.appendChild(dormGroup);
@@ -1006,14 +1192,12 @@
     }
 
     function updateInventoryMetrics() {
-      let occupiedCount = bookings.length;
-      let dirtyCount = 0;
-      let cleanCount = 0;
-
-      let occupiedRoomIds = bookings.map(b => b.room);
+      let occupiedList = getCurrentlyOccupiedRoomIds();
+      let occupiedCount = occupiedList.length;
+      let dirtyCount = 0, cleanCount = 0;
 
       rooms50State.forEach(r => {
-        if (!occupiedRoomIds.includes(r.id)) {
+        if (!occupiedList.includes(r.id)) {
           if (r.status === 'Dirty') dirtyCount++;
           else cleanCount++;
         }
@@ -1030,10 +1214,10 @@
       const grid = document.getElementById('roomVisualMatrixGrid');
       grid.innerHTML = '';
 
-      let occupiedRoomIds = bookings.map(b => b.room);
+      let occupiedList = getCurrentlyOccupiedRoomIds();
 
       rooms50State.forEach((r, idx) => {
-        let isOccupied = occupiedRoomIds.includes(r.id);
+        let isOccupied = occupiedList.includes(r.id);
         let displayStatus = isOccupied ? 'Occupied' : r.status;
         let cardClass = isOccupied ? 'occupied' : (r.status === 'Clean' ? 'clean' : 'dirty');
         let pillClass = isOccupied ? 'pill-occupied' : (r.status === 'Clean' ? 'pill-clean' : 'pill-dirty');
@@ -1063,11 +1247,13 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v23')) || [
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v24')) || [
       { 
         refId: "SKR-1001", 
         name: "Subhasis Banerjee", 
         room: "Cottage 04",
+        roomsAllocated: ["Cottage 04"],
+        isGroup: false,
         billedAs: "Heritage AC Cottage",
         gstMode: "EXCLUSIVE",
         adults: 2, 
@@ -1101,7 +1287,7 @@
       }
     ];
 
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v23')) || [
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v24')) || [
       {
         auditNo: "AUD-901",
         refId: "SKR-0998",
@@ -1122,9 +1308,9 @@
     ];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v23', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v23', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v23', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_v24', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_v24', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_v24', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1138,7 +1324,8 @@
       bSelect.innerHTML = '';
 
       bookings.forEach((b, index) => {
-        let opt = `<option value="${index}">${b.refId} | ${b.room} - ${b.name}</option>`;
+        let displayRoom = b.isGroup ? `[GROUP: ${b.roomsAllocated.join(', ')}]` : b.room;
+        let opt = `<option value="${index}">${b.refId} | ${displayRoom} - ${b.name}</option>`;
         dSelect.innerHTML += opt;
         bSelect.innerHTML += opt;
       });
@@ -1167,12 +1354,20 @@
         let orderCount = (b.orders || []).length;
         let orderListHtml = (b.orders || []).map(o => `<li style="font-size:11px; margin-bottom:2px;">${o}</li>`).join('');
 
+        let roomDisplayHtml = '';
+        if (b.isGroup) {
+          roomDisplayHtml = `<span class="group-badge">👥 Master Group (${b.roomsAllocated.length} Units)</span><br>
+                             <small><strong>Rooms:</strong> ${b.roomsAllocated.join(', ')}</small>`;
+        } else {
+          roomDisplayHtml = `<small><strong>Physical:</strong> ${b.room}</small><br>
+                             <small style="color:var(--secondary);"><strong>Billed As:</strong> ${b.billedAs || b.room}</small>`;
+        }
+
         let row = `<tr>
           <td><strong>${b.refId}</strong></td>
           <td>
             <strong>${b.name}</strong><br>
-            <small><strong>Physical:</strong> ${b.room}</small><br>
-            <small style="color:var(--secondary);"><strong>Billed As:</strong> ${b.billedAs || b.room}</small><br>
+            ${roomDisplayHtml}<br>
             <small>📞 ${b.phone}</small>
           </td>
           <td><small><strong>In:</strong> ${b.checkInDate}<br><strong>Out:</strong> ${b.checkOutDate}<br>(${b.nights}N)</small></td>
@@ -1193,9 +1388,16 @@
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
           <td style="text-align: center; white-space: nowrap;">
-            <button onclick="openSplitModal(${originalIndex})" class="btn btn-sm btn-info" title="Split into Room & F&B/Bar Folios">
-              ✂️ Split Folio
-            </button>
+            ${!b.isGroup ? `
+              <button onclick="openShiftModal(${originalIndex})" class="btn btn-sm btn-warning" title="Shift Guest to Another Room">
+                🔄 Shift Room
+              </button>
+              <button onclick="openSplitModal(${originalIndex})" class="btn btn-sm btn-info" title="Split into Room & F&B Folios">
+                ✂️ Split
+              </button>
+            ` : `
+              <span class="group-badge">Master Bill</span>
+            `}
             <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-sm btn-danger" title="Process Final Settlement">
               🛎️ Check-Out
             </button>
@@ -1256,7 +1458,8 @@
 
       bookings.push({ 
         refId, name, phone, idType, idNumber, checkInDate: inDate, checkOutDate: outDate, nights: nights,
-        dailyRate: dailyRate, adults, children, room, billedAs: billedAs, gstMode: gstMode,
+        dailyRate: dailyRate, adults, children, room: room, roomsAllocated: [room], isGroup: false,
+        billedAs: billedAs, gstMode: gstMode,
         roomBase: roomBase, roomGst: roomGst,
         diningBase: 0, diningGst: 0, barTotal: 0,
         totalGst: roomGst,
@@ -1276,7 +1479,220 @@
       updateCheckInGatewayDisplay();
     }
 
-    // FOLIO SPLIT MODAL LOGIC
+    // ================= GROUP RESERVATION ENGINE =================
+    function openGroupModal() {
+      document.getElementById('groupModal').classList.add('open');
+      populateRoomDropdown();
+      calcGroupRates();
+    }
+    function closeGroupModal() {
+      document.getElementById('groupModal').classList.remove('open');
+    }
+
+    function calcGroupRates() {
+      const select = document.getElementById('grpRoomsSelect');
+      const selectedOpts = Array.from(select.selectedOptions);
+      const inDate = document.getElementById('grpInDate').value;
+      const outDate = document.getElementById('grpOutDate').value;
+      const pricingModel = document.getElementById('grpPricingModel').value;
+      const gstType = document.getElementById('grpGstType').value;
+      const lumpSumInput = document.getElementById('grpLumpSum');
+
+      let nights = 1;
+      if (inDate && outDate) {
+        let d1 = new Date(inDate);
+        let d2 = new Date(outDate);
+        nights = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+      }
+
+      let standardRackTotal = 0;
+      selectedOpts.forEach(opt => {
+        let rate = parseFloat(opt.value.split('|')[1]);
+        standardRackTotal += rate * nights;
+      });
+
+      let finalDealAmount = 0;
+      if (pricingModel === 'STANDARD') {
+        lumpSumInput.disabled = true;
+        lumpSumInput.value = standardRackTotal;
+        finalDealAmount = standardRackTotal;
+      } else {
+        lumpSumInput.disabled = false;
+        if (!lumpSumInput.value) lumpSumInput.value = standardRackTotal;
+        finalDealAmount = parseFloat(lumpSumInput.value || 0);
+      }
+
+      let netBase = 0, taxGst = 0, grandTotal = 0;
+      if (gstType === 'INCLUSIVE') {
+        netBase = finalDealAmount / 1.12;
+        taxGst = finalDealAmount - netBase;
+        grandTotal = finalDealAmount;
+      } else {
+        netBase = finalDealAmount;
+        taxGst = netBase * 0.12;
+        grandTotal = netBase + taxGst;
+      }
+
+      document.getElementById('grpCalcBase').value = netBase.toFixed(2);
+      document.getElementById('grpCalcGst').value = taxGst.toFixed(2);
+      document.getElementById('grpCalcTotal').value = grandTotal.toFixed(2);
+    }
+
+    function confirmGroupBooking() {
+      const eventName = document.getElementById('grpEventName').value.trim();
+      const leaderName = document.getElementById('grpLeaderName').value.trim();
+      const leaderPhone = document.getElementById('grpLeaderPhone').value.trim();
+      const select = document.getElementById('grpRoomsSelect');
+      const selectedOpts = Array.from(select.selectedOptions);
+      const inDate = document.getElementById('grpInDate').value;
+      const outDate = document.getElementById('grpOutDate').value;
+      const advance = parseFloat(document.getElementById('grpAdvance').value || 0);
+      const payMode = document.getElementById('grpPayMode').value;
+      const gstType = document.getElementById('grpGstType').value;
+
+      if (!eventName || !leaderName) {
+        alert('Please enter Group Event Name and Leader Name.');
+        return;
+      }
+      if (selectedOpts.length === 0) {
+        alert('Please select at least 1 room for the group.');
+        return;
+      }
+
+      const allocatedRoomIds = selectedOpts.map(opt => opt.value.split('|')[0]);
+      let netBase = parseFloat(document.getElementById('grpCalcBase').value || 0);
+      let taxGst = parseFloat(document.getElementById('grpCalcGst').value || 0);
+      let grandTotal = parseFloat(document.getElementById('grpCalcTotal').value || 0);
+
+      let refCount = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
+      let grpRefId = "GRP-" + refCount;
+      localStorage.setItem('sk_ref_counter', (refCount + 1).toString());
+
+      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let orders = [
+        `Group Master Allocation: ${allocatedRoomIds.length} Rooms [${allocatedRoomIds.join(', ')}]`,
+        `Deal Base Tariff: ₹${netBase.toFixed(2)} (${gstType}) [${nowTime}]`,
+        `Room Tax: ₹${taxGst.toFixed(2)} (12% GST = 6% CGST + 6% SGST)`
+      ];
+
+      bookings.push({
+        refId: grpRefId,
+        name: `${eventName} (Leader: ${leaderName})`,
+        phone: leaderPhone || 'Group Desk',
+        room: allocatedRoomIds.join(', '),
+        roomsAllocated: allocatedRoomIds,
+        isGroup: true,
+        billedAs: "Central Corporate / Event Group Package",
+        gstMode: gstType,
+        checkInDate: inDate,
+        checkOutDate: outDate,
+        nights: Math.max(1, Math.ceil((new Date(outDate) - new Date(inDate)) / (1000 * 60 * 60 * 24))),
+        dailyRate: (netBase / allocatedRoomIds.length).toFixed(2),
+        roomBase: netBase,
+        roomGst: taxGst,
+        diningBase: 0,
+        diningGst: 0,
+        barTotal: 0,
+        totalGst: taxGst,
+        total: grandTotal,
+        paid: advance,
+        mode: `${payMode} (Group Advance)` ,
+        orders: orders
+      });
+
+      alert(`Group Reservation ${grpRefId} confirmed for ${allocatedRoomIds.length} units.\nAll units marked Occupied.`);
+      closeGroupModal();
+      saveState();
+      renderRoomVisualMatrix();
+    }
+
+    // ================= ROOM SHIFTING ENGINE =================
+    let activeShiftIndex = null;
+    function openShiftModal(index) {
+      activeShiftIndex = index;
+      let b = bookings[index];
+      let shiftDetailsDiv = document.getElementById('shiftGuestDetails');
+      shiftDetailsDiv.innerHTML = `
+        <strong>Guest:</strong> ${b.name} (${b.refId})<br>
+        <strong>Current Physical Room:</strong> <span style="color:var(--danger); font-weight:bold;">${b.room}</span><br>
+        <small>Current Running Bill: <strong>₹${b.total.toFixed(2)}</strong> (Base: ₹${b.roomBase.toFixed(2)})</small>
+      `;
+
+      let newRoomSelect = document.getElementById('shiftNewRoomSelect');
+      newRoomSelect.innerHTML = '';
+      let occupied = getCurrentlyOccupiedRoomIds();
+
+      rooms50State.forEach(r => {
+        if (!occupied.includes(r.id) && r.status === 'Clean') {
+          let opt = document.createElement('option');
+          opt.value = `${r.id}|${r.rate}`;
+          opt.innerText = `${r.id} (${r.type}) - Standard ₹${r.rate}/nt`;
+          newRoomSelect.appendChild(opt);
+        }
+      });
+
+      if (newRoomSelect.options.length === 0) {
+        alert('No vacant and clean rooms available for shifting right now.');
+        return;
+      }
+
+      onShiftRoomSelect();
+      document.getElementById('shiftModal').classList.add('open');
+    }
+
+    function closeShiftModal() {
+      document.getElementById('shiftModal').classList.remove('open');
+      activeShiftIndex = null;
+    }
+
+    function onShiftRoomSelect() {
+      let val = document.getElementById('shiftNewRoomSelect').value;
+      if (val) {
+        let rate = parseFloat(val.split('|')[1]);
+        document.getElementById('shiftNewRate').value = rate;
+      }
+    }
+
+    function calcShiftTotals() {
+      // live calculation placeholder
+    }
+
+    function confirmRoomShift() {
+      if (activeShiftIndex === null) return;
+      let b = bookings[activeShiftIndex];
+      let newRoomData = document.getElementById('shiftNewRoomSelect').value;
+      if (!newRoomData) return;
+
+      let [newRoomId, defRate] = newRoomData.split('|');
+      let nights = parseInt(document.getElementById('shiftNewNights').value || 1);
+      let agreedRate = parseFloat(document.getElementById('shiftNewRate').value || defRate);
+
+      let newBase = agreedRate * nights;
+      let newGst = newBase * 0.12;
+      let newGross = newBase + newGst;
+
+      // Mark old room as Dirty
+      let oldRoomObj = rooms50State.find(r => r.id === b.room);
+      if (oldRoomObj) oldRoomObj.status = "Dirty";
+
+      let nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      b.orders.push(`Shifted: Transferred from ${b.room} to ${newRoomId} [${nowTime}]`);
+      b.orders.push(`Room Addition: ${newRoomId} - ₹${newBase.toFixed(2)} [${nights}N @ ₹${agreedRate}/nt] (+12% GST: ₹${newGst.toFixed(2)})`);
+
+      b.room = newRoomId;
+      b.roomsAllocated = [newRoomId];
+      b.roomBase += newBase;
+      b.roomGst += newGst;
+      b.totalGst += newGst;
+      b.total += newGross;
+
+      alert(`Room Shift Authorized!\n${b.name} shifted to ${newRoomId}.\nPrevious room marked DIRTY for housekeeping.`);
+      closeShiftModal();
+      saveState();
+      renderRoomVisualMatrix();
+    }
+
+    // ================= FOLIO SPLIT MODAL LOGIC =================
     let activeSplitIndex = null;
     function openSplitModal(index) {
       activeSplitIndex = index;
@@ -1330,8 +1746,8 @@
         return;
       }
 
-      let roomOrders = (b.orders || []).filter(o => o.startsWith("Room"));
-      let fnbOrders = (b.orders || []).filter(o => !o.startsWith("Room"));
+      let roomOrders = (b.orders || []).filter(o => o.startsWith("Room") || o.startsWith("Shifted"));
+      let fnbOrders = (b.orders || []).filter(o => !o.startsWith("Room") && !o.startsWith("Shifted"));
 
       let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
       let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
@@ -1424,10 +1840,10 @@
 
       let html = `
         <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
-          <strong>Guest:</strong> ${b.name} (📞 ${b.phone}) | <strong>Physical Room:</strong> ${b.room}<br>
-          <strong style="color:var(--secondary);">Corporate Billed As:</strong> ${b.billedAs || b.room} | <strong>Ref:</strong> ${b.refId}<br>
-          <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small><br>
-          <small><strong>ID on File:</strong> ${b.idType || 'Proof'} - ${b.idNumber || 'Recorded'}</small>
+          <strong>Guest / Group:</strong> ${b.name} (📞 ${b.phone})<br>
+          <strong>Allocation:</strong> ${b.room} | <strong>Ref:</strong> ${b.refId}<br>
+          <strong style="color:var(--secondary);">Billed As:</strong> ${b.billedAs || b.room}<br>
+          <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small>
         </div>
 
         <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Bill & Timestamps:</h5>
@@ -1438,7 +1854,7 @@
         <div style="margin-top:12px; background:#fdfdfd; border:1px solid #ced4da; border-radius:6px; padding:10px; font-size:12px;">
           <table style="width:100%; border:none; margin:0;">
             <tr style="border-bottom:1px solid #eee;">
-              <td>Net Room Base Charges (${b.billedAs || b.room}):</td>
+              <td>Net Room Base Charges:</td>
               <td style="text-align:right;"><strong>₹${(b.roomBase||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #eee; color:#555;">
@@ -1569,8 +1985,16 @@
         txnDetails = "Cash Drawer Settlement";
       }
 
-      let targetRoom = rooms50State.find(r => r.id === b.room);
-      if (targetRoom) targetRoom.status = "Dirty";
+      // Mark all rooms in this booking dirty
+      if (b.roomsAllocated && Array.isArray(b.roomsAllocated)) {
+        b.roomsAllocated.forEach(rmId => {
+          let target = rooms50State.find(r => r.id === rmId);
+          if (target) target.status = "Dirty";
+        });
+      } else {
+        let target = rooms50State.find(r => r.id === b.room);
+        if (target) target.status = "Dirty";
+      }
 
       let auditCount = auditHistory.length + 901;
       let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
@@ -1593,7 +2017,7 @@
         timestamp: nowTime
       });
 
-      alert(`Checkout completed for ${b.name} (${b.room} | Billed As: ${b.billedAs || b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nRoom marked DIRTY.`);
+      alert(`Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nAllocated rooms marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
