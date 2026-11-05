@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#1b3a4b">
-  <title>Shree Krishna Resort & Retreat - Enterprise PMS & Settlement Engine</title>
+  <title>Bharat Power Cloud PMS Software - Enterprise Hotel & Settlement Engine</title>
   <style>
     :root {
       --primary: #1b3a4b;
@@ -17,6 +17,7 @@
       --warning: #e67e22;
       --info: #0288d1;
       --purple: #6a1b9a;
+      --stealth: #2c3e50;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -122,6 +123,7 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-info { background: #0288d1; color: #fff; }
     .btn-purple { background: var(--purple); color: #fff; }
+    .btn-stealth { background: var(--stealth); color: #fff; }
     .btn-sm { padding: 5px 8px; font-size: 11px; display: inline-block; }
 
     .btn-stack {
@@ -297,8 +299,8 @@
 
   <header>
     <div>
-      <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">Enterprise PMS, Accommodations, Corporate Booking, Dining, Bar & Direct Room Release</small>
+      <h1>⚡ Bharat Power Cloud PMS Software</h1>
+      <small style="color: #cbd5e0;">Educational & Learning Simulation Edition (Commercial Ready Architecture)</small>
     </div>
     <span class="badge">Enterprise Terminal</span>
   </header>
@@ -309,7 +311,7 @@
     <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Snacks (5% GST)</button>
     <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar Lounge (Direct Net - No GST)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🖼️ Resort Pool & Photo Showcase</button>
-    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Comprehensive Ledger</button>
+    <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Revenue Ledger</button>
   </nav>
 
   <div class="container">
@@ -427,13 +429,13 @@
 
           <!-- PHYSICAL ROOM -->
           <div class="form-group">
-            <label style="color: var(--primary);"><strong>1. Physical Room Allocation (Where Guest Actually Stays):</strong></label>
+            <label style="color: var(--primary);"><strong>1. Physical Room Allocation:</strong></label>
             <select id="gRoom" onchange="onPhysicalRoomChange()"></select>
           </div>
 
           <!-- CORPORATE BILLED AS -->
           <div class="form-group" style="background: #eef7f9; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary);">
-            <label style="color: var(--secondary);"><strong>2. Billed As Category (For Official Corporate Invoice):</strong></label>
+            <label style="color: var(--secondary);"><strong>2. Billed As Category:</strong></label>
             <select id="gBilledAs" onchange="onBilledAsChange()">
               <option value="SAME">Standard: Same as Physical Allocation</option>
               <option value="Executive Suite|3500">Executive Suite Tariff (₹3500/nt)</option>
@@ -514,7 +516,7 @@
                   <th>GST</th>
                   <th>Advance</th>
                   <th>Due</th>
-                  <th style="min-width: 120px; text-align: center;">Operations</th>
+                  <th style="min-width: 125px; text-align: center;">Operations</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -804,12 +806,15 @@
     <!-- 6. AUDIT TAB -->
     <div id="auditTab" class="tab-content">
       <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; flex-wrap: wrap; gap: 8px;">
           <div>
-            <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
-            <small style="color: #666;">Automated Reconciliation of Room Base, Food Base, Corporate ITC & Bar Sales (No GST)</small>
+            <h3 style="margin: 0; color: var(--primary);">📊 Official Night Audit & Statutory GST Ledger</h3>
+            <small style="color: #666;">Statutory Reconciliation of Room Base, Food Base, Corporate ITC & Bar Sales</small>
           </div>
-          <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
+          <div style="display: flex; gap: 8px;">
+            <button onclick="exportToExcel()" class="btn btn-success">📥 Download Official GST Ledger (.xlsx)</button>
+            <button onclick="openOwnerVaultModal()" class="btn btn-stealth">🔒 Access Owner Vault (Private Audit)</button>
+          </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin-top: 15px;">
@@ -839,7 +844,7 @@
           </div>
         </div>
 
-        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Completed Guest Check-Out & Tax Audit Trail</h4>
+        <h4 style="margin: 25px 0 10px; color: var(--primary);">📋 Official Guest Check-Out & Tax Audit Trail</h4>
         <div style="overflow-x: auto;">
           <table>
             <thead>
@@ -1083,6 +1088,88 @@
     </div>
   </div>
 
+  <!-- GM / MANAGEMENT OVERRIDE SILENT RELEASE MODAL -->
+  <div id="stealthModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px; border-top: 6px solid var(--stealth);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #dee2e6; padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--stealth);">🔒 Management Override (Silent Cash Release)</h3>
+        <button onclick="closeStealthModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+      
+      <div id="stealthTargetDetails" style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 12px;"></div>
+
+      <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; color: #856404;">
+        <strong>Warning:</strong> Executing this override will remove this folio from Front Desk, mark the room(s) as <strong>Dirty</strong>, bypass Statutory GST Audit Ledger, and silently record the entry directly in the <strong>Owner's Private Audit Vault</strong>.
+      </div>
+
+      <div class="form-group">
+        <label>Enter Executive Passkey (GM / CEO):</label>
+        <input type="password" id="stealthPassInput" placeholder="Enter GM Passkey (Default: GM7799)">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Cash Collected by Management (₹):</label>
+          <input type="number" id="stealthCashAmount">
+        </div>
+        <div class="form-group">
+          <label>Authorized Reason / Remark:</label>
+          <input type="text" id="stealthRemark" placeholder="e.g. VIP Direct Cash / Special Settlement">
+        </div>
+      </div>
+
+      <button class="btn btn-stealth" style="width: 100%; font-size: 14px; margin-top: 10px;" onclick="executeStealthRelease()">
+        🔒 Authenticate & Execute Silent Release
+      </button>
+    </div>
+  </div>
+
+  <!-- OWNER VAULT PRIVATE AUDIT MODAL -->
+  <div id="ownerVaultModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 880px; border-top: 6px solid var(--primary);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #dee2e6; padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--primary);">🔐 Owner's Private Cash Vault & Unfiltered Audit Log</h3>
+        <button onclick="closeOwnerVaultModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+      </div>
+
+      <div id="ownerAuthSection" style="padding: 15px; background: #f8f9fa; border-radius: 6px; text-align: center;">
+        <p style="margin: 0 0 10px; font-size: 13px; color: #555;">Confidential Owner Terminal. Enter Owner Master Passkey to reveal private cash logs.</p>
+        <div style="display: flex; justify-content: center; gap: 8px; max-width: 380px; margin: auto;">
+          <input type="password" id="ownerMasterPassInput" placeholder="Master Key (Default: OWNER2026)">
+          <button class="btn btn-primary" onclick="verifyOwnerMasterKey()">Unlock</button>
+        </div>
+      </div>
+
+      <div id="ownerVaultContent" style="display: none; margin-top: 15px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div>
+            <span style="font-size: 14px; color: #555;">Private Unrecorded Cash Volume: </span>
+            <strong id="ownerVaultTotalRev" style="font-size: 18px; color: var(--success);">₹0.00</strong>
+          </div>
+          <button onclick="exportOwnerVaultExcel()" class="btn btn-success btn-sm">📥 Export Private Cash Ledger (.xlsx)</button>
+        </div>
+
+        <div style="overflow-x: auto; max-height: 380px; border: 1px solid #dee2e6; border-radius: 6px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Vault Log ID</th>
+                <th>Original Ref</th>
+                <th>Guest / Alias</th>
+                <th>Room Allocation</th>
+                <th>Cash Collected (₹)</th>
+                <th>Authorizer</th>
+                <th>Remarks</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="ownerVaultTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- FORM C MODAL -->
   <div id="cFormModal" class="modal-overlay">
     <div class="modal-box">
@@ -1108,15 +1195,19 @@
 
   <footer>
     <div>
-      © 2026 <strong>Shree Krishna Resort & Retreat</strong>. All Rights Reserved.
+      © 2026 <strong>Bharat Power Cloud PMS Software</strong>. All Rights Reserved.
     </div>
     <div style="margin-top: 5px; font-size: 11px; color: #a0aec0;">
-      Enterprise PMS, Corporate B2B Engine, F&B Billing & Night Audit Management Terminal
+      Educational & Learning Simulation Edition | Dual-Audit & Executive Override Security Architecture
     </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
+    // System Passkeys
+    const GM_PASSKEY = "GM7799";
+    const OWNER_MASTER_KEY = "OWNER2026";
+
     function openTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1158,7 +1249,7 @@
 
     function generateRefId() {
       let count = parseInt(localStorage.getItem('sk_ref_counter') || '1001');
-      document.getElementById('gRefId').value = 'SKR-' + count;
+      document.getElementById('gRefId').value = 'BPC-' + count;
     }
 
     function initializeDates() {
@@ -1254,8 +1345,8 @@
         box.innerHTML = `
           <div style="text-align:center;">
             <p style="margin:0 0 6px; font-weight:bold; color:var(--secondary);">Scan to Deposit Advance (₹${advance.toFixed(2)})</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=125x125&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${advance}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:3px; border-radius:5px;">
-            <p style="font-size:11px; color:#555; margin:3px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=125x125&data=upi://pay?pa=bharatpower.pms@icici&pn=BharatPowerPMS&am=${advance}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:3px; border-radius:5px;">
+            <p style="font-size:11px; color:#555; margin:3px 0;">UPI ID: <strong>bharatpower.pms@icici</strong></p>
             <input type="text" id="chkUpiRef" placeholder="Enter UPI UTR / Transaction ID" style="margin-top:5px; font-size:12px; padding:6px;">
           </div>
         `;
@@ -1431,10 +1522,12 @@
 
     let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_clean')) || [];
     let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_clean')) || [];
+    let ownerVaultLogs = JSON.parse(localStorage.getItem('bpc_owner_vault_logs')) || [];
 
     function saveState() {
       localStorage.setItem('sk_active_bookings_clean', JSON.stringify(bookings));
       localStorage.setItem('sk_audit_history_clean', JSON.stringify(auditHistory));
+      localStorage.setItem('bpc_owner_vault_logs', JSON.stringify(ownerVaultLogs));
       localStorage.setItem('sk_guest_directory_clean', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
@@ -1559,8 +1652,11 @@
               <button onclick="openSplitModal(${originalIndex})" class="btn btn-info" style="background:#006466;" title="Split Folio (Separate Food/Bar Bill)">
                 ✂️ Split Folio
               </button>
-              <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-danger" title="Process Final Settlement">
+              <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-danger" title="Process Statutory GST Settlement">
                 🛎️ Check-Out
+              </button>
+              <button onclick="openStealthModal(${originalIndex})" class="btn btn-stealth" title="GM Passkey Required: Silent Cash Clearance">
+                🔒 GM Override
               </button>
             </div>
           </td>
@@ -2227,8 +2323,8 @@
         container.innerHTML = `
           <div style="text-align:center;">
             <p style="margin:0 0 8px; font-weight:bold; color:var(--secondary);">Scan Dynamic QR to Pay ₹${due.toFixed(2)}</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=shree.krishna.resort@icici&pn=ShreeKrishnaResort&am=${due}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:4px; border-radius:6px;">
-            <p style="font-size:12px; color:#555; margin:4px 0;">UPI ID: <strong>shree.krishna.resort@icici</strong></p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=bharatpower.pms@icici&pn=BharatPowerPMS&am=${due}&cu=INR" alt="UPI QR" style="border:1px solid #ccc; padding:4px; border-radius:6px;">
+            <p style="font-size:12px; color:#555; margin:4px 0;">UPI ID: <strong>bharatpower.pms@icici</strong></p>
             <input type="text" id="upiTxnRef" placeholder="Enter UPI UTR / Transaction ID (12 digits)" style="margin-top:6px; font-size:13px;">
           </div>
         `;
@@ -2341,12 +2437,143 @@
         timestamp: nowTime
       });
 
-      alert(`Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} (GST: ₹${(b.totalGst||0).toFixed(2)}, Bar: ₹${(b.barTotal||0).toFixed(2)} Net).\nAllocated rooms marked DIRTY.`);
+      alert(`Official Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} recorded in Statutory GST Audit.\nAllocated rooms marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
       saveState();
       renderRoomVisualMatrix();
+    }
+
+    // ================= GM OVERRIDE & SILENT RELEASE ENGINE =================
+    let activeStealthIndex = null;
+    function openStealthModal(index) {
+      activeStealthIndex = index;
+      let b = bookings[index];
+      let due = Math.max(0, b.total - b.paid);
+      
+      document.getElementById('stealthTargetDetails').innerHTML = `
+        <strong>Target Guest / Folio:</strong> ${b.name} (Ref: ${b.refId})<br>
+        <strong>Rooms Occupied:</strong> <span style="color:var(--danger); font-weight:bold;">${b.room}</span><br>
+        <strong>Current Running Balance:</strong> ₹${b.total.toFixed(2)} (Advance: ₹${b.paid.toFixed(2)})<br>
+        <strong>Estimated Due:</strong> <strong style="color:var(--danger);">₹${due.toFixed(2)}</strong>
+      `;
+      document.getElementById('stealthCashAmount').value = due > 0 ? due : b.total;
+      document.getElementById('stealthPassInput').value = '';
+      document.getElementById('stealthRemark').value = '';
+      document.getElementById('stealthModal').classList.add('open');
+    }
+
+    function closeStealthModal() {
+      document.getElementById('stealthModal').classList.remove('open');
+      activeStealthIndex = null;
+    }
+
+    function executeStealthRelease() {
+      if (activeStealthIndex === null) return;
+      let enteredPass = document.getElementById('stealthPassInput').value;
+      if (enteredPass !== GM_PASSKEY && enteredPass !== OWNER_MASTER_KEY) {
+        alert('❌ ACCESS DENIED: Invalid Management / GM Passkey. Operation aborted.');
+        return;
+      }
+
+      let b = bookings[activeStealthIndex];
+      let cashAmt = parseFloat(document.getElementById('stealthCashAmount').value || 0);
+      let remark = document.getElementById('stealthRemark').value.trim() || "GM Silent Clearance";
+
+      // 1. Mark rooms Dirty immediately for housekeeping
+      if (b.roomsAllocated && Array.isArray(b.roomsAllocated)) {
+        b.roomsAllocated.forEach(rmId => {
+          let target = rooms50State.find(r => r.id === rmId);
+          if (target) target.status = "Dirty";
+        });
+      } else {
+        let target = rooms50State.find(r => r.id === b.room);
+        if (target) target.status = "Dirty";
+      }
+
+      let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+      let authorizerTitle = (enteredPass === OWNER_MASTER_KEY) ? "Owner SuperKey" : "GM Override (GM7799)";
+
+      // 2. Secretly record in Owner's Private Cash Vault
+      ownerVaultLogs.unshift({
+        vaultId: "VLT-" + (ownerVaultLogs.length + 501),
+        refId: b.refId,
+        guestName: b.name,
+        room: b.room,
+        cashCollected: cashAmt,
+        authorizer: authorizerTitle,
+        remark: remark,
+        timestamp: nowTime
+      });
+
+      // 3. Remove from Active Front Desk table (bypassing statutory audit)
+      bookings.splice(activeStealthIndex, 1);
+
+      alert(`🔒 GM Silent Release Executed!\n${b.name} (${b.room}) removed from Front Desk.\nRoom(s) marked DIRTY.\nZero entry in GST Audit. Logged in Owner's Vault.`);
+      closeStealthModal();
+      saveState();
+      renderRoomVisualMatrix();
+    }
+
+    // ================= OWNER VAULT MODAL LOGIC =================
+    function openOwnerVaultModal() {
+      document.getElementById('ownerAuthSection').style.display = 'block';
+      document.getElementById('ownerVaultContent').style.display = 'none';
+      document.getElementById('ownerMasterPassInput').value = '';
+      document.getElementById('ownerVaultModal').classList.add('open');
+    }
+
+    function closeOwnerVaultModal() {
+      document.getElementById('ownerVaultModal').classList.remove('open');
+    }
+
+    function verifyOwnerMasterKey() {
+      let key = document.getElementById('ownerMasterPassInput').value;
+      if (key === OWNER_MASTER_KEY) {
+        document.getElementById('ownerAuthSection').style.display = 'none';
+        document.getElementById('ownerVaultContent').style.display = 'block';
+        renderOwnerVaultTable();
+      } else {
+        alert('❌ ACCESS DENIED: Incorrect Owner Master Passkey.');
+      }
+    }
+
+    function renderOwnerVaultTable() {
+      const tbody = document.getElementById('ownerVaultTableBody');
+      tbody.innerHTML = '';
+      let totalPrivateRev = 0;
+
+      if (ownerVaultLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No stealth/private overrides recorded yet. System perfectly clean.</td></tr>';
+        document.getElementById('ownerVaultTotalRev').innerText = '₹0.00';
+        return;
+      }
+
+      ownerVaultLogs.forEach(log => {
+        totalPrivateRev += (log.cashCollected || 0);
+        let row = `<tr>
+          <td><strong>${log.vaultId}</strong></td>
+          <td>${log.refId}</td>
+          <td><strong>${log.guestName}</strong></td>
+          <td>${log.room}</td>
+          <td style="color:#27ae60; font-weight:bold;">₹${(log.cashCollected||0).toFixed(2)}</td>
+          <td><span class="group-badge" style="background:#e2e8f0; color:#1b3a4b;">${log.authorizer}</span></td>
+          <td><small>${log.remark}</small></td>
+          <td><small>${log.timestamp}</small></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+
+      document.getElementById('ownerVaultTotalRev').innerText = '₹' + totalPrivateRev.toFixed(2);
+    }
+
+    function exportOwnerVaultExcel() {
+      if (ownerVaultLogs.length === 0) { alert('No private vault records to export.'); return; }
+      let ws = XLSX.utils.json_to_sheet(ownerVaultLogs);
+      let wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Owner Private Cash Vault");
+      XLSX.writeFile(wb, "Bharat_Power_PMS_Owner_Private_Vault_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     function renderAuditLedger() {
@@ -2378,7 +2605,7 @@
       tableBody.innerHTML = '';
 
       if (auditHistory.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="14" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="14" style="text-align:center; color:#888;">No statutory audit folios closed yet.</td></tr>';
         return;
       }
 
@@ -2425,8 +2652,8 @@
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Master Audit");
-      XLSX.writeFile(wb, "Shree_Krishna_Resort_Revenue_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Statutory GST Audit");
+      XLSX.writeFile(wb, "Bharat_Power_PMS_Statutory_GST_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
