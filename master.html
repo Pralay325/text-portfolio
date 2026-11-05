@@ -129,13 +129,13 @@
       flex-direction: column;
       gap: 5px;
       align-items: stretch;
-      min-width: 100px;
+      min-width: 115px;
     }
     .btn-stack .btn {
       margin: 0;
       width: 100%;
       text-align: center;
-      padding: 4px 6px;
+      padding: 5px 8px;
       font-size: 11px;
     }
 
@@ -155,7 +155,7 @@
 
     .col-orders {
       min-width: 260px;
-      max-width: 320px;
+      max-width: 340px;
     }
 
     details summary {
@@ -462,7 +462,7 @@
                   <th>GST</th>
                   <th>Advance</th>
                   <th>Due</th>
-                  <th style="min-width: 110px; text-align: center;">Operations</th>
+                  <th style="min-width: 120px; text-align: center;">Operations</th>
                 </tr>
               </thead>
               <tbody id="folioList"></tbody>
@@ -1019,7 +1019,7 @@
   <div id="splitModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 600px;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--info); padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--info);">✂️ Split Guest Folio (Room vs F&B / Bar)</h3>
+        <h3 style="margin: 0; color: var(--info);">✂️ Split Folio (Separate Room Tariff & Food/Bar Bill)</h3>
         <button onclick="closeSplitModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
       <div id="splitModalContent"></div>
@@ -1450,18 +1450,18 @@
           <td style="color:#d35400; font-weight:bold;">₹${due.toFixed(2)}</td>
           <td>
             <div class="btn-stack">
-              ${!b.isGroup ? `
-                <button onclick="openShiftModal(${originalIndex})" class="btn btn-warning" title="Shift Guest to Another Room">
-                  🔄 Shift Room
-                </button>
-                <button onclick="openSplitModal(${originalIndex})" class="btn btn-info" title="Split into Room & F&B Folios">
-                  ✂️ Split Folio
-                </button>
-              ` : `
+              ${b.isGroup ? `
                 <button onclick="openReleaseModal(${originalIndex})" class="btn btn-info" title="Release early checking-out rooms">
                   🔓 Release Rooms
                 </button>
+              ` : `
+                <button onclick="openShiftModal(${originalIndex})" class="btn btn-warning" title="Shift Guest to Another Room">
+                  🔄 Shift Room
+                </button>
               `}
+              <button onclick="openSplitModal(${originalIndex})" class="btn btn-info" style="background:#006466;" title="Split Folio (Separate Food/Bar Bill)">
+                ✂️ Split Folio
+              </button>
               <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-danger" title="Process Final Settlement">
                 🛎️ Check-Out
               </button>
@@ -1854,7 +1854,7 @@
       renderRoomVisualMatrix();
     }
 
-    // ================= FOLIO SPLIT MODAL LOGIC =================
+    // ================= FOLIO SPLIT MODAL LOGIC (SUPPORTS GROUPS & INDIVIDUALS) =================
     let activeSplitIndex = null;
     function openSplitModal(index) {
       activeSplitIndex = index;
@@ -1862,31 +1862,34 @@
       let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
       let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
 
+      let allocDisplay = b.isGroup ? `[GROUP: ${b.roomsAllocated.length} Rooms]` : b.room;
+
       let content = `
         <div style="background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:12px; font-size:13px;">
-          <strong>Guest:</strong> ${b.name} | <strong>Allocation:</strong> ${b.room} | <strong>Billed As:</strong> ${b.billedAs || b.room}<br>
-          <small>Current Total: <strong>₹${b.total.toFixed(2)}</strong> (Advance: ₹${b.paid.toFixed(2)})</small>
+          <strong>Guest / Group:</strong> ${b.name} | <strong>Ref:</strong> ${b.refId}<br>
+          <strong>Allocation:</strong> ${allocDisplay} | <strong>Package:</strong> ${b.billedAs || b.room}<br>
+          <small>Current Total: <strong>₹${b.total.toFixed(2)}</strong> (Advance Paid: ₹${b.paid.toFixed(2)})</small>
         </div>
-        <p style="font-size:13px; color:#555;">Split this reservation into two separate legal folios for corporate/separate billing:</p>
+        <p style="font-size:13px; color:#555;">Split this booking into two separate legal folios for corporate tax accounting & separate F&B billing:</p>
         
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
           <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
-            <h5 style="margin:0 0 6px; color:var(--primary);">Folio A: Accommodation (Room)</h5>
-            <small>Category: ${b.billedAs || b.room}</small><br>
+            <h5 style="margin:0 0 6px; color:var(--primary);">Folio A: Room Tariff Only</h5>
+            <small>Package: ${b.billedAs || b.room}</small><br>
             <small>Net Base: ₹${(b.roomBase||0).toFixed(2)}</small><br>
             <small>Room GST 12%: ₹${(b.roomGst||0).toFixed(2)}</small><br>
-            <strong>Total Room: ₹${roomGross.toFixed(2)}</strong>
+            <strong>Total Room Bill: ₹${roomGross.toFixed(2)}</strong>
           </div>
           <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
-            <h5 style="margin:0 0 6px; color:var(--secondary);">Folio B: F&B & Bar Lounge</h5>
+            <h5 style="margin:0 0 6px; color:var(--secondary);">Folio B: F&B & Snacks (Food Bill)</h5>
             <small>Dining Base: ₹${(b.diningBase||0).toFixed(2)}</small><br>
             <small>Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}</small><br>
-            <small>Bar (Net): ₹${(b.barTotal||0).toFixed(2)}</small><br>
-            <strong>Total F&B: ₹${fnbGross.toFixed(2)}</strong>
+            <small>Bar Lounge (Net): ₹${(b.barTotal||0).toFixed(2)}</small><br>
+            <strong>Total Food & Bar: ₹${fnbGross.toFixed(2)}</strong>
           </div>
         </div>
 
-        <button class="btn btn-info" style="width:100%;" onclick="confirmSplitFolio()">
+        <button class="btn btn-info" style="width:100%; font-size:14px; background:#006466;" onclick="confirmSplitFolio()">
           ✂️ Confirm & Execute Folio Split
         </button>
       `;
@@ -1904,19 +1907,20 @@
       let b = bookings[activeSplitIndex];
 
       if ((b.diningBase + b.barTotal) <= 0) {
-        alert('This folio has no Food or Bar orders to split. Add F&B items first before splitting.');
+        alert('This folio has no Food or Bar orders to split. Please post F&B items before splitting.');
         return;
       }
 
-      let roomOrders = (b.orders || []).filter(o => o.startsWith("Room") || o.startsWith("Shifted"));
-      let fnbOrders = (b.orders || []).filter(o => !o.startsWith("Room") && !o.startsWith("Shifted"));
+      let roomOrders = (b.orders || []).filter(o => o.startsWith("Room") || o.startsWith("Group") || o.startsWith("Deal") || o.startsWith("Shifted") || o.startsWith("Early Released"));
+      let fnbOrders = (b.orders || []).filter(o => o.startsWith("F&B") || o.startsWith("Bar"));
 
       let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
       let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
 
       let folioA = {
         ...b,
-        refId: b.refId + "-A",
+        refId: b.refId + "-ROOM",
+        name: b.name + " [Room Folio]",
         diningBase: 0,
         diningGst: 0,
         barTotal: 0,
@@ -1929,11 +1933,14 @@
       let remainingAdvance = Math.max(0, b.paid - roomGross);
       let folioB = {
         ...b,
-        refId: b.refId + "-B",
-        roomBase: 0,
-        roomGst: 0,
+        refId: b.refId + "-FOOD",
+        name: b.name + " [Food & Bar Folio]",
+        room: b.room,
+        roomsAllocated: [],
         dailyRate: 0,
         nights: 0,
+        roomBase: 0,
+        roomGst: 0,
         diningBase: b.diningBase,
         diningGst: b.diningGst,
         barTotal: b.barTotal,
@@ -1944,7 +1951,7 @@
       };
 
       bookings.splice(activeSplitIndex, 1, folioA, folioB);
-      alert(`Folio successfully split into ${folioA.refId} (Room) and ${folioB.refId} (F&B/Bar).`);
+      alert(`Folio successfully split into two separate accounts:\n1. ${folioA.refId} (Room Bill: ₹${roomGross.toFixed(2)})\n2. ${folioB.refId} (Food Bill: ₹${fnbGross.toFixed(2)})`);
       closeSplitModal();
       saveState();
     }
