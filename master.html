@@ -289,7 +289,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
             <h2 style="margin: 0; border: none; padding: 0;">🛎️ Guest Check-In & KYC</h2>
             <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-              <button class="btn btn-purple btn-sm" onclick="openGroupModal()">👥 Bulk Check-In</button>
+              <button class="btn btn-purple btn-sm" onclick="openGroupModal()">👥 Group Reservation</button>
               <button class="btn btn-info btn-sm" onclick="openHeaderReleaseModal()">🔓 Release Group Rooms</button>
               <button class="btn btn-warning btn-sm" onclick="openCFormModal()">📄 Form C</button>
             </div>
@@ -485,7 +485,7 @@
       </div>
     </div>
 
-    <!-- 3. DINING & SNACKS TAB (WITH QUANTITY SUPPORT) -->
+    <!-- 3. DINING & SNACKS TAB -->
     <div id="diningTab" class="tab-content">
       <div class="card">
         <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
@@ -594,7 +594,7 @@
       </div>
     </div>
 
-    <!-- 4. BAR TAB (WITH QUANTITY SUPPORT) -->
+    <!-- 4. BAR TAB -->
     <div id="barTab" class="tab-content">
       <div class="card">
         <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under Excise Law)</h2>
@@ -1135,10 +1135,8 @@
       updateCheckInGatewayDisplay();
     }
 
-    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_v27')) || {
-      "9832104521": { name: "Subhasis Banerjee", idType: "Voter ID Card", idNumber: "WB/02/123/456789" },
-      "9434112233": { name: "Debabrata Roy", idType: "PAN Card", idNumber: "ABCDE1234F" }
-    };
+    // CLEAN GUEST DIRECTORY (NO DUMMIES)
+    let guestDirectory = JSON.parse(localStorage.getItem('sk_guest_directory_clean')) || {};
 
     function lookupExistingGuest(phone) {
       let trimmed = phone.trim();
@@ -1205,10 +1203,10 @@
     let fresh50Units = [];
 
     for(let i=1; i<=10; i++) {
-      fresh50Units.push({ id: "Cottage " + (i < 10 ? '0' + i : i), type: "Heritage AC Cottage", rate: 4500, img: cottageImg, status: (i === 3 || i === 8) ? "Dirty" : "Clean" });
+      fresh50Units.push({ id: "Cottage " + (i < 10 ? '0' + i : i), type: "Heritage AC Cottage", rate: 4500, img: cottageImg, status: "Clean" });
     }
     for(let i=101; i<=120; i++) {
-      fresh50Units.push({ id: "Room " + i, type: "Deluxe AC Room", rate: 2200, img: deluxeImg, status: (i === 104 || i === 115) ? "Dirty" : "Clean" });
+      fresh50Units.push({ id: "Room " + i, type: "Deluxe AC Room", rate: 2200, img: deluxeImg, status: "Clean" });
     }
     for(let i=1; i<=10; i++) {
       fresh50Units.push({ id: "Dormitory D-" + (i < 10 ? '0' + i : i), type: "Shared / Group Dormitory", rate: 850, img: dormImg, status: "Clean" });
@@ -1334,70 +1332,14 @@
       renderRoomVisualMatrix();
     }
 
-    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_v27')) || [
-      { 
-        refId: "SKR-1001", 
-        name: "Subhasis Banerjee", 
-        room: "Cottage 04",
-        roomsAllocated: ["Cottage 04"],
-        isGroup: false,
-        billedAs: "Heritage AC Cottage",
-        gstMode: "EXCLUSIVE",
-        adults: 2, 
-        children: 1, 
-        phone: "9832104521", 
-        idType: "Voter ID Card",
-        idNumber: "WB/02/123/456789",
-        checkInDate: "2026-11-03",
-        checkOutDate: "2026-11-05",
-        nights: 2,
-        dailyRate: 4500,
-        roomBase: 9000,
-        roomGst: 1080,
-        diningBase: 1200,
-        diningGst: 60,
-        barTotal: 660,
-        totalGst: 1140,
-        total: 12000,
-        paid: 5000, 
-        mode: "UPI (Ref: UPI88912301)",
-        orders: [
-          "Room Base Tariff: ₹9000.00 [Billed As: Heritage AC Cottage | 2 Nights @ ₹4500.00]",
-          "Room Tax: ₹1080.00 (12% GST = 6% CGST + 6% SGST)",
-          "Dining: Special Bengali Katla Fish Thali - ₹320.00 (+5% GST) [01:15 PM]",
-          "Dining: Purulia Desi Mutton Curry with Rice - ₹420.00 (+5% GST) [01:30 PM]",
-          "Dining: Chicken Kasha with Tandoori Roti - ₹280.00 (+5% GST) [09:45 PM]",
-          "Dining Tax: ₹60.00 (5% GST = 2.5% CGST + 2.5% SGST)",
-          "Bar (No GST): Johnnie Walker Black Label (60ml) - ₹420.00 [08:30 PM]",
-          "Bar (No GST): Blenders Pride Reserve (60ml) - ₹240.00 [09:10 PM]"
-        ]
-      }
-    ];
-
-    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_v27')) || [
-      {
-        auditNo: "AUD-901",
-        refId: "SKR-0998",
-        name: "Debabrata Roy",
-        room: "Room 102",
-        billedAs: "Executive Suite",
-        stayPeriod: "2026-11-01 to 2026-11-02 (1 Night)",
-        roomBase: 3125,
-        roomGst: 375,
-        diningBase: 640,
-        diningGst: 32,
-        barTotal: 440,
-        totalGst: 407,
-        totalSettled: 4612,
-        gateway: "UPI QR (Ref: UPI889123001)",
-        timestamp: "03 Nov, 10:45 AM"
-      }
-    ];
+    // 100% CLEAN INITIAL ARRAYS (NO DUMMY BOOKINGS OR AUDIT)
+    let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_clean')) || [];
+    let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_clean')) || [];
 
     function saveState() {
-      localStorage.setItem('sk_active_bookings_v27', JSON.stringify(bookings));
-      localStorage.setItem('sk_audit_history_v27', JSON.stringify(auditHistory));
-      localStorage.setItem('sk_guest_directory_v27', JSON.stringify(guestDirectory));
+      localStorage.setItem('sk_active_bookings_clean', JSON.stringify(bookings));
+      localStorage.setItem('sk_audit_history_clean', JSON.stringify(auditHistory));
+      localStorage.setItem('sk_guest_directory_clean', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
       updateInventoryMetrics();
@@ -1409,6 +1351,12 @@
       const bSelect = document.getElementById('barRoomSelect');
       dSelect.innerHTML = '';
       bSelect.innerHTML = '';
+
+      if (bookings.length === 0) {
+        dSelect.innerHTML = '<option value="">No Active Guests In-House</option>';
+        bSelect.innerHTML = '<option value="">No Active Guests In-House</option>';
+        return;
+      }
 
       bookings.forEach((b, index) => {
         let displayRoom = b.isGroup ? `[GROUP: ${b.roomsAllocated.join(', ')}]` : b.room;
@@ -1431,7 +1379,7 @@
       );
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888; padding:15px;">No matching in-house guest records found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#888; padding:18px;">No active in-house guests at this moment. Ready for fresh check-ins.</td></tr>';
         return;
       }
 
@@ -1974,8 +1922,15 @@
 
     // ================= F&B & BAR WITH QUANTITY SUPPORT =================
     function postFoodOrder(selectId, qtyId) {
-      if (bookings.length === 0) return;
+      if (bookings.length === 0) {
+        alert('No in-house guests currently checked-in.');
+        return;
+      }
       let idx = document.getElementById('diningRoomSelect').value;
+      if (idx === "" || !bookings[idx]) {
+        alert('Please select an active guest or group folio first.');
+        return;
+      }
       let [item, unitPrice] = document.getElementById(selectId).value.split('|');
       let qty = parseInt(document.getElementById(qtyId).value || 1);
       if (qty < 1) qty = 1;
@@ -1994,13 +1949,20 @@
       if (!bookings[idx].orders) bookings[idx].orders = [];
       bookings[idx].orders.push(`F&B: ${item} x ${qty} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
 
-      alert(`${item} (Qty: ${qty}) Posted!\nBase: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)} = Total ₹${totalItem.toFixed(2)} added to folio.`);
+      alert(`${item} (Qty: ${qty}) Posted!\nBase: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)} = Total ₹${totalItem.toFixed(2)} added to ${bookings[idx].name}.`);
       saveState();
     }
 
     function postBarOrder(selectId, qtyId) {
-      if (bookings.length === 0) return;
+      if (bookings.length === 0) {
+        alert('No in-house guests currently checked-in.');
+        return;
+      }
       let idx = document.getElementById('barRoomSelect').value;
+      if (idx === "" || !bookings[idx]) {
+        alert('Please select an active guest or group folio first.');
+        return;
+      }
       let [item, unitPrice] = document.getElementById(selectId).value.split('|');
       let qty = parseInt(document.getElementById(qtyId).value || 1);
       if (qty < 1) qty = 1;
@@ -2014,7 +1976,7 @@
       if (!bookings[idx].orders) bookings[idx].orders = [];
       bookings[idx].orders.push(`Bar: ${item} x ${qty} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
 
-      alert(`Bar Service: ${item} (Qty: ${qty}) - ₹${val.toFixed(2)} Net posted to folio at ${time}.`);
+      alert(`Bar Service: ${item} (Qty: ${qty}) - ₹${val.toFixed(2)} Net posted to ${bookings[idx].name} at ${time}.`);
       saveState();
     }
 
