@@ -270,6 +270,18 @@
       margin-top: 3px;
     }
 
+    .corp-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
     footer {
       background: var(--primary);
       color: #cbd5e0;
@@ -286,7 +298,7 @@
   <header>
     <div>
       <h1>🌸 Shree Krishna Resort & Retreat</h1>
-      <small style="color: #cbd5e0;">PMS, Accommodations, Dining, Bar, Group Engine & Direct Room Release</small>
+      <small style="color: #cbd5e0;">Enterprise PMS, Accommodations, Corporate Booking, Dining, Bar & Direct Room Release</small>
     </div>
     <span class="badge">Enterprise Terminal</span>
   </header>
@@ -323,6 +335,46 @@
             <div class="form-group">
               <label>Contact Phone (Auto-fill for returning guests)</label>
               <input type="text" id="gPhone" placeholder="Enter 10-digit mobile" oninput="lookupExistingGuest(this.value)">
+            </div>
+          </div>
+
+          <!-- BOOKING TYPE & CORPORATE SELECTION -->
+          <div class="form-row" style="background: #eef2f7; padding: 10px; border-radius: 6px; border: 1px solid #ced4da;">
+            <div class="form-group" style="margin: 0;">
+              <label style="color: var(--primary);"><strong>Client Booking Type:</strong></label>
+              <select id="gBookingType" onchange="toggleCorporateFields()">
+                <option value="STANDARD">Regular / Leisure Guest</option>
+                <option value="CORPORATE">🏢 Corporate / Business Client</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="corporateFieldsBox" style="display: none; background: #e0f2fe; padding: 10px; border-radius: 6px; border: 1px solid #7dd3fc; margin-bottom: 12px;">
+            <div class="form-row">
+              <div class="form-group" style="margin: 0;">
+                <label style="color: #0369a1;"><strong>Select Corporate Company:</strong></label>
+                <select id="gCorpCompany" onchange="onCorpCompanyChange()">
+                  <option value="Tata Consultancy Services (TCS)">Tata Consultancy Services (TCS)</option>
+                  <option value="Tata Steel Limited">Tata Steel Limited</option>
+                  <option value="Reliance Industries Ltd (RIL)">Reliance Industries Ltd (RIL)</option>
+                  <option value="Infosys Limited">Infosys Limited</option>
+                  <option value="Wipro Enterprises">Wipro Enterprises</option>
+                  <option value="Larsen & Toubro (L&T)">Larsen & Toubro (L&T)</option>
+                  <option value="ITC Limited">ITC Limited</option>
+                  <option value="Coal India Limited (CIL)">Coal India Limited (CIL)</option>
+                  <option value="Hindustan Unilever (HUL)">Hindustan Unilever (HUL)</option>
+                  <option value="State Bank of India (Corporate)">State Bank of India (Corporate)</option>
+                  <option value="CUSTOM">✍️ Other Enterprise (Custom Name)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label style="color: #0369a1;"><strong>Company GSTIN:</strong></label>
+                <input type="text" id="gCorpGstin" placeholder="e.g. 19AAACT2727Q1ZW" maxlength="15">
+              </div>
+            </div>
+            <div class="form-group" id="customCorpNameRow" style="display: none; margin-top: 8px; margin-bottom: 0;">
+              <label style="color: #0369a1;">Custom Company Name:</label>
+              <input type="text" id="gCustomCorpName" placeholder="Enter full official company name">
             </div>
           </div>
 
@@ -755,7 +807,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
           <div>
             <h3 style="margin: 0; color: var(--primary);">📊 End-of-Day Night Audit & Revenue Reconciliation</h3>
-            <small style="color: #666;">Automated Reconciliation of Room Base, Food Base, Itemized GST & Bar Sales (No GST)</small>
+            <small style="color: #666;">Automated Reconciliation of Room Base, Food Base, Corporate ITC & Bar Sales (No GST)</small>
           </div>
           <button onclick="exportToExcel()" class="btn btn-success">📥 Download Master EOD Ledger (.xlsx)</button>
         </div>
@@ -794,9 +846,10 @@
               <tr>
                 <th>Audit No</th>
                 <th>Ref ID</th>
-                <th>Guest / Group Name</th>
+                <th>Guest / Corporate Client</th>
                 <th>Room Allocation</th>
                 <th>Billed As</th>
+                <th>Corporate GSTIN</th>
                 <th>Room Base (₹)</th>
                 <th>Room GST 12% (₹)</th>
                 <th>Dining Base (₹)</th>
@@ -825,8 +878,8 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>Group Event / Company Name</label>
-          <input type="text" id="grpEventName" placeholder="e.g. TCS Conference / Mukherjee Wedding">
+          <label>Group Event / Corporate Company Name</label>
+          <input type="text" id="grpEventName" placeholder="e.g. TCS Corporate Retreat / Mukherjee Wedding">
         </div>
         <div class="form-group">
           <label>Leader / Organiser Full Name</label>
@@ -840,7 +893,11 @@
           <input type="text" id="grpLeaderPhone" placeholder="10-digit mobile">
         </div>
         <div class="form-group">
-          <label>Total Pax in Group</label>
+          <label>Corporate / Group GSTIN (Optional)</label>
+          <input type="text" id="grpGstin" placeholder="15-digit GSTIN">
+        </div>
+        <div class="form-group" style="max-width: 90px;">
+          <label>Total Pax</label>
           <input type="number" id="grpPax" value="15" min="1">
         </div>
       </div>
@@ -1054,7 +1111,7 @@
       © 2026 <strong>Shree Krishna Resort & Retreat</strong>. All Rights Reserved.
     </div>
     <div style="margin-top: 5px; font-size: 11px; color: #a0aec0;">
-      Enterprise PMS, F&B Billing & Night Audit Management Terminal
+      Enterprise PMS, Corporate B2B Engine, F&B Billing & Night Audit Management Terminal
     </div>
   </footer>
 
@@ -1065,6 +1122,27 @@
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
+    }
+
+    function toggleCorporateFields() {
+      const type = document.getElementById('gBookingType').value;
+      const box = document.getElementById('corporateFieldsBox');
+      if (type === 'CORPORATE') {
+        box.style.display = 'block';
+        onCorpCompanyChange();
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
+    function onCorpCompanyChange() {
+      const sel = document.getElementById('gCorpCompany').value;
+      const customRow = document.getElementById('customCorpNameRow');
+      if (sel === 'CUSTOM') {
+        customRow.style.display = 'block';
+      } else {
+        customRow.style.display = 'none';
+      }
     }
 
     function openCFormModal() { document.getElementById('cFormModal').classList.add('open'); }
@@ -1367,6 +1445,10 @@
       filterFolioTable();
       const dSelect = document.getElementById('diningRoomSelect');
       const bSelect = document.getElementById('barRoomSelect');
+      
+      let curDVal = dSelect.value;
+      let curBVal = bSelect.value;
+
       dSelect.innerHTML = '';
       bSelect.innerHTML = '';
 
@@ -1376,11 +1458,20 @@
         return;
       }
 
-      bookings.forEach((b, index) => {
+      bookings.forEach((b) => {
         let displayRoom = b.isGroup ? `[GROUP: ${b.roomsAllocated.join(', ')}]` : b.room;
-        let opt = `<option value="${index}">${b.refId} | ${displayRoom} - ${b.name}</option>`;
-        dSelect.innerHTML += opt;
-        bSelect.innerHTML += opt;
+        let corpNote = b.isCorporate ? ` [🏢 ${b.corporateCompany}]` : '';
+        let optD = document.createElement('option');
+        optD.value = b.refId;
+        optD.innerText = `${b.refId} | ${displayRoom} - ${b.name}${corpNote}`;
+        if (b.refId === curDVal) optD.selected = true;
+        dSelect.appendChild(optD);
+
+        let optB = document.createElement('option');
+        optB.value = b.refId;
+        optB.innerText = `${b.refId} | ${displayRoom} - ${b.name}${corpNote}`;
+        if (b.refId === curBVal) optB.selected = true;
+        bSelect.appendChild(optB);
       });
     }
 
@@ -1393,6 +1484,7 @@
         b.name.toLowerCase().includes(query) || 
         b.room.toLowerCase().includes(query) || 
         (b.billedAs && b.billedAs.toLowerCase().includes(query)) ||
+        (b.corporateCompany && b.corporateCompany.toLowerCase().includes(query)) ||
         b.refId.toLowerCase().includes(query)
       );
 
@@ -1416,12 +1508,17 @@
                              <small style="color:var(--secondary);"><strong>Billed As:</strong> ${b.billedAs || b.room}</small>`;
         }
 
+        let corpBadgeHtml = '';
+        if (b.isCorporate) {
+          corpBadgeHtml = `<br><span class="corp-badge">🏢 ${b.corporateCompany}</span><br><small style="color:#0369a1;">GSTIN: ${b.corporateGstin || 'Unregistered'}</small>`;
+        }
+
         let inTimeDisplay = b.checkInTime ? ` (${b.checkInTime})` : '';
 
         let row = `<tr>
           <td><strong>${b.refId}</strong></td>
           <td>
-            <strong>${b.name}</strong><br>
+            <strong>${b.name}</strong>${corpBadgeHtml}<br>
             ${roomDisplayHtml}<br>
             <small>📞 ${b.phone}</small>
           </td>
@@ -1474,6 +1571,18 @@
 
     function addBooking() {
       let refId = document.getElementById('gRefId').value;
+      let bookingType = document.getElementById('gBookingType').value;
+      let isCorp = (bookingType === 'CORPORATE');
+      let corpCompany = '';
+      let corpGstin = '';
+
+      if (isCorp) {
+        let selCorp = document.getElementById('gCorpCompany').value;
+        corpCompany = (selCorp === 'CUSTOM') ? document.getElementById('gCustomCorpName').value.trim() : selCorp;
+        corpGstin = document.getElementById('gCorpGstin').value.trim();
+        if (!corpCompany) { alert('Please enter or select corporate company name.'); return; }
+      }
+
       let name = document.getElementById('gName').value.trim();
       let phone = document.getElementById('gPhone').value.trim();
       let idType = document.getElementById('gIdType').value;
@@ -1524,6 +1633,7 @@
       bookings.push({ 
         refId, name, phone, idType, idNumber, checkInDate: inDate, checkInTime: checkInTimeStr, checkOutDate: outDate, nights: nights,
         dailyRate: dailyRate, adults, children, room: room, roomsAllocated: [room], isGroup: false,
+        isCorporate: isCorp, corporateCompany: corpCompany, corporateGstin: corpGstin,
         billedAs: billedAs, gstMode: gstMode,
         roomBase: roomBase, roomGst: roomGst,
         diningBase: 0, diningGst: 0, barTotal: 0,
@@ -1538,6 +1648,11 @@
       document.getElementById('gPhone').value = '';
       document.getElementById('gIdNumber').value = '';
       document.getElementById('gPaid').value = '';
+      if (document.getElementById('gCustomCorpName')) document.getElementById('gCustomCorpName').value = '';
+      if (document.getElementById('gCorpGstin')) document.getElementById('gCorpGstin').value = '';
+      document.getElementById('gBookingType').value = 'STANDARD';
+      toggleCorporateFields();
+
       generateRefId();
       saveState();
       renderRoomVisualMatrix();
@@ -1607,6 +1722,7 @@
       const eventName = document.getElementById('grpEventName').value.trim();
       const leaderName = document.getElementById('grpLeaderName').value.trim();
       const leaderPhone = document.getElementById('grpLeaderPhone').value.trim();
+      const grpGstin = document.getElementById('grpGstin') ? document.getElementById('grpGstin').value.trim() : '';
       const select = document.getElementById('grpRoomsSelect');
       const selectedOpts = Array.from(select.selectedOptions);
       const inDate = document.getElementById('grpInDate').value;
@@ -1647,6 +1763,9 @@
         room: allocatedRoomIds.join(', '),
         roomsAllocated: allocatedRoomIds,
         isGroup: true,
+        isCorporate: grpGstin ? true : false,
+        corporateCompany: eventName,
+        corporateGstin: grpGstin,
         billedAs: "Central Corporate / Event Group Package",
         gstMode: gstType,
         checkInDate: inDate,
@@ -1854,7 +1973,7 @@
       renderRoomVisualMatrix();
     }
 
-    // ================= FOLIO SPLIT MODAL LOGIC (SUPPORTS GROUPS & INDIVIDUALS) =================
+    // ================= FOLIO SPLIT MODAL LOGIC =================
     let activeSplitIndex = null;
     function openSplitModal(index) {
       activeSplitIndex = index;
@@ -1956,14 +2075,16 @@
       saveState();
     }
 
-    // ================= F&B & BAR WITH QUANTITY SUPPORT =================
+    // ================= F&B & BAR ENGINE (CONSECUTIVE MULTI-ORDER ROBUST FIX) =================
     function postFoodOrder(selectId, qtyId) {
       if (bookings.length === 0) {
         alert('No in-house guests currently checked-in.');
         return;
       }
-      let idx = document.getElementById('diningRoomSelect').value;
-      if (idx === "" || !bookings[idx]) {
+      let targetRef = document.getElementById('diningRoomSelect').value;
+      let targetBooking = bookings.find(b => b.refId === targetRef);
+
+      if (!targetBooking) {
         alert('Please select an active guest or group folio first.');
         return;
       }
@@ -1977,16 +2098,16 @@
       let totalItem = baseVal + gstVal;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].diningBase = (bookings[idx].diningBase || 0) + baseVal;
-      bookings[idx].diningGst = (bookings[idx].diningGst || 0) + gstVal;
-      bookings[idx].totalGst = (bookings[idx].totalGst || 0) + gstVal;
-      bookings[idx].total += totalItem;
+      targetBooking.diningBase = (targetBooking.diningBase || 0) + baseVal;
+      targetBooking.diningGst = (targetBooking.diningGst || 0) + gstVal;
+      targetBooking.totalGst = (targetBooking.totalGst || 0) + gstVal;
+      targetBooking.total += totalItem;
 
-      if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`F&B: ${item} x ${qty} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
+      if (!targetBooking.orders) targetBooking.orders = [];
+      targetBooking.orders.push(`F&B: ${item} x ${qty} - ₹${baseVal.toFixed(2)} (+5% GST: ₹${gstVal.toFixed(2)}) [${time}]`);
 
-      alert(`${item} (Qty: ${qty}) Posted!\nBase: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)} = Total ₹${totalItem.toFixed(2)} added to ${bookings[idx].name}.`);
       saveState();
+      alert(`✅ ${item} (Qty: ${qty}) Posted!\nBase: ₹${baseVal.toFixed(2)} + 5% GST: ₹${gstVal.toFixed(2)} = ₹${totalItem.toFixed(2)} added to ${targetBooking.name}.`);
     }
 
     function postBarOrder(selectId, qtyId) {
@@ -1994,8 +2115,10 @@
         alert('No in-house guests currently checked-in.');
         return;
       }
-      let idx = document.getElementById('barRoomSelect').value;
-      if (idx === "" || !bookings[idx]) {
+      let targetRef = document.getElementById('barRoomSelect').value;
+      let targetBooking = bookings.find(b => b.refId === targetRef);
+
+      if (!targetBooking) {
         alert('Please select an active guest or group folio first.');
         return;
       }
@@ -2006,14 +2129,14 @@
       let val = parseFloat(unitPrice) * qty;
       let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      bookings[idx].barTotal = (bookings[idx].barTotal || 0) + val;
-      bookings[idx].total += val;
+      targetBooking.barTotal = (targetBooking.barTotal || 0) + val;
+      targetBooking.total += val;
 
-      if (!bookings[idx].orders) bookings[idx].orders = [];
-      bookings[idx].orders.push(`Bar: ${item} x ${qty} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
+      if (!targetBooking.orders) targetBooking.orders = [];
+      targetBooking.orders.push(`Bar: ${item} x ${qty} - ₹${val.toFixed(2)} (Direct Net) [${time}]`);
 
-      alert(`Bar Service: ${item} (Qty: ${qty}) - ₹${val.toFixed(2)} Net posted to ${bookings[idx].name} at ${time}.`);
       saveState();
+      alert(`✅ Bar Service: ${item} (Qty: ${qty}) - ₹${val.toFixed(2)} Net posted to ${targetBooking.name}.`);
     }
 
     let activeCheckoutIndex = null;
@@ -2029,12 +2152,22 @@
       let foodCgst = (b.diningGst || 0) / 2;
       let foodSgst = (b.diningGst || 0) / 2;
 
+      let corpBillingDetails = '';
+      if (b.isCorporate) {
+        corpBillingDetails = `
+          <div style="background:#e0f2fe; padding:6px 10px; border-radius:4px; margin-top:5px; border:1px solid #bae6fd;">
+            🏢 <strong>Billed to:</strong> ${b.corporateCompany} | <strong>GSTIN:</strong> ${b.corporateGstin || 'Unregistered'}
+          </div>
+        `;
+      }
+
       let html = `
         <div style="background:#f8f9fa; padding:10px 14px; border-radius:6px; margin-bottom:10px; font-size:13px;">
           <strong>Guest / Group:</strong> ${b.name} (📞 ${b.phone})<br>
           <strong>Allocation:</strong> ${b.room} | <strong>Ref:</strong> ${b.refId}<br>
           <strong style="color:var(--secondary);">Billed As:</strong> ${b.billedAs || b.room}<br>
           <small><strong>Stay Period:</strong> ${b.checkInDate} to ${b.checkOutDate} (${b.nights} Night${b.nights>1?'s':''})</small>
+          ${corpBillingDetails}
         </div>
 
         <h5 style="margin:6px 0; color:var(--primary);">📋 Itemized Bill & Timestamps:</h5>
@@ -2192,7 +2325,8 @@
       auditHistory.unshift({
         auditNo: "AUD-" + auditCount,
         refId: b.refId,
-        name: b.name,
+        name: b.isCorporate ? `${b.name} (${b.corporateCompany})` : b.name,
+        corpGstin: b.corporateGstin || 'N/A',
         room: b.room,
         billedAs: b.billedAs || b.room,
         stayPeriod: `${b.checkInDate} to ${b.checkOutDate} (${b.nights} Nights)`,
@@ -2244,7 +2378,7 @@
       tableBody.innerHTML = '';
 
       if (auditHistory.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="14" style="text-align:center; color:#888;">No closed audit folios yet.</td></tr>';
         return;
       }
 
@@ -2255,6 +2389,7 @@
           <td><strong>${a.name}</strong></td>
           <td>${a.room}</td>
           <td style="color:var(--secondary); font-weight:bold;">${a.billedAs || a.room}</td>
+          <td style="color:#0369a1; font-weight:bold;">${a.corpGstin || 'N/A'}</td>
           <td>₹${(a.roomBase||0).toFixed(2)}</td>
           <td style="color:var(--secondary);">₹${(a.roomGst||0).toFixed(2)}</td>
           <td>₹${(a.diningBase||0).toFixed(2)}</td>
@@ -2273,7 +2408,8 @@
       let exportData = auditHistory.map(a => ({
         "Audit ID": a.auditNo,
         "Ref ID": a.refId,
-        "Guest Name": a.name,
+        "Guest / Corporate Client": a.name,
+        "Corporate GSTIN": a.corpGstin || 'N/A',
         "Physical Room": a.room,
         "Billed As Category": a.billedAs || a.room,
         "Stay Period": a.stayPeriod,
