@@ -17,7 +17,7 @@
       --warning: #e67e22;
       --info: #0288d1;
       --purple: #6a1b9a;
-      --stealth: #2c3e50;
+      --executive: #2c3e50;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -123,7 +123,7 @@
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-info { background: #0288d1; color: #fff; }
     .btn-purple { background: var(--purple); color: #fff; }
-    .btn-stealth { background: var(--stealth); color: #fff; }
+    .btn-executive { background: var(--executive); color: #fff; }
     .btn-sm { padding: 5px 8px; font-size: 11px; display: inline-block; }
 
     .btn-stack {
@@ -131,7 +131,7 @@
       flex-direction: column;
       gap: 5px;
       align-items: stretch;
-      min-width: 115px;
+      min-width: 125px;
     }
     .btn-stack .btn {
       margin: 0;
@@ -308,8 +308,8 @@
   <nav>
     <button class="nav-btn active" onclick="openTab('frontDeskTab', this)">🛎️ Front Desk Check-In</button>
     <button class="nav-btn" onclick="openTab('roomInventoryTab', this)">🧹 50 Room Matrix (Status & KPI)</button>
-    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Snacks (5% GST)</button>
-    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar Lounge (Direct Net - No GST)</button>
+    <button class="nav-btn" onclick="openTab('diningTab', this)">🍲 Dining & Banquet Catering</button>
+    <button class="nav-btn" onclick="openTab('barTab', this)">🍸 Bar Lounge (Direct Net)</button>
     <button class="nav-btn" onclick="openTab('lawnGalleryTab', this)">🖼️ Resort Pool & Photo Showcase</button>
     <button class="nav-btn" onclick="openTab('auditTab', this)">📊 Night Audit & Revenue Ledger</button>
   </nav>
@@ -427,13 +427,11 @@
             </div>
           </div>
 
-          <!-- PHYSICAL ROOM -->
           <div class="form-group">
             <label style="color: var(--primary);"><strong>1. Physical Room Allocation:</strong></label>
             <select id="gRoom" onchange="onPhysicalRoomChange()"></select>
           </div>
 
-          <!-- CORPORATE BILLED AS -->
           <div class="form-group" style="background: #eef7f9; padding: 10px; border-radius: 6px; border: 1px dashed var(--secondary);">
             <label style="color: var(--secondary);"><strong>2. Billed As Category:</strong></label>
             <select id="gBilledAs" onchange="onBilledAsChange()">
@@ -445,7 +443,6 @@
             </select>
           </div>
 
-          <!-- GST INCLUSIVE VS EXCLUSIVE TOGGLE -->
           <div class="form-row" style="background: #fff8e7; padding: 10px; border-radius: 6px; border: 1px solid #ffeeba;">
             <div class="form-group" style="margin: 0;">
               <label style="color: #856404;"><strong>Room GST Billing Type:</strong></label>
@@ -559,18 +556,64 @@
       </div>
     </div>
 
-    <!-- 3. DINING & SNACKS TAB -->
+    <!-- 3. DINING & BANQUET CATERING TAB -->
     <div id="diningTab" class="tab-content">
       <div class="card">
-        <h2>🍲 Dining & Snacks Management (5% Restaurant GST Applied)</h2>
-        <div class="form-group" style="max-width: 450px;">
-          <label>Select In-House Room / Guest Folio</label>
+        <h2>🍲 Dining, Event Catering & Custom Banquet Menu</h2>
+        <div class="form-group" style="max-width: 480px;">
+          <label>Select In-House Room / Event Group Master Folio</label>
           <select id="diningRoomSelect"></select>
         </div>
 
+        <!-- CUSTOM BANQUET CATERING TERMINAL (FOR WEDDINGS, 300 PAX & PARTIES) -->
+        <div style="background: #fdfaf5; border: 2px dashed #d4a373; border-radius: 8px; padding: 16px; margin-top: 15px; margin-bottom: 25px;">
+          <h3 style="color: #9c5b16; margin-top: 0; border-bottom: 1px solid #ebd4b8; padding-bottom: 6px; font-size: 16px;">
+            ✍️ Custom Banquet, Wedding & Event Catering Terminal (হাতে লেখা কাস্টম মেনু এন্ট্রি)
+          </h3>
+          <p style="font-size: 12px; color: #666; margin-top: 2px; margin-bottom: 12px;">
+            Use this section for 300-pax Wedding Dinners, Afternoon Buffets, Special Catering Menus, or custom dishes not in standard menu.
+          </p>
+
+          <div class="form-row">
+            <div class="form-group" style="flex: 2.5;">
+              <label>Custom Dish Name / Full Event Menu Details ✍️</label>
+              <input type="text" id="custDishName" placeholder="e.g. Grand Wedding Feast (Fish Batter Fry, Polao, Mutton Kasha, Chatni, Sandesh)">
+            </div>
+            <div class="form-group" style="flex: 1; max-width: 140px;">
+              <label>Guests (Pax / Qty)</label>
+              <input type="number" id="custDishPax" value="300" min="1">
+            </div>
+            <div class="form-group" style="flex: 1; max-width: 150px;">
+              <label>Rate / Plate (₹)</label>
+              <input type="number" id="custDishRate" placeholder="e.g. 750" oninput="calculateCustomCateringTotal()">
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items: center;">
+            <div class="form-group" style="flex: 1.5; margin: 0;">
+              <label>Catering Tax Slab:</label>
+              <select id="custDishTaxType" onchange="calculateCustomCateringTotal()">
+                <option value="GST5">Restaurant / Banquet Food (5% GST)</option>
+                <option value="GST18">AC Event & Wedding Banquet Package (18% GST)</option>
+                <option value="NET">Direct Net Settlement (0% - Non-GST / Raw Catering)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1; margin: 0; background: #fff; padding: 8px 12px; border-radius: 6px; border: 1px solid #ced4da;">
+              <small style="color: #666; display: block;">Total Net Billing:</small>
+              <strong id="custDishSummaryTotal" style="color: var(--primary); font-size: 15px;">₹0.00</strong>
+            </div>
+            <div class="form-group" style="flex: 1; margin: 0;">
+              <button class="btn btn-warning" style="width: 100%; padding: 12px; font-size: 14px;" onclick="postCustomCateringOrder()">
+                ➕ Post Custom Catering Bill
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 16px; color: var(--secondary); margin-bottom: 10px;">🍽️ Standard A-La-Carte Menu Columns</h3>
         <div class="menu-columns">
           <div class="menu-box">
-            <h4>🍳 Breakfast Menu</h4>
+            <h4>🍳 Breakfast Menu (Standard)</h4>
             <div class="form-row">
               <div class="form-group" style="flex: 3;">
                 <label>Item</label>
@@ -616,7 +659,7 @@
           </div>
 
           <div class="menu-box" style="border: 2px solid var(--accent); background: #fffcf7;">
-            <h4 style="color: #9c5b16;">☕ Evening Snacks & Tea</h4>
+            <h4 style="color: #9c5b16;">☕ Evening Snacks & High-Tea</h4>
             <div class="form-row">
               <div class="form-group" style="flex: 3;">
                 <label>Item</label>
@@ -640,7 +683,7 @@
           </div>
 
           <div class="menu-box">
-            <h4>🍲 Dinner Menu (Curries, Breads & Specials)</h4>
+            <h4>🍲 Dinner Menu (A-La-Carte Curries & Breads)</h4>
             <div class="form-row">
               <div class="form-group" style="flex: 3;">
                 <label>Item</label>
@@ -671,7 +714,7 @@
     <!-- 4. BAR TAB -->
     <div id="barTab" class="tab-content">
       <div class="card">
-        <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under Excise Law)</h2>
+        <h2>🍸 Bar Lounge Services (Direct Net Pricing - Non-GST Under State Excise)</h2>
         <div class="form-group" style="max-width: 450px;">
           <label>Select In-House Room / Guest Folio</label>
           <select id="barRoomSelect"></select>
@@ -808,12 +851,12 @@
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; flex-wrap: wrap; gap: 8px;">
           <div>
-            <h3 style="margin: 0; color: var(--primary);">📊 Official Night Audit & Statutory GST Ledger</h3>
+            <h3 style="margin: 0; color: var(--primary);">📊 Official Night Audit & Statutory Revenue Ledger</h3>
             <small style="color: #666;">Statutory Reconciliation of Room Base, Food Base, Corporate ITC & Bar Sales</small>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button onclick="exportToExcel()" class="btn btn-success">📥 Download Official GST Ledger (.xlsx)</button>
-            <button onclick="openOwnerVaultModal()" class="btn btn-stealth">🔒 Access Owner Vault (Private Audit)</button>
+            <button onclick="exportToExcel()" class="btn btn-success">📥 Download Official Statutory Ledger (.xlsx)</button>
+            <button onclick="openExecutiveVaultModal()" class="btn btn-executive">🔒 Executive Management Audit Vault</button>
           </div>
         </div>
 
@@ -823,7 +866,7 @@
             <h4 id="auditRoomRev" style="margin: 5px 0 0; color: var(--primary);">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #006466; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Net Dining & Snacks</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Net Dining & Banquet</span>
             <h4 id="auditDiningRev" style="margin: 5px 0 0; color: #006466;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #8e44ad; padding: 12px; border-radius: 4px;">
@@ -831,15 +874,15 @@
             <h4 id="auditBarRev" style="margin: 5px 0 0; color: #8e44ad;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #f39c12; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Total GST (Room+Food)</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Total Tax Collected</span>
             <h4 id="auditGstRev" style="margin: 5px 0 0; color: #d35400;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #2ecc71; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">Total Inflow Settled</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Total Statutory Inflow</span>
             <h4 id="auditTotalSettled" style="margin: 5px 0 0; color: #27ae60;">₹0.00</h4>
           </div>
           <div style="background: #f8f9fa; border-left: 4px solid #e74c3c; padding: 12px; border-radius: 4px;">
-            <span style="font-size: 12px; color: #7f8c8d;">In-House Folio Dues</span>
+            <span style="font-size: 12px; color: #7f8c8d;">Active In-House Dues</span>
             <h4 id="auditPendingBalance" style="margin: 5px 0 0; color: #c0392b;">₹0.00</h4>
           </div>
         </div>
@@ -884,7 +927,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>Group Event / Corporate Company Name</label>
-          <input type="text" id="grpEventName" placeholder="e.g. TCS Corporate Retreat / Mukherjee Wedding">
+          <input type="text" id="grpEventName" placeholder="e.g. Grand Wedding Celebration / TCS Retreat">
         </div>
         <div class="form-group">
           <label>Leader / Organiser Full Name</label>
@@ -903,7 +946,7 @@
         </div>
         <div class="form-group" style="max-width: 90px;">
           <label>Total Pax</label>
-          <input type="number" id="grpPax" value="15" min="1">
+          <input type="number" id="grpPax" value="300" min="1">
         </div>
       </div>
 
@@ -1088,82 +1131,82 @@
     </div>
   </div>
 
-  <!-- GM / MANAGEMENT OVERRIDE SILENT RELEASE MODAL -->
-  <div id="stealthModal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 520px; border-top: 6px solid var(--stealth);">
+  <!-- PROFESSIONAL EXECUTIVE CLEARANCE MODAL (NEUTRAL TERMINOLOGY) -->
+  <div id="executiveModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 530px; border-top: 6px solid var(--executive);">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #dee2e6; padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--stealth);">🔒 Management Override (Silent Cash Release)</h3>
-        <button onclick="closeStealthModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+        <h3 style="margin: 0; color: var(--executive);">🏛️ House Courtesy & Director Discretionary Clearance</h3>
+        <button onclick="closeExecutiveModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
       
-      <div id="stealthTargetDetails" style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 12px;"></div>
+      <div id="executiveTargetDetails" style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 12px;"></div>
 
-      <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; color: #856404;">
-        <strong>Warning:</strong> Executing this override will remove this folio from Front Desk, mark the room(s) as <strong>Dirty</strong>, bypass Statutory GST Audit Ledger, and silently record the entry directly in the <strong>Owner's Private Audit Vault</strong>.
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; color: #166534;">
+        <strong>Protocol Notice:</strong> Executing this clearance will remove this room from Front Desk operational queues, flag units as <strong>Dirty (Needs Housekeeping)</strong>, and route the internal settlement directly to the <strong>Director's Executive Management Ledger</strong>.
       </div>
 
       <div class="form-group">
-        <label>Enter Executive Passkey (GM / CEO):</label>
-        <input type="password" id="stealthPassInput" placeholder="Enter GM Passkey (Default: GM7799)">
+        <label>Executive Authorization Passkey (GM / Resident Director):</label>
+        <input type="password" id="executivePassInput" placeholder="Enter GM Passkey (Default: GM7799)">
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Cash Collected by Management (₹):</label>
-          <input type="number" id="stealthCashAmount">
+          <label>Internal Clearance Amount (₹):</label>
+          <input type="number" id="executiveCashAmount">
         </div>
         <div class="form-group">
-          <label>Authorized Reason / Remark:</label>
-          <input type="text" id="stealthRemark" placeholder="e.g. VIP Direct Cash / Special Settlement">
+          <label>Authorization Category / Note:</label>
+          <input type="text" id="executiveRemark" placeholder="e.g. Director VIP Courtesy / Internal Cash Settlement">
         </div>
       </div>
 
-      <button class="btn btn-stealth" style="width: 100%; font-size: 14px; margin-top: 10px;" onclick="executeStealthRelease()">
-        🔒 Authenticate & Execute Silent Release
+      <button class="btn btn-executive" style="width: 100%; font-size: 14px; margin-top: 10px;" onclick="executeExecutiveRelease()">
+        🏛️ Authorize & Execute Executive Clearance
       </button>
     </div>
   </div>
 
-  <!-- OWNER VAULT PRIVATE AUDIT MODAL -->
-  <div id="ownerVaultModal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 880px; border-top: 6px solid var(--primary);">
+  <!-- EXECUTIVE MANAGEMENT AUDIT VAULT MODAL -->
+  <div id="executiveVaultModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 890px; border-top: 6px solid var(--primary);">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #dee2e6; padding-bottom: 8px; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: var(--primary);">🔐 Owner's Private Cash Vault & Unfiltered Audit Log</h3>
-        <button onclick="closeOwnerVaultModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
+        <h3 style="margin: 0; color: var(--primary);">🔐 Executive Management & Statutory Re-audit Vault</h3>
+        <button onclick="closeExecutiveVaultModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">✕</button>
       </div>
 
-      <div id="ownerAuthSection" style="padding: 15px; background: #f8f9fa; border-radius: 6px; text-align: center;">
-        <p style="margin: 0 0 10px; font-size: 13px; color: #555;">Confidential Owner Terminal. Enter Owner Master Passkey to reveal private cash logs.</p>
+      <div id="executiveAuthSection" style="padding: 15px; background: #f8f9fa; border-radius: 6px; text-align: center;">
+        <p style="margin: 0 0 10px; font-size: 13px; color: #555;">Restricted Master Terminal. Enter Managing Director Super-Audit Key to open internal ledgers.</p>
         <div style="display: flex; justify-content: center; gap: 8px; max-width: 380px; margin: auto;">
-          <input type="password" id="ownerMasterPassInput" placeholder="Master Key (Default: OWNER2026)">
-          <button class="btn btn-primary" onclick="verifyOwnerMasterKey()">Unlock</button>
+          <input type="password" id="masterPassInput" placeholder="Master Key (Default: OWNER2026)">
+          <button class="btn btn-primary" onclick="verifyDirectorMasterKey()">Unlock Terminal</button>
         </div>
       </div>
 
-      <div id="ownerVaultContent" style="display: none; margin-top: 15px;">
+      <div id="executiveVaultContent" style="display: none; margin-top: 15px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <div>
-            <span style="font-size: 14px; color: #555;">Private Unrecorded Cash Volume: </span>
-            <strong id="ownerVaultTotalRev" style="font-size: 18px; color: var(--success);">₹0.00</strong>
+            <span style="font-size: 14px; color: #555;">Director Internal Clearance Volume: </span>
+            <strong id="executiveVaultTotalRev" style="font-size: 18px; color: var(--success);">₹0.00</strong>
           </div>
-          <button onclick="exportOwnerVaultExcel()" class="btn btn-success btn-sm">📥 Export Private Cash Ledger (.xlsx)</button>
+          <button onclick="exportExecutiveVaultExcel()" class="btn btn-success btn-sm">📥 Export Executive Ledger (.xlsx)</button>
         </div>
 
         <div style="overflow-x: auto; max-height: 380px; border: 1px solid #dee2e6; border-radius: 6px;">
           <table>
             <thead>
               <tr>
-                <th>Vault Log ID</th>
+                <th>Audit No</th>
                 <th>Original Ref</th>
-                <th>Guest / Alias</th>
-                <th>Room Allocation</th>
-                <th>Cash Collected (₹)</th>
+                <th>Guest / Organization</th>
+                <th>Units Released</th>
+                <th>Settlement Value (₹)</th>
                 <th>Authorizer</th>
-                <th>Remarks</th>
+                <th>Protocol Note</th>
                 <th>Timestamp</th>
               </tr>
             </thead>
-            <tbody id="ownerVaultTableBody"></tbody>
+            <tbody id="executiveVaultTableBody"></tbody>
           </table>
         </div>
       </div>
@@ -1204,7 +1247,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
-    // System Passkeys
+    // Industry System Passkeys
     const GM_PASSKEY = "GM7799";
     const OWNER_MASTER_KEY = "OWNER2026";
 
@@ -1522,12 +1565,12 @@
 
     let bookings = JSON.parse(localStorage.getItem('sk_active_bookings_clean')) || [];
     let auditHistory = JSON.parse(localStorage.getItem('sk_audit_history_clean')) || [];
-    let ownerVaultLogs = JSON.parse(localStorage.getItem('bpc_owner_vault_logs')) || [];
+    let executiveVaultLogs = JSON.parse(localStorage.getItem('bpc_executive_vault_logs')) || [];
 
     function saveState() {
       localStorage.setItem('sk_active_bookings_clean', JSON.stringify(bookings));
       localStorage.setItem('sk_audit_history_clean', JSON.stringify(auditHistory));
-      localStorage.setItem('bpc_owner_vault_logs', JSON.stringify(ownerVaultLogs));
+      localStorage.setItem('bpc_executive_vault_logs', JSON.stringify(executiveVaultLogs));
       localStorage.setItem('sk_guest_directory_clean', JSON.stringify(guestDirectory));
       render();
       renderAuditLedger();
@@ -1632,8 +1675,8 @@
           <td>
             <small style="color:var(--secondary);">
               Room 12%: ₹${(b.roomGst||0).toFixed(2)}<br>
-              Food 5%: ₹${(b.diningGst||0).toFixed(2)}<br>
-              <strong>GST: ₹${(b.totalGst||0).toFixed(2)}</strong>
+              Food/Bqt: ₹${(b.diningGst||0).toFixed(2)}<br>
+              <strong>Tax: ₹${(b.totalGst||0).toFixed(2)}</strong>
             </small>
           </td>
           <td style="color:#27ae60; font-weight:bold;">₹${b.paid.toFixed(2)}</td>
@@ -1655,8 +1698,8 @@
               <button onclick="openCheckoutModal(${originalIndex})" class="btn btn-danger" title="Process Statutory GST Settlement">
                 🛎️ Check-Out
               </button>
-              <button onclick="openStealthModal(${originalIndex})" class="btn btn-stealth" title="GM Passkey Required: Silent Cash Clearance">
-                🔒 GM Override
+              <button onclick="openExecutiveModal(${originalIndex})" class="btn btn-executive" title="Director / GM Discretionary Courtesy Clearance">
+                🏛️ Executive Clearance
               </button>
             </div>
           </td>
@@ -2096,9 +2139,9 @@
             <strong>Total Room Bill: ₹${roomGross.toFixed(2)}</strong>
           </div>
           <div style="border:1px solid #ced4da; padding:10px; border-radius:6px; background:#fff;">
-            <h5 style="margin:0 0 6px; color:var(--secondary);">Folio B: F&B & Snacks (Food Bill)</h5>
-            <small>Dining Base: ₹${(b.diningBase||0).toFixed(2)}</small><br>
-            <small>Food GST 5%: ₹${(b.diningGst||0).toFixed(2)}</small><br>
+            <h5 style="margin:0 0 6px; color:var(--secondary);">Folio B: F&B & Banquet (Catering Bill)</h5>
+            <small>Dining/Banquet Base: ₹${(b.diningBase||0).toFixed(2)}</small><br>
+            <small>Taxes: ₹${(b.diningGst||0).toFixed(2)}</small><br>
             <small>Bar Lounge (Net): ₹${(b.barTotal||0).toFixed(2)}</small><br>
             <strong>Total Food & Bar: ₹${fnbGross.toFixed(2)}</strong>
           </div>
@@ -2122,12 +2165,12 @@
       let b = bookings[activeSplitIndex];
 
       if ((b.diningBase + b.barTotal) <= 0) {
-        alert('This folio has no Food or Bar orders to split. Please post F&B items before splitting.');
+        alert('This folio has no Food, Banquet or Bar orders to split. Please post catering items before splitting.');
         return;
       }
 
       let roomOrders = (b.orders || []).filter(o => o.startsWith("Room") || o.startsWith("Group") || o.startsWith("Deal") || o.startsWith("Shifted") || o.startsWith("Early Released"));
-      let fnbOrders = (b.orders || []).filter(o => o.startsWith("F&B") || o.startsWith("Bar"));
+      let fnbOrders = (b.orders || []).filter(o => o.startsWith("F&B") || o.startsWith("Banquet") || o.startsWith("Bar"));
 
       let roomGross = (b.roomBase || 0) + (b.roomGst || 0);
       let fnbGross = (b.diningBase || 0) + (b.diningGst || 0) + (b.barTotal || 0);
@@ -2148,8 +2191,8 @@
       let remainingAdvance = Math.max(0, b.paid - roomGross);
       let folioB = {
         ...b,
-        refId: b.refId + "-FOOD",
-        name: b.name + " [Food & Bar Folio]",
+        refId: b.refId + "-BANQUET",
+        name: b.name + " [Catering & Banquet Folio]",
         room: b.room,
         roomsAllocated: [],
         dailyRate: 0,
@@ -2166,12 +2209,85 @@
       };
 
       bookings.splice(activeSplitIndex, 1, folioA, folioB);
-      alert(`Folio successfully split into two separate accounts:\n1. ${folioA.refId} (Room Bill: ₹${roomGross.toFixed(2)})\n2. ${folioB.refId} (Food Bill: ₹${fnbGross.toFixed(2)})`);
+      alert(`Folio successfully split into two separate accounts:\n1. ${folioA.refId} (Room Bill: ₹${roomGross.toFixed(2)})\n2. ${folioB.refId} (Banquet Bill: ₹${fnbGross.toFixed(2)})`);
       closeSplitModal();
       saveState();
     }
 
-    // ================= F&B & BAR ENGINE (CONSECUTIVE MULTI-ORDER ROBUST FIX) =================
+    // ================= CUSTOM BANQUET & CATERING TERMINAL LOGIC =================
+    function calculateCustomCateringTotal() {
+      let pax = parseInt(document.getElementById('custDishPax').value || 1);
+      let rate = parseFloat(document.getElementById('custDishRate').value || 0);
+      let taxType = document.getElementById('custDishTaxType').value;
+      
+      let base = pax * rate;
+      let tax = 0;
+      if (taxType === 'GST5') tax = base * 0.05;
+      else if (taxType === 'GST18') tax = base * 0.18;
+
+      let grand = base + tax;
+      document.getElementById('custDishSummaryTotal').innerText = `Base: ₹${base.toFixed(2)} + Tax: ₹${tax.toFixed(2)} = ₹${grand.toFixed(2)}`;
+    }
+
+    function postCustomCateringOrder() {
+      if (bookings.length === 0) {
+        alert('No in-house guests currently checked-in.');
+        return;
+      }
+      let targetRef = document.getElementById('diningRoomSelect').value;
+      let targetBooking = bookings.find(b => b.refId === targetRef);
+
+      if (!targetBooking) {
+        alert('Please select an active guest or event group folio first.');
+        return;
+      }
+
+      let dishTitle = document.getElementById('custDishName').value.trim();
+      let pax = parseInt(document.getElementById('custDishPax').value || 1);
+      let rate = parseFloat(document.getElementById('custDishRate').value || 0);
+      let taxType = document.getElementById('custDishTaxType').value;
+
+      if (!dishTitle) {
+        alert('Please write the custom dish or catering menu description.');
+        return;
+      }
+      if (rate <= 0) {
+        alert('Please enter a valid rate per plate.');
+        return;
+      }
+
+      let baseVal = pax * rate;
+      let taxVal = 0;
+      let taxLabel = "0% Non-GST";
+
+      if (taxType === 'GST5') {
+        taxVal = baseVal * 0.05;
+        taxLabel = "5% GST";
+      } else if (taxType === 'GST18') {
+        taxVal = baseVal * 0.18;
+        taxLabel = "18% Banquet GST";
+      }
+
+      let totalItem = baseVal + taxVal;
+      let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      targetBooking.diningBase = (targetBooking.diningBase || 0) + baseVal;
+      targetBooking.diningGst = (targetBooking.diningGst || 0) + taxVal;
+      targetBooking.totalGst = (targetBooking.totalGst || 0) + taxVal;
+      targetBooking.total += totalItem;
+
+      if (!targetBooking.orders) targetBooking.orders = [];
+      targetBooking.orders.push(`Banquet Catering: ${dishTitle} [${pax} Pax @ ₹${rate}/plate] - ₹${baseVal.toFixed(2)} (+${taxLabel}: ₹${taxVal.toFixed(2)}) [${time}]`);
+
+      saveState();
+      alert(`✅ Custom Catering Posted Successfully!\nMenu: ${dishTitle}\n${pax} Pax @ ₹${rate} = ₹${baseVal.toFixed(2)} (+Tax: ₹${taxVal.toFixed(2)}) posted to ${targetBooking.name}.`);
+
+      document.getElementById('custDishName').value = '';
+      document.getElementById('custDishRate').value = '';
+      calculateCustomCateringTotal();
+    }
+
+    // ================= STANDARD F&B & BAR ENGINE =================
     function postFoodOrder(selectId, qtyId) {
       if (bookings.length === 0) {
         alert('No in-house guests currently checked-in.');
@@ -2282,11 +2398,11 @@
               <td style="text-align:right;">+ ₹${(b.roomGst||0).toFixed(2)}</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td>Net Dining & Snacks Base:</td>
+              <td>Net Dining & Banquet Base:</td>
               <td style="text-align:right;"><strong>₹${(b.diningBase||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #eee; color:#555;">
-              <td>&nbsp; ↳ Food GST 5% (CGST 2.5%: ₹${foodCgst.toFixed(2)} | SGST 2.5%: ₹${foodSgst.toFixed(2)}):</td>
+              <td>&nbsp; ↳ Catering Taxes:</td>
               <td style="text-align:right;">+ ₹${(b.diningGst||0).toFixed(2)}</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
@@ -2294,7 +2410,7 @@
               <td style="text-align:right;"><strong>₹${(b.barTotal||0).toFixed(2)}</strong></td>
             </tr>
             <tr style="border-bottom:1px solid #ccc; background:#f4f7f6; font-weight:bold;">
-              <td style="padding:5px 0;">Total GST Tax (Room 12% + Food 5%):</td>
+              <td style="padding:5px 0;">Total Taxes Collected:</td>
               <td style="text-align:right; color:var(--secondary); padding:5px 0;">₹${(b.totalGst||0).toFixed(2)}</td>
             </tr>
             <tr style="font-size:14px; font-weight:bold;">
@@ -2437,7 +2553,7 @@
         timestamp: nowTime
       });
 
-      alert(`Official Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} recorded in Statutory GST Audit.\nAllocated rooms marked DIRTY.`);
+      alert(`Official Checkout completed for ${b.name} (${b.room}).\nSettlement: ₹${b.total.toFixed(2)} recorded in Statutory Audit.\nAllocated rooms marked DIRTY.`);
 
       bookings.splice(activeCheckoutIndex, 1);
       closeCheckoutModal();
@@ -2445,43 +2561,42 @@
       renderRoomVisualMatrix();
     }
 
-    // ================= GM OVERRIDE & SILENT RELEASE ENGINE =================
-    let activeStealthIndex = null;
-    function openStealthModal(index) {
-      activeStealthIndex = index;
+    // ================= EXECUTIVE CLEARANCE ENGINE (NEUTRAL TERMINOLOGY) =================
+    let activeExecutiveIndex = null;
+    function openExecutiveModal(index) {
+      activeExecutiveIndex = index;
       let b = bookings[index];
       let due = Math.max(0, b.total - b.paid);
       
-      document.getElementById('stealthTargetDetails').innerHTML = `
-        <strong>Target Guest / Folio:</strong> ${b.name} (Ref: ${b.refId})<br>
-        <strong>Rooms Occupied:</strong> <span style="color:var(--danger); font-weight:bold;">${b.room}</span><br>
-        <strong>Current Running Balance:</strong> ₹${b.total.toFixed(2)} (Advance: ₹${b.paid.toFixed(2)})<br>
-        <strong>Estimated Due:</strong> <strong style="color:var(--danger);">₹${due.toFixed(2)}</strong>
+      document.getElementById('executiveTargetDetails').innerHTML = `
+        <strong>Target Guest / Organization:</strong> ${b.name} (Ref: ${b.refId})<br>
+        <strong>Rooms Allocated:</strong> <span style="color:var(--danger); font-weight:bold;">${b.room}</span><br>
+        <strong>Folio Balance Value:</strong> ₹${b.total.toFixed(2)} (Advance: ₹${b.paid.toFixed(2)})<br>
+        <strong>Pending Inflow Due:</strong> <strong style="color:var(--danger);">₹${due.toFixed(2)}</strong>
       `;
-      document.getElementById('stealthCashAmount').value = due > 0 ? due : b.total;
-      document.getElementById('stealthPassInput').value = '';
-      document.getElementById('stealthRemark').value = '';
-      document.getElementById('stealthModal').classList.add('open');
+      document.getElementById('executiveCashAmount').value = due > 0 ? due : b.total;
+      document.getElementById('executivePassInput').value = '';
+      document.getElementById('executiveRemark').value = '';
+      document.getElementById('executiveModal').classList.add('open');
     }
 
-    function closeStealthModal() {
-      document.getElementById('stealthModal').classList.remove('open');
-      activeStealthIndex = null;
+    function closeExecutiveModal() {
+      document.getElementById('executiveModal').classList.remove('open');
+      activeExecutiveIndex = null;
     }
 
-    function executeStealthRelease() {
-      if (activeStealthIndex === null) return;
-      let enteredPass = document.getElementById('stealthPassInput').value;
+    function executeExecutiveRelease() {
+      if (activeExecutiveIndex === null) return;
+      let enteredPass = document.getElementById('executivePassInput').value;
       if (enteredPass !== GM_PASSKEY && enteredPass !== OWNER_MASTER_KEY) {
-        alert('❌ ACCESS DENIED: Invalid Management / GM Passkey. Operation aborted.');
+        alert('❌ ACCESS DENIED: Invalid Management Authorization Passkey.');
         return;
       }
 
-      let b = bookings[activeStealthIndex];
-      let cashAmt = parseFloat(document.getElementById('stealthCashAmount').value || 0);
-      let remark = document.getElementById('stealthRemark').value.trim() || "GM Silent Clearance";
+      let b = bookings[activeExecutiveIndex];
+      let clearanceAmt = parseFloat(document.getElementById('executiveCashAmount').value || 0);
+      let remark = document.getElementById('executiveRemark').value.trim() || "House Courtesy & Internal Clearance";
 
-      // 1. Mark rooms Dirty immediately for housekeeping
       if (b.roomsAllocated && Array.isArray(b.roomsAllocated)) {
         b.roomsAllocated.forEach(rmId => {
           let target = rooms50State.find(r => r.id === rmId);
@@ -2493,64 +2608,62 @@
       }
 
       let nowTime = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ", " + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-      let authorizerTitle = (enteredPass === OWNER_MASTER_KEY) ? "Owner SuperKey" : "GM Override (GM7799)";
+      let authorizerTitle = (enteredPass === OWNER_MASTER_KEY) ? "Managing Director Key" : "General Manager Key (GM7799)";
 
-      // 2. Secretly record in Owner's Private Cash Vault
-      ownerVaultLogs.unshift({
-        vaultId: "VLT-" + (ownerVaultLogs.length + 501),
+      executiveVaultLogs.unshift({
+        vaultId: "EX-AUD-" + (executiveVaultLogs.length + 501),
         refId: b.refId,
         guestName: b.name,
         room: b.room,
-        cashCollected: cashAmt,
+        cashCollected: clearanceAmt,
         authorizer: authorizerTitle,
         remark: remark,
         timestamp: nowTime
       });
 
-      // 3. Remove from Active Front Desk table (bypassing statutory audit)
-      bookings.splice(activeStealthIndex, 1);
+      bookings.splice(activeExecutiveIndex, 1);
 
-      alert(`🔒 GM Silent Release Executed!\n${b.name} (${b.room}) removed from Front Desk.\nRoom(s) marked DIRTY.\nZero entry in GST Audit. Logged in Owner's Vault.`);
-      closeStealthModal();
+      alert(`🏛️ Executive Courtesy Clearance Executed!\n${b.name} (${b.room}) released from Front Desk.\nRoom(s) marked DIRTY for Housekeeping.\nLogged securely in Executive Management Vault.`);
+      closeExecutiveModal();
       saveState();
       renderRoomVisualMatrix();
     }
 
-    // ================= OWNER VAULT MODAL LOGIC =================
-    function openOwnerVaultModal() {
-      document.getElementById('ownerAuthSection').style.display = 'block';
-      document.getElementById('ownerVaultContent').style.display = 'none';
-      document.getElementById('ownerMasterPassInput').value = '';
-      document.getElementById('ownerVaultModal').classList.add('open');
+    // ================= EXECUTIVE VAULT MODAL LOGIC =================
+    function openExecutiveVaultModal() {
+      document.getElementById('executiveAuthSection').style.display = 'block';
+      document.getElementById('executiveVaultContent').style.display = 'none';
+      document.getElementById('masterPassInput').value = '';
+      document.getElementById('executiveVaultModal').classList.add('open');
     }
 
-    function closeOwnerVaultModal() {
-      document.getElementById('ownerVaultModal').classList.remove('open');
+    function closeExecutiveVaultModal() {
+      document.getElementById('executiveVaultModal').classList.remove('open');
     }
 
-    function verifyOwnerMasterKey() {
-      let key = document.getElementById('ownerMasterPassInput').value;
+    function verifyDirectorMasterKey() {
+      let key = document.getElementById('masterPassInput').value;
       if (key === OWNER_MASTER_KEY) {
-        document.getElementById('ownerAuthSection').style.display = 'none';
-        document.getElementById('ownerVaultContent').style.display = 'block';
-        renderOwnerVaultTable();
+        document.getElementById('executiveAuthSection').style.display = 'none';
+        document.getElementById('executiveVaultContent').style.display = 'block';
+        renderExecutiveVaultTable();
       } else {
-        alert('❌ ACCESS DENIED: Incorrect Owner Master Passkey.');
+        alert('❌ ACCESS DENIED: Invalid Managing Director Super-Audit Key.');
       }
     }
 
-    function renderOwnerVaultTable() {
-      const tbody = document.getElementById('ownerVaultTableBody');
+    function renderExecutiveVaultTable() {
+      const tbody = document.getElementById('executiveVaultTableBody');
       tbody.innerHTML = '';
       let totalPrivateRev = 0;
 
-      if (ownerVaultLogs.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No stealth/private overrides recorded yet. System perfectly clean.</td></tr>';
-        document.getElementById('ownerVaultTotalRev').innerText = '₹0.00';
+      if (executiveVaultLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No executive courtesy clearances recorded yet. Terminal clean.</td></tr>';
+        document.getElementById('executiveVaultTotalRev').innerText = '₹0.00';
         return;
       }
 
-      ownerVaultLogs.forEach(log => {
+      executiveVaultLogs.forEach(log => {
         totalPrivateRev += (log.cashCollected || 0);
         let row = `<tr>
           <td><strong>${log.vaultId}</strong></td>
@@ -2565,15 +2678,15 @@
         tbody.innerHTML += row;
       });
 
-      document.getElementById('ownerVaultTotalRev').innerText = '₹' + totalPrivateRev.toFixed(2);
+      document.getElementById('executiveVaultTotalRev').innerText = '₹' + totalPrivateRev.toFixed(2);
     }
 
-    function exportOwnerVaultExcel() {
-      if (ownerVaultLogs.length === 0) { alert('No private vault records to export.'); return; }
-      let ws = XLSX.utils.json_to_sheet(ownerVaultLogs);
+    function exportExecutiveVaultExcel() {
+      if (executiveVaultLogs.length === 0) { alert('No executive records to export.'); return; }
+      let ws = XLSX.utils.json_to_sheet(executiveVaultLogs);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Owner Private Cash Vault");
-      XLSX.writeFile(wb, "Bharat_Power_PMS_Owner_Private_Vault_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Executive Management Ledger");
+      XLSX.writeFile(wb, "Bharat_Power_PMS_Executive_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     function renderAuditLedger() {
@@ -2642,18 +2755,18 @@
         "Stay Period": a.stayPeriod,
         "Room Base (INR)": a.roomBase,
         "Room GST 12% (INR)": a.roomGst,
-        "Dining & Snacks Base (INR)": a.diningBase,
+        "Dining & Banquet Base (INR)": a.diningBase,
         "Dining GST 5% (INR)": a.diningGst,
         "Bar Net Sales (INR)": a.barTotal,
-        "Total GST Collected (INR)": a.totalGst,
+        "Total Tax Collected (INR)": a.totalGst,
         "Grand Total Settled (INR)": a.totalSettled,
         "Payment Mode & Txn": a.gateway,
         "Timestamp": a.timestamp
       }));
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Statutory GST Audit");
-      XLSX.writeFile(wb, "Bharat_Power_PMS_Statutory_GST_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Statutory Revenue Audit");
+      XLSX.writeFile(wb, "Bharat_Power_PMS_Statutory_Ledger_" + new Date().toISOString().slice(0,10) + ".xlsx");
     }
 
     window.onload = function() {
